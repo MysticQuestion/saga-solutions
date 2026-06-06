@@ -63,6 +63,114 @@ const products = [
     secondaryImage: '/assets/1000005330.jpg',
     lore: 'A legacy visual file from the first Mad Evil Genius doctrine: intellect under pressure, electricity through bone, design as survival language.',
     sizes: ['Print', 'Patch', 'Digital File']
+  },
+  {
+    slug: 'lab-skull-white-tee',
+    code: 'EXP-021',
+    name: 'Lab Skull White Tee',
+    category: 'experiment',
+    status: 'ACTIVE',
+    price: 44,
+    image: '/assets/1000005321.jpg',
+    secondaryImage: '/assets/1000005321.jpg',
+    lore: 'White field issue with a skull-brain apparatus graphic: mortality, memory, and machinery fused into a clean first-contact artifact.',
+    sizes: ['S', 'M', 'L', 'XL', 'XXL']
+  },
+  {
+    slug: 'meg-operator-zip-hoodie',
+    code: 'CL-018',
+    name: 'M.E.G. Operator Zip Hoodie',
+    category: 'classified',
+    status: 'ACTIVE',
+    price: 84,
+    image: '/assets/1000005320.jpg',
+    secondaryImage: '/assets/1000005307.jpg',
+    lore: 'Low-visibility black hoodie with a compact M.E.G. insignia for daily deployment: disciplined, minimal, recognizable.',
+    sizes: ['S', 'M', 'L', 'XL', 'XXL']
+  },
+  {
+    slug: 'original-style-jar-tee',
+    code: 'FILE-080',
+    name: 'Original Style Jar Tee',
+    category: 'vault',
+    status: 'ARCHIVED',
+    price: 42,
+    image: '/assets/1000005319.jpg',
+    secondaryImage: '/assets/1000005319.jpg',
+    lore: 'A foundational Mad Evil Genius mark: the brain preserved in a jar, framed by the Original Style doctrine.',
+    sizes: ['S', 'M', 'L', 'XL', 'XXL']
+  },
+  {
+    slug: 'bolt-skull-pocket-tee',
+    code: 'BR-022',
+    name: 'Bolt Skull Pocket Tee',
+    category: 'breach',
+    status: 'LIMITED',
+    price: 40,
+    image: '/assets/1000005322.jpg',
+    secondaryImage: '/assets/1000005322.jpg',
+    lore: 'A restrained black tee carrying a small skull-brain bolt mark over the chest: silent signal, high recognition value.',
+    sizes: ['S', 'M', 'L', 'XL', 'XXL']
+  },
+  {
+    slug: 'split-vessel-black-tee',
+    code: 'EXP-023',
+    name: 'Split Vessel Black Tee',
+    category: 'experiment',
+    status: 'ACTIVE',
+    price: 48,
+    image: '/assets/1000005308.jpg',
+    secondaryImage: '/assets/1000005308.jpg',
+    lore: 'Half skull, half preserved brain: a wearable diagram of body, intellect, and engineered survival.',
+    sizes: ['S', 'M', 'L', 'XL', 'XXL']
+  },
+  {
+    slug: 'green-interference-brain-tee',
+    code: 'BR-031',
+    name: 'Green Interference Brain Tee',
+    category: 'breach',
+    status: 'LIMITED',
+    price: 52,
+    image: '/assets/1000005304.jpg',
+    secondaryImage: '/assets/1000005304.jpg',
+    lore: 'A loud black tee with acid-green interference typography and neural mass: the first true concert-poster energy piece in the line.',
+    sizes: ['S', 'M', 'L', 'XL', 'XXL']
+  },
+  {
+    slug: 'patched-cortex-cargo',
+    code: 'CL-032',
+    name: 'Patched Cortex Cargo',
+    category: 'classified',
+    status: 'ACTIVE',
+    price: 98,
+    image: '/assets/1000005305.jpg',
+    secondaryImage: '/assets/1000005305.jpg',
+    lore: 'Black tactical cargo panel with skull patch and cortex mark: utilitarian streetwear built for modular brand expansion.',
+    sizes: ['S', 'M', 'L', 'XL', 'XXL']
+  },
+  {
+    slug: 'containment-breach-crewneck',
+    code: 'BR-040',
+    name: 'Containment Breach Crewneck',
+    category: 'breach',
+    status: 'CONTAINMENT FAILED',
+    price: 94,
+    image: '/assets/1000005296.jpg',
+    secondaryImage: '/assets/1000005296.jpg',
+    lore: 'A circuit-board crewneck with cracked vessel graphics and corrupted type. The uniform of a failed lockdown.',
+    sizes: ['S', 'M', 'L', 'XL', 'XXL']
+  },
+  {
+    slug: 'reanimated-crewneck',
+    code: 'EXP-041',
+    name: 'Reanimated Crewneck',
+    category: 'experiment',
+    status: 'LIMITED',
+    price: 96,
+    image: '/assets/1000005297.jpg',
+    secondaryImage: '/assets/1000005297.jpg',
+    lore: 'A black crewneck for the return sequence: skull and jar split across the chest, marked REANIMATED for the second life of the archive.',
+    sizes: ['S', 'M', 'L', 'XL', 'XXL']
   }
 ];
 
@@ -117,7 +225,7 @@ function App() {
           <h2>Recovered Experiments</h2>
         </div>
         <div className="filters">
-          {['all', 'experiment', 'breach', 'classified', 'vault', 'ACTIVE', 'LIMITED', 'CONTAINMENT FAILED'].map((item) => (
+          {['all', 'experiment', 'breach', 'classified', 'vault', 'ACTIVE', 'LIMITED', 'CONTAINMENT FAILED', 'ARCHIVED'].map((item) => (
             <button key={item} onClick={() => setFilter(item)} className={filter === item ? 'active' : ''}>{item}</button>
           ))}
         </div>
