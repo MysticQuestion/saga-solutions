@@ -1,256 +1,70 @@
 import React, { useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ArrowRight, Cpu, Lock, Radio, Shield, ShoppingBag, Sparkles, Zap } from 'lucide-react';
-import './styles.css';
-import { products, collections, dropSchedule } from './products.js';
-import { createShopifyCheckout } from './shopify.js';
 
-const signalIcons = [Cpu, Radio, Shield, Zap];
+const collections = [
+  { id: 'apparel', name: 'Apparel' },
+  { id: 'bottoms', name: 'Bottoms' },
+  { id: 'outerwear', name: 'Outerwear' },
+  { id: 'artifacts', name: 'Artifacts' },
+];
+
+const products = [
+  { id: 'meg-neural-cargo-joggers', shopifyVariantId: '', collection: 'bottoms', type: 'Technical Cargo Jogger', name: 'Neural Circuit Cargo Joggers', code: 'M.E.G.-01', price: 78, status: 'Launch Drop', accent: '#9bffb8', image: 'linear-gradient(145deg, #050505 0%, #101010 45%, #1d1d1d 100%)', description: 'Black technical cargo joggers with tonal circuit-board paneling, crowned-brain patch placement, utility pockets, and a slim tactical silhouette.' },
+  { id: 'meg-circuit-crewneck', shopifyVariantId: '', collection: 'apparel', type: 'Oversized Crewneck', name: 'Crowned Circuit Crewneck', code: 'M.E.G.-02', price: 82, status: 'Core Product', accent: '#7CFF9B', image: 'linear-gradient(135deg, #070707 0%, #111 55%, #19261f 100%)', description: 'Oversized black crewneck using neon green circuit-line graphics across the shoulders, sleeves, and side body with a compact crowned neural crest.' },
+  { id: 'meg-monarch-brain-sweatshirt', shopifyVariantId: '', collection: 'apparel', type: 'Graphic Sweatshirt', name: 'Monarch Brain Backprint Sweatshirt', code: 'M.E.G.-03', price: 88, status: 'Statement Piece', accent: '#39ff6a', image: 'radial-gradient(circle at 50% 42%, rgba(60,255,106,.35), transparent 32%), linear-gradient(145deg, #050505, #121212)', description: 'Black sweatshirt with oversized crowned-brain backprint, shadow circuit architecture, and Neural Breach laboratory iconography.' },
+  { id: 'meg-blacksite-tactical-jacket', shopifyVariantId: '', collection: 'outerwear', type: 'Tactical Jacket', name: 'Blacksite Tactical Jacket', code: 'M.E.G.-04', price: 148, status: 'Premium Outerwear', accent: '#f5f5f5', image: 'linear-gradient(135deg, #030303 0%, #0d0d0d 52%, #262626 100%)', description: 'Cropped black tactical jacket with utility buckles, zipper hardware, modular patch language, and bold Mad Evil Genius chest labeling.' },
+  { id: 'meg-preserved-mind-hoodie', shopifyVariantId: '', collection: 'apparel', type: 'Graphic Hoodie', name: 'Preserved Mind Glitch Hoodie', code: 'M.E.G.-05', price: 92, status: 'Hero Item', accent: '#00e5ff', image: 'radial-gradient(circle at 50% 38%, rgba(0,229,255,.42), transparent 28%), linear-gradient(145deg, #050505, #141414)', description: 'Black hoodie with cyan and magenta glitch treatment: brain-in-jar centerpiece, lab containment energy, and digital disruption graphics.' },
+  { id: 'meg-crowned-neural-emblem', shopifyVariantId: '', collection: 'artifacts', type: 'Patch / Sticker / Digital Asset', name: 'Crowned Neural Emblem Pack', code: 'M.E.G.-06', price: 18, status: 'Brand Asset', accent: '#7CFFCB', image: 'radial-gradient(circle at 50% 45%, rgba(124,255,203,.65), transparent 34%), linear-gradient(145deg, #020202, #111)', description: 'Crowned-brain emblem system for patches, stickers, tags, digital wallpapers, QR inserts, packaging, and Neural Breach shop lore.' },
+  { id: 'meg-skull-lab-print', shopifyVariantId: '', collection: 'artifacts', type: 'Poster / Art Print', name: 'Skull Lab Preserved Intelligence Print', code: 'M.E.G.-07', price: 34, status: 'Wall Artifact', accent: '#f8f8f8', image: 'radial-gradient(circle at 62% 45%, rgba(255,255,255,.34), transparent 28%), linear-gradient(145deg, #020202, #151515)', description: 'Black-and-white lab-horror print with skull, preserved brain, analog scan distortion, and Neural Breach intellectual afterlife symbolism.' },
+];
+
+const dropSchedule = [
+  { phase: 'Phase 01', title: 'Core Wearable Signal', description: 'Launch the hoodie, crewneck, joggers, and tactical jacket first. These are the clearest commercial pieces and define the line immediately.' },
+  { phase: 'Phase 02', title: 'Patch + Artifact Expansion', description: 'Convert the crowned-brain mark into patches, stickers, tags, digital wallpapers, QR inserts, packaging, and creator-facing assets.' },
+  { phase: 'Phase 03', title: 'Neural Breach Capsule Drops', description: 'Release limited products around story chapters, short films, game demos, music drops, blog essays, or ARG-style campaign beats.' },
+];
+
+const styleText = `
+:root{color-scheme:dark;--bg:#030303;--panel:rgba(14,16,18,.86);--text:#f4f4f1;--muted:#9ea4a1;--line:rgba(124,255,177,.18);--acid:#7cff9b;--cyan:#00e5ff;--warning:#ff355d;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}*{box-sizing:border-box}html{scroll-behavior:smooth;background:var(--bg)}body{margin:0;background:radial-gradient(circle at 20% 0%,rgba(124,255,155,.14),transparent 24%),radial-gradient(circle at 82% 18%,rgba(0,229,255,.13),transparent 26%),#030303;color:var(--text)}a{color:inherit;text-decoration:none}button{font:inherit}.site-shell{min-height:100vh;overflow:hidden}.hero{min-height:92vh;padding:28px clamp(18px,4vw,64px) 64px;position:relative}.hero:before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(124,255,155,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(124,255,155,.035) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,#000,transparent 90%);pointer-events:none}.nav{display:flex;align-items:center;justify-content:space-between;gap:20px;position:relative;z-index:2}.brandmark{display:flex;align-items:center;gap:12px}.brand-sigil{height:48px;width:48px;display:grid;place-items:center;border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,rgba(124,255,155,.22),rgba(0,229,255,.08));color:var(--acid);font-weight:900;letter-spacing:.08em}.brandmark strong{display:block}.brandmark small{display:block;color:var(--muted);font-size:.78rem}.nav-links{display:flex;gap:18px;color:var(--muted);font-size:.9rem}.nav-links a:hover{color:var(--acid)}.hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.65fr);gap:42px;align-items:center;max-width:1180px;margin:96px auto 0;position:relative;z-index:1}.eyebrow{color:var(--acid);text-transform:uppercase;letter-spacing:.18em;font-size:.76rem;font-weight:800}.hero h1{font-size:clamp(3.1rem,8vw,7.3rem);line-height:.88;margin:16px 0 22px;letter-spacing:-.07em;max-width:900px}.lede{font-size:clamp(1rem,2.2vw,1.28rem);color:#c8cfca;max-width:720px;line-height:1.72}.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:32px}.button{border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);border-radius:999px;padding:13px 18px;display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:.2s ease}.button:hover{transform:translateY(-1px);border-color:rgba(124,255,155,.54)}.primary{background:linear-gradient(135deg,var(--acid),var(--cyan));color:#020202;border:0;font-weight:900}.ghost{background:rgba(255,255,255,.03)}.terminal-card{border:1px solid var(--line);background:linear-gradient(180deg,rgba(14,16,18,.92),rgba(4,5,6,.92));border-radius:28px;padding:22px;box-shadow:0 0 90px rgba(124,255,155,.08)}.terminal-header{display:flex;gap:8px;margin-bottom:18px}.terminal-header span{width:10px;height:10px;border-radius:99px;background:var(--muted)}.terminal-line{font-family:'Courier New',monospace;color:#c6cbc7;margin:9px 0}.terminal-line.green{color:var(--acid)}.scan-panel{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:24px}.scan-cell{border:1px solid var(--line);border-radius:18px;padding:16px;background:rgba(124,255,155,.035);color:var(--acid);display:grid;gap:12px}.scan-cell span{color:#d7ddd9;font-size:.86rem}.manifesto-section,.cart-panel,.integration,.drop-system,.collections{padding:72px clamp(18px,4vw,64px);max-width:1280px;margin:0 auto}.manifesto-section{display:grid;grid-template-columns:.85fr 1.15fr;gap:36px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.manifesto-section h2,.section-heading h2,.cart-panel h2{font-size:clamp(2rem,4.4vw,4rem);line-height:.96;margin:10px 0}.manifesto-section p{color:#c8cfca;line-height:1.75}.section-heading{max-width:780px;margin-bottom:28px}.filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px}.filter-bar button{border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.035);color:#d6ddd8;padding:10px 14px;cursor:pointer}.filter-bar button.active{background:var(--acid);color:#020202;border-color:transparent;font-weight:900}.product-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.product-card{border:1px solid var(--line);background:var(--panel);border-radius:26px;overflow:hidden}.product-art{height:240px;background:var(--product-bg);position:relative;display:grid;place-items:center;isolation:isolate}.product-art:before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:18px 18px;opacity:.34}.product-art:after{content:'♛';position:absolute;font-size:88px;color:var(--accent);filter:drop-shadow(0 0 22px var(--accent));opacity:.9}.product-art span{position:absolute;left:16px;top:16px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.42);border-radius:999px;padding:7px 10px;color:var(--accent);font-weight:900;font-size:.72rem;letter-spacing:.14em}.product-meta{padding:22px}.product-type{color:var(--accent);font-weight:900;text-transform:uppercase;letter-spacing:.12em;font-size:.72rem}.product-meta h3{font-size:1.45rem;margin:8px 0}.product-meta p{color:#c3cac5;line-height:1.6}.product-details{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:14px;margin-top:16px;color:#e9eee9}.product-details span:first-child{font-weight:900}.product-button{width:100%;margin-top:16px}.drop-grid,.integration-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.drop-card,.integration-grid article,.cart-box{border:1px solid var(--line);background:var(--panel);border-radius:24px;padding:22px}.drop-phase{color:var(--cyan);font-weight:900;letter-spacing:.13em;text-transform:uppercase;font-size:.72rem}.drop-card p,.integration-grid p,.cart-panel p{color:#c8cfca;line-height:1.65}.cart-panel{display:grid;grid-template-columns:.8fr 1.2fr;gap:28px}.cart-box ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}.cart-box li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:12px}.cart-box small{color:var(--acid)}.cart-box li button{background:transparent;border:0;color:var(--warning);cursor:pointer}.empty-cart{color:var(--muted)}.cart-total{display:flex;justify-content:space-between;align-items:center;margin:20px 0;font-size:1.25rem}.checkout-button{width:100%}.status-line{border:1px solid rgba(124,255,155,.28);border-radius:16px;padding:12px;color:var(--acid);background:rgba(124,255,155,.05)}code{background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:8px;padding:2px 6px}.footer{padding:36px clamp(18px,4vw,64px);border-top:1px solid var(--line);color:var(--muted);text-align:center}@media(max-width:920px){.hero-grid,.manifesto-section,.cart-panel{grid-template-columns:1fr}.product-grid,.drop-grid,.integration-grid{grid-template-columns:1fr}.nav{align-items:flex-start}.nav-links{display:none}.hero{min-height:auto}.hero-grid{margin-top:60px}.hero h1{letter-spacing:-.04em}}
+`;
+
+async function createShopifyCheckout(cart) {
+  const domain = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN;
+  const token = import.meta.env.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
+  const missingVariants = cart.filter((item) => !item.shopifyVariantId);
+  if (!domain || !token || missingVariants.length) throw new Error('Shopify configuration incomplete.');
+  const response = await fetch(`https://${domain}/api/2024-10/graphql.json`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Shopify-Storefront-Access-Token': token }, body: JSON.stringify({ query: `mutation cartCreate($input: CartInput!) { cartCreate(input: $input) { cart { checkoutUrl } userErrors { field message } } }`, variables: { input: { lines: cart.map((item) => ({ merchandiseId: item.shopifyVariantId, quantity: item.quantity })) } } }) });
+  const data = await response.json();
+  const url = data?.data?.cartCreate?.cart?.checkoutUrl;
+  if (!url) throw new Error('Shopify checkout URL unavailable.');
+  return url;
+}
 
 function App() {
   const [activeCollection, setActiveCollection] = useState('all');
   const [cart, setCart] = useState([]);
   const [status, setStatus] = useState('');
-
-  const filteredProducts = useMemo(() => {
-    if (activeCollection === 'all') return products;
-    return products.filter((product) => product.collection === activeCollection);
-  }, [activeCollection]);
-
+  const filteredProducts = useMemo(() => activeCollection === 'all' ? products : products.filter((product) => product.collection === activeCollection), [activeCollection]);
   const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-  const addToCart = (product) => {
-    setCart((current) => {
-      const existing = current.find((item) => item.id === product.id);
-      if (existing) {
-        return current.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      }
-      return [...current, { ...product, quantity: 1 }];
-    });
-    setStatus(`${product.name} added to cart.`);
-  };
-
-  const removeFromCart = (productId) => {
-    setCart((current) => current.filter((item) => item.id !== productId));
-  };
-
-  const checkout = async () => {
-    if (!cart.length) {
-      setStatus('Add at least one item before checkout.');
-      return;
-    }
-
-    setStatus('Opening secure Shopify checkout...');
-    try {
-      const checkoutUrl = await createShopifyCheckout(cart);
-      window.location.href = checkoutUrl;
-    } catch (error) {
-      console.error(error);
-      setStatus(
-        'Checkout needs Shopify environment variables and product variant IDs before live transactions can process.'
-      );
-    }
-  };
+  const addToCart = (product) => { setCart((current) => { const existing = current.find((item) => item.id === product.id); if (existing) return current.map((item) => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item); return [...current, { ...product, quantity: 1 }]; }); setStatus(`${product.name} added to cart.`); };
+  const removeFromCart = (productId) => setCart((current) => current.filter((item) => item.id !== productId));
+  const checkout = async () => { if (!cart.length) return setStatus('Add at least one item before checkout.'); try { setStatus('Opening secure Shopify checkout...'); const url = await createShopifyCheckout(cart); window.location.href = url; } catch { setStatus('Checkout is staged. Add Shopify store domain, Storefront token, and product variant IDs to activate transactions.'); } };
+  const signalIcons = [Cpu, Radio, Shield, Zap];
 
   return (
     <main className="site-shell">
+      <style>{styleText}</style>
       <section className="hero" id="mad-evil-genius-shop">
-        <nav className="nav" aria-label="Mad Evil Genius shop navigation">
-          <a href="#mad-evil-genius-shop" className="brandmark">
-            <span className="brand-sigil">MEG</span>
-            <span>
-              <strong>Mad Evil Genius</strong>
-              <small>Neural Breach Commerce Node</small>
-            </span>
-          </a>
-          <div className="nav-links">
-            <a href="#collections">Collections</a>
-            <a href="#drop-system">Drop System</a>
-            <a href="#cart">Cart</a>
-          </div>
-        </nav>
-
-        <div className="hero-grid">
-          <div className="hero-copy">
-            <p className="eyebrow">Cyberpunk fashion / artifact commerce / Neural Breach ready</p>
-            <h1>The shop for the intelligence they failed to contain.</h1>
-            <p className="lede">
-              Mad Evil Genius is a standalone Shopify-ready storefront built to plug directly into
-              the Neural Breach project page while functioning as its own complete fashion and
-              artifact shop.
-            </p>
-            <div className="hero-actions">
-              <a href="#collections" className="button primary">
-                Enter the Shop <ArrowRight size={18} />
-              </a>
-              <a href="#integration" className="button ghost">
-                View Integration Notes
-              </a>
-            </div>
-          </div>
-
-          <aside className="terminal-card" aria-label="Shop status panel">
-            <div className="terminal-header">
-              <span /> <span /> <span />
-            </div>
-            <p className="terminal-line">node://mad-evil-genius/shop</p>
-            <p className="terminal-line green">STATUS: STOREFRONT READY</p>
-            <p className="terminal-line">SHOPIFY: ENV-BASED CHECKOUT</p>
-            <p className="terminal-line">NEURAL BREACH: EMBED ANCHOR ENABLED</p>
-            <div className="scan-panel">
-              {signalIcons.map((Icon, index) => (
-                <div className="scan-cell" key={Icon.name}>
-                  <Icon size={22} />
-                  <span>{['Signal', 'Broadcast', 'Defense', 'Voltage'][index]}</span>
-                </div>
-              ))}
-            </div>
-          </aside>
-        </div>
+        <nav className="nav" aria-label="Mad Evil Genius shop navigation"><a href="#mad-evil-genius-shop" className="brandmark"><span className="brand-sigil">MEG</span><span><strong>Mad Evil Genius</strong><small>Neural Breach Commerce Node</small></span></a><div className="nav-links"><a href="#collections">Collections</a><a href="#drop-system">Drop System</a><a href="#cart">Cart</a></div></nav>
+        <div className="hero-grid"><div className="hero-copy"><p className="eyebrow">Cyberpunk fashion / artifact commerce / Neural Breach ready</p><h1>The shop for the intelligence they failed to contain.</h1><p className="lede">Mad Evil Genius is a standalone Shopify-ready storefront built to plug directly into the Neural Breach project page while functioning as its own complete fashion, techwear, and artifact shop.</p><div className="hero-actions"><a href="#collections" className="button primary">Enter the Shop <ArrowRight size={18} /></a><a href="#integration" className="button ghost">View Integration Notes</a></div></div><aside className="terminal-card" aria-label="Shop status panel"><div className="terminal-header"><span /><span /><span /></div><p className="terminal-line">node://mad-evil-genius/shop</p><p className="terminal-line green">STATUS: STOREFRONT READY</p><p className="terminal-line">SHOPIFY: ENV-BASED CHECKOUT</p><p className="terminal-line">NEURAL BREACH: EMBED ANCHOR ENABLED</p><div className="scan-panel">{signalIcons.map((Icon, index) => <div className="scan-cell" key={Icon.name}><Icon size={22}/><span>{['Signal','Broadcast','Defense','Voltage'][index]}</span></div>)}</div></aside></div>
       </section>
-
-      <section className="manifesto-section">
-        <div>
-          <p className="eyebrow">Brand Thesis</p>
-          <h2>Not generic merch. Wearable insurgent mythology.</h2>
-        </div>
-        <p>
-          The line carries black, acid green, chrome, bone white, warning red, signal blue,
-          distressed typography, corrupted interfaces, lab-note symbolism, and premium streetwear
-          cues. It should feel less like a logo pasted onto shirts and more like a product archive
-          from a forbidden design lab.
-        </p>
-      </section>
-
-      <section className="collections" id="collections">
-        <div className="section-heading">
-          <p className="eyebrow">Shop Collections</p>
-          <h2>Core drop architecture</h2>
-        </div>
-
-        <div className="filter-bar" aria-label="Product collection filters">
-          <button
-            type="button"
-            className={activeCollection === 'all' ? 'active' : ''}
-            onClick={() => setActiveCollection('all')}
-          >
-            All Products
-          </button>
-          {collections.map((collection) => (
-            <button
-              type="button"
-              key={collection.id}
-              className={activeCollection === collection.id ? 'active' : ''}
-              onClick={() => setActiveCollection(collection.id)}
-            >
-              {collection.name}
-            </button>
-          ))}
-        </div>
-
-        <div className="product-grid">
-          {filteredProducts.map((product) => (
-            <article className="product-card" key={product.id}>
-              <div className="product-art" style={{ '--accent': product.accent }}>
-                <span>{product.code}</span>
-              </div>
-              <div className="product-meta">
-                <p className="product-type">{product.type}</p>
-                <h3>{product.name}</h3>
-                <p>{product.description}</p>
-                <div className="product-details">
-                  <span>${product.price.toFixed(2)}</span>
-                  <span>{product.status}</span>
-                </div>
-                <button type="button" className="button product-button" onClick={() => addToCart(product)}>
-                  <ShoppingBag size={17} /> Add to Cart
-                </button>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="drop-system" id="drop-system">
-        <div className="section-heading">
-          <p className="eyebrow">Release System</p>
-          <h2>Built for episodic Neural Breach drops</h2>
-        </div>
-        <div className="drop-grid">
-          {dropSchedule.map((drop) => (
-            <article key={drop.phase} className="drop-card">
-              <p className="drop-phase">{drop.phase}</p>
-              <h3>{drop.title}</h3>
-              <p>{drop.description}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="cart-panel" id="cart">
-        <div>
-          <p className="eyebrow">Live Cart</p>
-          <h2>Checkout node</h2>
-          <p>
-            Cart creation uses Shopify Storefront API when the store domain, public Storefront
-            access token, and product variant IDs are configured. Until then, this functions as a
-            complete storefront preview and integration-ready sales page.
-          </p>
-        </div>
-
-        <div className="cart-box">
-          {!cart.length ? (
-            <p className="empty-cart">No items selected yet.</p>
-          ) : (
-            <ul>
-              {cart.map((item) => (
-                <li key={item.id}>
-                  <span>
-                    {item.name} <small>x{item.quantity}</small>
-                  </span>
-                  <button type="button" onClick={() => removeFromCart(item.id)}>
-                    Remove
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-          <div className="cart-total">
-            <span>Total</span>
-            <strong>${cartTotal.toFixed(2)}</strong>
-          </div>
-          <button type="button" className="button primary checkout-button" onClick={checkout}>
-            Secure Shopify Checkout <Lock size={17} />
-          </button>
-          {status && <p className="status-line">{status}</p>}
-        </div>
-      </section>
-
-      <section className="integration" id="integration">
-        <div className="section-heading">
-          <p className="eyebrow">Neural Breach Integration</p>
-          <h2>How this shop fills the missing pieces</h2>
-        </div>
-        <div className="integration-grid">
-          <article>
-            <Sparkles size={24} />
-            <h3>Standalone shop</h3>
-            <p>Can be deployed as its own Vite site, linked from bios, ads, QR codes, and campaigns.</p>
-          </article>
-          <article>
-            <Cpu size={24} />
-            <h3>Project-page module</h3>
-            <p>The root anchor <code>#mad-evil-genius-shop</code> lets Neural Breach embed or route here cleanly.</p>
-          </article>
-          <article>
-            <ShoppingBag size={24} />
-            <h3>Shopify path</h3>
-            <p>Replace placeholder Shopify variant IDs after products are created or imported into Shopify.</p>
-          </article>
-        </div>
-      </section>
+      <section className="manifesto-section"><div><p className="eyebrow">Brand Thesis</p><h2>Not generic merch. Wearable insurgent mythology.</h2></div><p>The line is built from black tactical garments, crowned-brain marks, tonal circuit-board printing, neon green and cyan glitch accents, lab-preserved intelligence imagery, and premium streetwear construction. The commercial lane is cyberpunk fashion with enough narrative gravity to support Neural Breach as a larger storyworld.</p></section>
+      <section className="collections" id="collections"><div className="section-heading"><p className="eyebrow">Shop Collections</p><h2>Core drop architecture</h2></div><div className="filter-bar"><button type="button" className={activeCollection === 'all' ? 'active' : ''} onClick={() => setActiveCollection('all')}>All Products</button>{collections.map((collection) => <button type="button" key={collection.id} className={activeCollection === collection.id ? 'active' : ''} onClick={() => setActiveCollection(collection.id)}>{collection.name}</button>)}</div><div className="product-grid">{filteredProducts.map((product) => <article className="product-card" key={product.id}><div className="product-art" style={{ '--accent': product.accent, '--product-bg': product.image }}><span>{product.code}</span></div><div className="product-meta"><p className="product-type">{product.type}</p><h3>{product.name}</h3><p>{product.description}</p><div className="product-details"><span>${product.price.toFixed(2)}</span><span>{product.status}</span></div><button type="button" className="button product-button" onClick={() => addToCart(product)}><ShoppingBag size={17}/> Add to Cart</button></div></article>)}</div></section>
+      <section className="drop-system" id="drop-system"><div className="section-heading"><p className="eyebrow">Release System</p><h2>Built for episodic Neural Breach drops</h2></div><div className="drop-grid">{dropSchedule.map((drop) => <article key={drop.phase} className="drop-card"><p className="drop-phase">{drop.phase}</p><h3>{drop.title}</h3><p>{drop.description}</p></article>)}</div></section>
+      <section className="cart-panel" id="cart"><div><p className="eyebrow">Live Cart</p><h2>Checkout node</h2><p>Cart creation uses Shopify Storefront API when the store domain, public Storefront access token, and product variant IDs are configured. Until then, this works as a complete storefront preview and integration-ready sales page.</p></div><div className="cart-box">{!cart.length ? <p className="empty-cart">No items selected yet.</p> : <ul>{cart.map((item) => <li key={item.id}><span>{item.name} <small>x{item.quantity}</small></span><button type="button" onClick={() => removeFromCart(item.id)}>Remove</button></li>)}</ul>}<div className="cart-total"><span>Total</span><strong>${cartTotal.toFixed(2)}</strong></div><button type="button" className="button primary checkout-button" onClick={checkout}>Secure Shopify Checkout <Lock size={17}/></button>{status && <p className="status-line">{status}</p>}</div></section>
+      <section className="integration" id="integration"><div className="section-heading"><p className="eyebrow">Neural Breach Integration</p><h2>How this shop fills the missing pieces</h2></div><div className="integration-grid"><article><Sparkles size={24}/><h3>Standalone shop</h3><p>Deploy as a Vite site, link from bios, ads, QR codes, Neural Breach pages, and capsule campaigns.</p></article><article><Cpu size={24}/><h3>Project-page module</h3><p>The root anchor <code>#mad-evil-genius-shop</code> lets Neural Breach embed or route here cleanly.</p></article><article><ShoppingBag size={24}/><h3>Shopify path</h3><p>Create/import products in Shopify, then paste each variant GID into the matching product object.</p></article></div></section>
+      <footer className="footer">Mad Evil Genius — a Neural Breach commerce node by Saga Solutions.</footer>
     </main>
   );
 }
