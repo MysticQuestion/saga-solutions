@@ -1,81 +1,1197 @@
 import React, { useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ArrowRight, Cpu, Lock, Radio, Shield, ShoppingBag, Sparkles, Zap } from 'lucide-react';
+import {
+  ArrowRight,
+  BookOpen,
+  Bot,
+  BrainCircuit,
+  CheckCircle2,
+  Code2,
+  Database,
+  ExternalLink,
+  FileText,
+  Globe2,
+  KeyRound,
+  Landmark,
+  Layers3,
+  Lock,
+  Radio,
+  Rocket,
+  Sparkles,
+  Store,
+  TerminalSquare,
+  Workflow,
+  Search,
+  Server,
+  ShieldCheck,
+} from 'lucide-react';
 
-const collections = [
-  { id: 'apparel', name: 'Apparel' },
-  { id: 'bottoms', name: 'Bottoms' },
-  { id: 'outerwear', name: 'Outerwear' },
-  { id: 'artifacts', name: 'Artifacts' },
+const links = {
+  sagaVibesLive: 'https://saga-vibe-studio.lovable.app/',
+  githubRepo: 'https://github.com/MysticQuestion/saga-solutions',
+  githubCodespaces: 'https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=1259516437',
+  questlyne: 'https://thequestlyne.blogspot.com/',
+};
+
+const sagaVibesSystemPrompt = `You are Codex operating inside the GitHub Codespaces workspace for the Saga Vibes application. Build Saga Vibes as a production-grade AI app-construction operating system: a web app that lets a user describe an idea, select a project type, generate a runnable repository, edit files with AI assistance, preview the app, manage tasks, connect GitHub, and prepare deployment.
+
+Primary objective:
+Create a working full-stack app that feels like a serious alternative to Lovable, Bolt, Replit Agent, v0, and other vibe-coding interfaces, but with a stronger operating model: project memory, requirements discipline, security checks, reproducible builds, and transparent execution logs.
+
+Non-negotiable result:
+The repository must run locally in Codespaces with:
+- npm install
+- npm run dev
+- npm run build
+- npm run test when tests are present
+
+Recommended stack:
+- Next.js App Router with TypeScript
+- Tailwind CSS
+- shadcn/ui or an equivalent accessible component system
+- Supabase/Postgres for persistence, with local fallback mocks when Supabase variables are absent
+- Auth-ready architecture, even if local dev uses a demo user
+- OpenAI-compatible provider abstraction, supporting OPENAI_API_KEY when available and a deterministic mock agent when absent
+- GitHub integration boundary with a service layer and mocked local adapter when credentials are absent
+- Optional sandbox execution adapter for E2B, Docker, or local child-process execution, but never execute untrusted code without explicit isolation
+
+Core modules to implement:
+1. Studio Dashboard
+   - Project list
+   - New project wizard
+   - Recent activity
+   - Build health cards
+   - Prompt library entry points
+
+2. New Project Wizard
+   - Input: project name, one-sentence idea, target users, app type, required features, data sources, integrations, tone/design direction, deployment target
+   - Output: structured project brief, file plan, route plan, data model, test plan, risks, first sprint backlog
+   - Save generated brief as a project artifact
+
+3. AI Build Console
+   - Chat interface with system, user, assistant, and tool-event messages
+   - Agent modes: Architect, Builder, Debugger, Refactorer, Security Reviewer, Product Strategist
+   - Every response must produce either a plan, patch, test result, question, or documented decision
+   - Include a visible execution ledger: what changed, why, what still needs attention
+
+4. Repository Workspace
+   - File tree
+   - Code editor area
+   - Diff viewer
+   - Patch apply/reject controls
+   - Commit message generator
+   - Branch naming helper
+   - README and environment variable inspector
+
+5. Live Preview
+   - Preview panel with loading/error states
+   - Route shortcuts
+   - Responsive viewport presets
+   - Console/error display
+   - Build status
+
+6. Deployment Desk
+   - Deployment checklist
+   - Environment variable checklist
+   - GitHub push instructions
+   - Vercel/Netlify/Railway deployment notes
+   - Domain and SEO readiness checklist
+   - Rollback notes
+
+7. Prompt Library
+   - Codex-ready prompts for creating apps, debugging, adding auth, adding payments, adding dashboards, scraping/importing public data, writing tests, and creating documentation
+   - Each prompt has title, use case, required inputs, full prompt body, and copy button
+
+8. System Memory
+   - Store project briefs, decisions, tasks, file changes, deployment notes, and unresolved risks
+   - Create a “project constitution” per app: purpose, users, design law, forbidden assumptions, security posture, revenue model, and success metrics
+
+9. Governance and Safety Layer
+   - Never claim a build passed unless tests actually ran
+   - Never invent credentials, API keys, private URLs, or successful deployments
+   - Mark missing integrations as pending
+   - Add dependency/license checks
+   - Add security checklist for auth, secrets, user data, API routes, prompt injection, rate limits, and server-side execution
+
+10. Saga Solutions Integration
+   - Include navigation links back to Saga Solutions, Questlyne Blog, Citizens Transparency Institute, Neural Breach/Mad Evil Genius, and the live Saga Vibes reference URL
+   - Build a public-facing landing page and a logged-in studio shell
+
+Data model:
+Create TypeScript interfaces and, if using Supabase, SQL migrations for:
+- users
+- projects
+- project_briefs
+- conversations
+- messages
+- artifacts
+- tasks
+- builds
+- deployments
+- prompt_templates
+- decisions
+- integrations
+
+Minimum screens/routes:
+- /
+- /studio
+- /studio/new
+- /studio/projects/[projectId]
+- /studio/projects/[projectId]/files
+- /studio/projects/[projectId]/preview
+- /studio/projects/[projectId]/deploy
+- /prompts
+- /docs
+- /settings
+
+Implementation discipline:
+- Build in vertical slices, not empty placeholder pages.
+- Use meaningful mock data only where real credentials are absent.
+- Keep all buttons, forms, and navigation functional.
+- Add loading, empty, error, and success states.
+- Add tests for utilities, data transforms, prompt generation, and project creation logic.
+- Add a seed script for demo projects.
+- Add clear README instructions for Codespaces, local dev, environment variables, and deployment.
+- Add .env.example.
+- Add a CHANGELOG.md.
+- Add a docs/ARCHITECTURE.md explaining the agent loop, data model, integrations, and security limits.
+
+Design direction:
+The visual language should feel like a sovereign creative lab: cinematic, dark, luminous, editorial, operationally serious. Avoid toy-like dashboards. Use strong hierarchy, exact labels, readable typography, status panels, command surfaces, and crisp cards. The app should feel powerful enough for entrepreneurs, journalists, policy researchers, creators, civic technologists, and small-business operators.
+
+Acceptance criteria:
+- npm run build passes.
+- All routes render.
+- Navigation has no dead buttons.
+- New project wizard saves a project brief locally or in Supabase.
+- Prompt library copy buttons work.
+- AI console works with a mock provider when no API key exists and switches to a real provider when configured.
+- README explains setup clearly.
+- The app makes missing integrations visible instead of pretending they work.
+- The resulting codebase is clean enough for GitHub, Codespaces, and deployment.`;
+
+const initiatives = [
+  {
+    title: 'Saga Vibes',
+    kicker: 'AI build studio',
+    body:
+      'A creative operating system for turning ideas into structured briefs, working repositories, previews, deployments, and project memory.',
+    icon: Sparkles,
+    href: '#saga-vibes',
+    action: 'Open Saga Vibes page',
+  },
+  {
+    title: 'The Questlyne Blog',
+    kicker: 'Original essay archive',
+    body:
+      'A minimal literary archive linked to the wider Saga Solutions system, built for essays, spiritual analysis, journalism, and durable authorship.',
+    icon: BookOpen,
+    href: links.questlyne,
+    action: 'Visit Questlyne',
+    external: true,
+  },
+  {
+    title: 'Citizens Transparency Institute',
+    kicker: 'Public-interest research desk',
+    body:
+      'A civic resource hub for records requests, budgets, public health data, food systems, corporate accountability, and government transparency.',
+    icon: Landmark,
+    href: '#transparency-institute',
+    action: 'Open resources',
+  },
+  {
+    title: 'Neural Breach / Mad Evil Genius',
+    kicker: 'Commerce and storyworld node',
+    body:
+      'A cyberpunk commerce surface for Neural Breach, preserving the existing shop concept while routing it into the broader Saga ecosystem.',
+    icon: Store,
+    href: '#neural-breach-shop',
+    action: 'View shop node',
+  },
 ];
 
-const products = [
-  { id: 'meg-neural-cargo-joggers', shopifyVariantId: '', collection: 'bottoms', type: 'Technical Cargo Jogger', name: 'Neural Circuit Cargo Joggers', code: 'M.E.G.-01', price: 78, status: 'Launch Drop', accent: '#9bffb8', image: 'linear-gradient(145deg, #050505 0%, #101010 45%, #1d1d1d 100%)', description: 'Black technical cargo joggers with tonal circuit-board paneling, crowned-brain patch placement, utility pockets, and a slim tactical silhouette.' },
-  { id: 'meg-circuit-crewneck', shopifyVariantId: '', collection: 'apparel', type: 'Oversized Crewneck', name: 'Crowned Circuit Crewneck', code: 'M.E.G.-02', price: 82, status: 'Core Product', accent: '#7CFF9B', image: 'linear-gradient(135deg, #070707 0%, #111 55%, #19261f 100%)', description: 'Oversized black crewneck using neon green circuit-line graphics across the shoulders, sleeves, and side body with a compact crowned neural crest.' },
-  { id: 'meg-monarch-brain-sweatshirt', shopifyVariantId: '', collection: 'apparel', type: 'Graphic Sweatshirt', name: 'Monarch Brain Backprint Sweatshirt', code: 'M.E.G.-03', price: 88, status: 'Statement Piece', accent: '#39ff6a', image: 'radial-gradient(circle at 50% 42%, rgba(60,255,106,.35), transparent 32%), linear-gradient(145deg, #050505, #121212)', description: 'Black sweatshirt with oversized crowned-brain backprint, shadow circuit architecture, and Neural Breach laboratory iconography.' },
-  { id: 'meg-blacksite-tactical-jacket', shopifyVariantId: '', collection: 'outerwear', type: 'Tactical Jacket', name: 'Blacksite Tactical Jacket', code: 'M.E.G.-04', price: 148, status: 'Premium Outerwear', accent: '#f5f5f5', image: 'linear-gradient(135deg, #030303 0%, #0d0d0d 52%, #262626 100%)', description: 'Cropped black tactical jacket with utility buckles, zipper hardware, modular patch language, and bold Mad Evil Genius chest labeling.' },
-  { id: 'meg-preserved-mind-hoodie', shopifyVariantId: '', collection: 'apparel', type: 'Graphic Hoodie', name: 'Preserved Mind Glitch Hoodie', code: 'M.E.G.-05', price: 92, status: 'Hero Item', accent: '#00e5ff', image: 'radial-gradient(circle at 50% 38%, rgba(0,229,255,.42), transparent 28%), linear-gradient(145deg, #050505, #141414)', description: 'Black hoodie with cyan and magenta glitch treatment: brain-in-jar centerpiece, lab containment energy, and digital disruption graphics.' },
-  { id: 'meg-crowned-neural-emblem', shopifyVariantId: '', collection: 'artifacts', type: 'Patch / Sticker / Digital Asset', name: 'Crowned Neural Emblem Pack', code: 'M.E.G.-06', price: 18, status: 'Brand Asset', accent: '#7CFFCB', image: 'radial-gradient(circle at 50% 45%, rgba(124,255,203,.65), transparent 34%), linear-gradient(145deg, #020202, #111)', description: 'Crowned-brain emblem system for patches, stickers, tags, digital wallpapers, QR inserts, packaging, and Neural Breach shop campaign assets.' },
-  { id: 'meg-skull-lab-print', shopifyVariantId: '', collection: 'artifacts', type: 'Poster / Art Print', name: 'Skull Lab Preserved Intelligence Print', code: 'M.E.G.-07', price: 34, status: 'Wall Artifact', accent: '#f8f8f8', image: 'radial-gradient(circle at 62% 45%, rgba(255,255,255,.34), transparent 28%), linear-gradient(145deg, #020202, #151515)', description: 'Black-and-white lab-horror print with skull, preserved brain, analog scan distortion, and Neural Breach intellectual afterlife symbolism.' },
-  { id: 'meg-reanimated-crewneck', shopifyVariantId: '', collection: 'apparel', type: 'Oversized Crewneck', name: 'Reanimated Skull Jar Crewneck', code: 'M.E.G.-08', price: 88, status: 'New Reference', accent: '#d9f2ff', image: 'radial-gradient(circle at 50% 39%, rgba(217,242,255,.38), transparent 30%), linear-gradient(145deg, #040404, #101010)', description: 'Black crewneck with split skull-and-brain jar graphic, circuit sleeves, and REANIMATED wordmark as the capsule bridge between horror science and streetwear.' },
-  { id: 'meg-mg-ripstop-cargos', shopifyVariantId: '', collection: 'bottoms', type: 'Ripstop Cargo Pant', name: 'MG Black Ripstop Circuit Cargos', code: 'M.E.G.-09', price: 84, status: 'Utility Bottom', accent: '#f2f2f2', image: 'linear-gradient(135deg, #050505, #121212 55%, #1d1d1d)', description: 'Black ripstop cargo pants with MG embroidery, tonal pocket branding, side circuit striping, and jar-brain patch placement.' },
-  { id: 'meg-reanimated-crown-crewneck', shopifyVariantId: '', collection: 'apparel', type: 'Graphic Crewneck', name: 'Reanimated Crown Brain Crewneck', code: 'M.E.G.-10', price: 86, status: 'Graphic Core', accent: '#00ffb3', image: 'radial-gradient(circle at 50% 42%, rgba(0,255,179,.28), transparent 33%), linear-gradient(145deg, #030303, #111)', description: 'Black oversized crewneck centered on the crowned-brain mark with lightning fracture accents and a radioactive green Reanimated side tag.' },
-  { id: 'meg-friction-backprint-hoodie', shopifyVariantId: '', collection: 'apparel', type: 'Minimal Hoodie', name: 'Designing Friction Backprint Hoodie', code: 'M.E.G.-11', price: 96, status: 'Minimal Premium', accent: '#bfbfbf', image: 'linear-gradient(145deg, #050505 0%, #0a0a0a 55%, #191919 100%)', description: 'Black premium hoodie with restrained back text, skull-sleeve emblem, and a quieter design language for customers who want the idea without the loud front graphic.' },
-  { id: 'meg-containment-breach-crewneck', shopifyVariantId: '', collection: 'apparel', type: 'All-over Crewneck', name: 'Containment Breach Circuit Crewneck', code: 'M.E.G.-12', price: 92, status: 'Capsule Anchor', accent: '#f2f2f2', image: 'radial-gradient(circle at 50% 45%, rgba(255,255,255,.28), transparent 27%), linear-gradient(145deg, #050505, #121212)', description: 'Black crewneck with subtle all-over circuit field, jar-brain shatter mark, and distressed CONTAINMENT BREACH typography.' },
-  { id: 'meg-modular-covert-vest', shopifyVariantId: '', collection: 'outerwear', type: 'Modular Utility Vest', name: 'Covert Lab Utility Vest', code: 'M.E.G.-13', price: 128, status: 'Layering System', accent: '#8f8f8f', image: 'linear-gradient(135deg, #050505, #0f0f0f 50%, #1a1a1a)', description: 'Black modular sleeveless utility layer with detachable arm guards, internal jar-brain mark, and functional cyber-field styling.' },
-  { id: 'meg-original-style-tee', shopifyVariantId: '', collection: 'apparel', type: 'Classic Tee', name: 'Original Style Jar Tee', code: 'M.E.G.-14', price: 38, status: 'Entry Product', accent: '#f8f8f8', image: 'radial-gradient(circle at 50% 40%, rgba(255,255,255,.22), transparent 26%), linear-gradient(145deg, #050505, #111)', description: 'Black tee with Mad Evil Genius Original Style jar-brain graphic. Designed as the cleanest entry item for first-time buyers.' },
-  { id: 'meg-blue-crown-brain-emblem', shopifyVariantId: '', collection: 'artifacts', type: 'Premium Emblem Asset', name: 'Blue Crown Brain Emblem', code: 'M.E.G.-15', price: 22, status: 'Visual System', accent: '#00d4ff', image: 'radial-gradient(circle at 50% 45%, rgba(0,212,255,.5), transparent 36%), linear-gradient(145deg, #010101, #080808)', description: 'Dark-blue crowned brain emblem with gold and cyan crown treatment for premium patches, product tags, site badges, and packaging.' },
+const vibeCapabilities = [
+  {
+    title: 'Prompt-to-App Studio',
+    body: 'Convert rough ideas into app briefs, route maps, component plans, database schemas, and first-sprint task lists.',
+    icon: BrainCircuit,
+    href: '#working-system',
+  },
+  {
+    title: 'Repository Control Tower',
+    body: 'Inspect files, review proposed patches, generate commits, track decisions, and keep the build history intelligible.',
+    icon: Code2,
+    href: '#repo-workspace',
+  },
+  {
+    title: 'AI Orchestration Layer',
+    body: 'Run architect, builder, debugger, refactorer, security, and product strategy modes with a visible work ledger.',
+    icon: Bot,
+    href: '#agent-loop',
+  },
+  {
+    title: 'Preview and Deployment Desk',
+    body: 'Move from prototype to deployable app with checks for routes, environment variables, security, domains, and rollback.',
+    icon: Rocket,
+    href: '#deployment-desk',
+  },
 ];
 
-const dropSchedule = [
-  { phase: 'Phase 01', title: 'Core Wearable Signal', description: 'Launch the hoodie, crewneck, joggers, and tactical jacket first. These are the clearest commercial pieces and define the line immediately.' },
-  { phase: 'Phase 02', title: 'Reanimated Capsule', description: 'Center the Reanimated, Containment Breach, jar-brain, and crowned-brain graphics as the first named release family.' },
-  { phase: 'Phase 03', title: 'Patch + Artifact Expansion', description: 'Convert the crowned-brain mark into patches, stickers, tags, digital wallpapers, QR inserts, packaging, and creator-facing assets.' },
-  { phase: 'Phase 04', title: 'Neural Breach Story Drops', description: 'Release limited products around story chapters, short films, game demos, music drops, blog essays, or ARG-style campaign beats.' },
+const systemModules = [
+  {
+    id: 'studio-dashboard',
+    title: 'Studio Dashboard',
+    icon: Layers3,
+    body: 'Project inventory, recent activity, build health, prompt library entry points, and clear next actions.',
+  },
+  {
+    id: 'intake-queue',
+    title: 'New Project Wizard',
+    icon: FileText,
+    body: 'Collects idea, users, features, data needs, integrations, design direction, success metrics, and deployment target.',
+  },
+  {
+    id: 'agent-loop',
+    title: 'AI Build Console',
+    icon: TerminalSquare,
+    body: 'Chat plus execution ledger. Every agent answer must produce a plan, patch, test result, question, or documented decision.',
+  },
+  {
+    id: 'repo-workspace',
+    title: 'Repository Workspace',
+    icon: Workflow,
+    body: 'File tree, editor, diff viewer, patch controls, branch helper, commit message generator, and README inspector.',
+  },
+  {
+    id: 'deployment-desk',
+    title: 'Deployment Desk',
+    icon: Server,
+    body: 'Environment checklist, deploy readiness, GitHub push notes, Vercel/Railway/Netlify notes, domain checks, and rollback notes.',
+  },
+  {
+    id: 'governance-layer',
+    title: 'Governance Layer',
+    icon: ShieldCheck,
+    body: 'No false success claims, no invented keys, no fake deployments, explicit risk register, and security review surfaces.',
+  },
 ];
 
-const styleText = `
-:root{color-scheme:dark;--bg:#030303;--panel:rgba(14,16,18,.86);--text:#f4f4f1;--muted:#9ea4a1;--line:rgba(124,255,177,.18);--acid:#7cff9b;--cyan:#00e5ff;--warning:#ff355d;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}*{box-sizing:border-box}html{scroll-behavior:smooth;background:var(--bg)}body{margin:0;background:radial-gradient(circle at 20% 0%,rgba(124,255,155,.14),transparent 24%),radial-gradient(circle at 82% 18%,rgba(0,229,255,.13),transparent 26%),#030303;color:var(--text)}a{color:inherit;text-decoration:none}button{font:inherit}.site-shell{min-height:100vh;overflow:hidden}.hero{min-height:92vh;padding:28px clamp(18px,4vw,64px) 64px;position:relative}.hero:before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(124,255,155,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(124,255,155,.035) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,#000,transparent 90%);pointer-events:none}.nav{display:flex;align-items:center;justify-content:space-between;gap:20px;position:relative;z-index:2}.brandmark{display:flex;align-items:center;gap:12px}.brand-sigil{height:48px;width:48px;display:grid;place-items:center;border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,rgba(124,255,155,.22),rgba(0,229,255,.08));color:var(--acid);font-weight:900;letter-spacing:.08em}.brandmark strong{display:block}.brandmark small{display:block;color:var(--muted);font-size:.78rem}.nav-links{display:flex;gap:18px;color:var(--muted);font-size:.9rem}.nav-links a:hover{color:var(--acid)}.hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.65fr);gap:42px;align-items:center;max-width:1180px;margin:96px auto 0;position:relative;z-index:1}.eyebrow{color:var(--acid);text-transform:uppercase;letter-spacing:.18em;font-size:.76rem;font-weight:800}.hero h1{font-size:clamp(3.1rem,8vw,7.3rem);line-height:.88;margin:16px 0 22px;letter-spacing:-.07em;max-width:900px}.lede{font-size:clamp(1rem,2.2vw,1.28rem);color:#c8cfca;max-width:720px;line-height:1.72}.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:32px}.button{border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);border-radius:999px;padding:13px 18px;display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:.2s ease}.button:hover{transform:translateY(-1px);border-color:rgba(124,255,155,.54)}.primary{background:linear-gradient(135deg,var(--acid),var(--cyan));color:#020202;border:0;font-weight:900}.ghost{background:rgba(255,255,255,.03)}.terminal-card{border:1px solid var(--line);background:linear-gradient(180deg,rgba(14,16,18,.92),rgba(4,5,6,.92));border-radius:28px;padding:22px;box-shadow:0 0 90px rgba(124,255,155,.08)}.terminal-header{display:flex;gap:8px;margin-bottom:18px}.terminal-header span{width:10px;height:10px;border-radius:99px;background:var(--muted)}.terminal-line{font-family:'Courier New',monospace;color:#c6cbc7;margin:9px 0}.terminal-line.green{color:var(--acid)}.scan-panel{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:24px}.scan-cell{border:1px solid var(--line);border-radius:18px;padding:16px;background:rgba(124,255,155,.035);color:var(--acid);display:grid;gap:12px}.scan-cell span{color:#d7ddd9;font-size:.86rem}.manifesto-section,.cart-panel,.integration,.drop-system,.collections{padding:72px clamp(18px,4vw,64px);max-width:1280px;margin:0 auto}.manifesto-section{display:grid;grid-template-columns:.85fr 1.15fr;gap:36px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.manifesto-section h2,.section-heading h2,.cart-panel h2{font-size:clamp(2rem,4.4vw,4rem);line-height:.96;margin:10px 0}.manifesto-section p{color:#c8cfca;line-height:1.75}.section-heading{max-width:780px;margin-bottom:28px}.filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px}.filter-bar button{border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.035);color:#d6ddd8;padding:10px 14px;cursor:pointer}.filter-bar button.active{background:var(--acid);color:#020202;border-color:transparent;font-weight:900}.product-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.product-card{border:1px solid var(--line);background:var(--panel);border-radius:26px;overflow:hidden}.product-art{height:240px;background:var(--product-bg);position:relative;display:grid;place-items:center;isolation:isolate}.product-art:before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:18px 18px;opacity:.34}.product-art:after{content:'♛';position:absolute;font-size:88px;color:var(--accent);filter:drop-shadow(0 0 22px var(--accent));opacity:.9}.product-art span{position:absolute;left:16px;top:16px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.42);border-radius:999px;padding:7px 10px;color:var(--accent);font-weight:900;font-size:.72rem;letter-spacing:.14em}.product-meta{padding:22px}.product-type{color:var(--accent);font-weight:900;text-transform:uppercase;letter-spacing:.12em;font-size:.72rem}.product-meta h3{font-size:1.45rem;margin:8px 0}.product-meta p{color:#c3cac5;line-height:1.6}.product-details{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:14px;margin-top:16px;color:#e9eee9}.product-details span:first-child{font-weight:900}.product-button{width:100%;margin-top:16px}.drop-grid,.integration-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.drop-card,.integration-grid article,.cart-box{border:1px solid var(--line);background:var(--panel);border-radius:24px;padding:22px}.drop-phase{color:var(--cyan);font-weight:900;letter-spacing:.13em;text-transform:uppercase;font-size:.72rem}.drop-card p,.integration-grid p,.cart-panel p{color:#c8cfca;line-height:1.65}.cart-panel{display:grid;grid-template-columns:.8fr 1.2fr;gap:28px}.cart-box ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}.cart-box li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:12px}.cart-box small{color:var(--acid)}.cart-box li button{background:transparent;border:0;color:var(--warning);cursor:pointer}.empty-cart{color:var(--muted)}.cart-total{display:flex;justify-content:space-between;align-items:center;margin:20px 0;font-size:1.25rem}.checkout-button{width:100%}.status-line{border:1px solid rgba(124,255,155,.28);border-radius:16px;padding:12px;color:var(--acid);background:rgba(124,255,155,.05)}code{background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:8px;padding:2px 6px}.footer{padding:36px clamp(18px,4vw,64px);border-top:1px solid var(--line);color:var(--muted);text-align:center}@media(max-width:1120px){.drop-grid,.integration-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:920px){.hero-grid,.manifesto-section,.cart-panel{grid-template-columns:1fr}.product-grid,.drop-grid,.integration-grid{grid-template-columns:1fr}.nav{align-items:flex-start}.nav-links{display:none}.hero{min-height:auto}.hero-grid{margin-top:60px}.hero h1{letter-spacing:-.04em}}
-`;
+const resourceLinks = [
+  {
+    label: 'Saga Vibes live reference',
+    href: links.sagaVibesLive,
+    icon: Globe2,
+    type: 'External',
+  },
+  {
+    label: 'GitHub repository',
+    href: links.githubRepo,
+    icon: Code2,
+    type: 'Repo',
+  },
+  {
+    label: 'Open in GitHub Codespaces',
+    href: links.githubCodespaces,
+    icon: TerminalSquare,
+    type: 'Build',
+  },
+  {
+    label: 'Questlyne Blog',
+    href: links.questlyne,
+    icon: BookOpen,
+    type: 'Archive',
+  },
+];
 
-async function createShopifyCheckout(cart) {
-  const domain = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN;
-  const token = import.meta.env.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
-  const missingVariants = cart.filter((item) => !item.shopifyVariantId);
-  if (!domain || !token || missingVariants.length) throw new Error('Shopify configuration incomplete.');
-  const response = await fetch(`https://${domain}/api/2024-10/graphql.json`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Shopify-Storefront-Access-Token': token }, body: JSON.stringify({ query: `mutation cartCreate($input: CartInput!) { cartCreate(input: $input) { cart { checkoutUrl } userErrors { field message } } }`, variables: { input: { lines: cart.map((item) => ({ merchandiseId: item.shopifyVariantId, quantity: item.quantity })) } } }) });
-  const data = await response.json();
-  const url = data?.data?.cartCreate?.cart?.checkoutUrl;
-  if (!url) throw new Error('Shopify checkout URL unavailable.');
-  return url;
+const transparencyResources = [
+  'Public records request strategy and request logs',
+  'Budget, contract, and tax-spending research workflows',
+  'Food, medicine, housing, policing, and infrastructure accountability links',
+  'NextRequest-style civic request platform directory',
+  'Downloadable request templates and evidence checklists',
+  'Corporate ownership, lobbying, procurement, and campaign finance research notes',
+];
+
+const shopProducts = [
+  {
+    title: 'Neural Circuit Cargo Joggers',
+    price: '$78',
+    body: 'Technical black cargo joggers with circuit panel language and utility-pocket silhouette.',
+  },
+  {
+    title: 'Crowned Circuit Crewneck',
+    price: '$82',
+    body: 'Oversized crewneck built around the crowned-brain mark and neon circuit language.',
+  },
+  {
+    title: 'Blacksite Tactical Jacket',
+    price: '$148',
+    body: 'Premium outerwear concept with modular patch logic and cyber-field styling.',
+  },
+];
+
+function ExternalAwareLink({ href, children, className = '', external = false, onClick }) {
+  const isExternal = external || href?.startsWith('http');
+  return (
+    <a
+      href={href}
+      className={className}
+      onClick={onClick}
+      target={isExternal ? '_blank' : undefined}
+      rel={isExternal ? 'noreferrer' : undefined}
+    >
+      {children}
+      {isExternal ? <ExternalLink size={15} aria-hidden="true" /> : null}
+    </a>
+  );
 }
 
 function App() {
-  const [activeCollection, setActiveCollection] = useState('all');
-  const [cart, setCart] = useState([]);
-  const [status, setStatus] = useState('');
-  const filteredProducts = useMemo(() => activeCollection === 'all' ? products : products.filter((product) => product.collection === activeCollection), [activeCollection]);
-  const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const addToCart = (product) => { setCart((current) => { const existing = current.find((item) => item.id === product.id); if (existing) return current.map((item) => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item); return [...current, { ...product, quantity: 1 }]; }); setStatus(`${product.name} added to cart.`); };
-  const removeFromCart = (productId) => setCart((current) => current.filter((item) => item.id !== productId));
-  const checkout = async () => { if (!cart.length) return setStatus('Add at least one item before checkout.'); try { setStatus('Opening secure Shopify checkout...'); const url = await createShopifyCheckout(cart); window.location.href = url; } catch { setStatus('Checkout is staged. Add Shopify store domain, Storefront token, and product variant IDs to activate transactions.'); } };
-  const signalIcons = [Cpu, Radio, Shield, Zap];
+  const [copyStatus, setCopyStatus] = useState('');
+  const promptStats = useMemo(() => {
+    const words = sagaVibesSystemPrompt.trim().split(/\s+/).length;
+    return { words, characters: sagaVibesSystemPrompt.length };
+  }, []);
+
+  const copyPrompt = async () => {
+    try {
+      await navigator.clipboard.writeText(sagaVibesSystemPrompt);
+      setCopyStatus('Codex prompt copied. Paste it into Codex inside GitHub Codespaces.');
+    } catch {
+      setCopyStatus('Copy blocked by browser permissions. Select the prompt text manually.');
+    }
+  };
 
   return (
-    <main className="site-shell">
+    <main className="app-shell">
       <style>{styleText}</style>
-      <section className="hero" id="mad-evil-genius-shop">
-        <nav className="nav" aria-label="Mad Evil Genius shop navigation"><a href="#mad-evil-genius-shop" className="brandmark"><span className="brand-sigil">MEG</span><span><strong>Mad Evil Genius</strong><small>Neural Breach Commerce Node</small></span></a><div className="nav-links"><a href="#collections">Collections</a><a href="#drop-system">Drop System</a><a href="#cart">Cart</a></div></nav>
-        <div className="hero-grid"><div className="hero-copy"><p className="eyebrow">Cyberpunk fashion / artifact commerce / Neural Breach ready</p><h1>The shop for the intelligence they failed to contain.</h1><p className="lede">Mad Evil Genius is a standalone Shopify-ready storefront built to plug directly into the Neural Breach project page while functioning as its own complete fashion, techwear, and artifact shop.</p><div className="hero-actions"><a href="#collections" className="button primary">Enter the Shop <ArrowRight size={18} /></a><a href="#integration" className="button ghost">View Integration Notes</a></div></div><aside className="terminal-card" aria-label="Shop status panel"><div className="terminal-header"><span /><span /><span /></div><p className="terminal-line">node://mad-evil-genius/shop</p><p className="terminal-line green">STATUS: STOREFRONT READY</p><p className="terminal-line">SHOPIFY: ENV-BASED CHECKOUT</p><p className="terminal-line">NEURAL BREACH: EMBED ANCHOR ENABLED</p><div className="scan-panel">{signalIcons.map((Icon, index) => <div className="scan-cell" key={Icon.name}><Icon size={22}/><span>{['Signal','Broadcast','Defense','Voltage'][index]}</span></div>)}</div></aside></div>
+
+      <section className="hero" id="top">
+        <nav className="nav" aria-label="Primary navigation">
+          <a href="#top" className="brandmark" aria-label="Saga Solutions home">
+            <span className="brand-sigil">SV</span>
+            <span>
+              <strong>Saga Solutions</strong>
+              <small>Saga Vibes system gateway</small>
+            </span>
+          </a>
+          <div className="nav-links">
+            <a href="#saga-vibes">Saga Vibes</a>
+            <a href="#working-system">System</a>
+            <a href="#transparency-institute">Transparency</a>
+            <a href="#codex-prompt">Codex Prompt</a>
+            <a href="#links">Links</a>
+          </div>
+        </nav>
+
+        <div className="hero-grid">
+          <div className="hero-copy">
+            <p className="eyebrow">Saga Solutions / AI systems / civic creative infrastructure</p>
+            <h1>Build the studio that builds the work.</h1>
+            <p className="lede">
+              Saga Solutions now routes cleanly into Saga Vibes: a working-system blueprint for turning creative,
+              civic, journalistic, entrepreneurial, and technical ideas into structured software projects.
+            </p>
+            <div className="hero-actions">
+              <ExternalAwareLink href="#saga-vibes" className="button primary">
+                Open Saga Vibes <ArrowRight size={18} />
+              </ExternalAwareLink>
+              <ExternalAwareLink href={links.sagaVibesLive} className="button ghost">
+                Live Saga Vibes reference
+              </ExternalAwareLink>
+              <ExternalAwareLink href="#codex-prompt" className="button ghost">
+                Use Codex build prompt
+              </ExternalAwareLink>
+            </div>
+          </div>
+
+          <aside className="terminal-card" aria-label="Saga Vibes status panel">
+            <div className="terminal-header">
+              <span />
+              <span />
+              <span />
+            </div>
+            <p className="terminal-line">node://saga-solutions/saga-vibes</p>
+            <p className="terminal-line green">STATUS: PAGE LINKED</p>
+            <p className="terminal-line">BUTTON AUDIT: ROUTED</p>
+            <p className="terminal-line">PROMPT: CODEX READY</p>
+            <div className="scan-panel">
+              {[
+                ['Briefs', FileText],
+                ['Builds', Code2],
+                ['Preview', Radio],
+                ['Deploy', Rocket],
+              ].map(([label, Icon]) => (
+                <a href="#working-system" className="scan-cell" key={label}>
+                  <Icon size={22} />
+                  <span>{label}</span>
+                </a>
+              ))}
+            </div>
+          </aside>
+        </div>
       </section>
-      <section className="manifesto-section"><div><p className="eyebrow">Brand Thesis</p><h2>Not generic merch. Wearable insurgent mythology.</h2></div><p>The line is built from black tactical garments, crowned-brain marks, tonal circuit-board printing, neon green and cyan glitch accents, lab-preserved intelligence imagery, Reanimated release language, and premium streetwear construction. The commercial lane is cyberpunk fashion with enough narrative gravity to support Neural Breach as a larger storyworld.</p></section>
-      <section className="collections" id="collections"><div className="section-heading"><p className="eyebrow">Shop Collections</p><h2>Core drop architecture</h2></div><div className="filter-bar"><button type="button" className={activeCollection === 'all' ? 'active' : ''} onClick={() => setActiveCollection('all')}>All Products</button>{collections.map((collection) => <button type="button" key={collection.id} className={activeCollection === collection.id ? 'active' : ''} onClick={() => setActiveCollection(collection.id)}>{collection.name}</button>)}</div><div className="product-grid">{filteredProducts.map((product) => <article className="product-card" key={product.id}><div className="product-art" style={{ '--accent': product.accent, '--product-bg': product.image }}><span>{product.code}</span></div><div className="product-meta"><p className="product-type">{product.type}</p><h3>{product.name}</h3><p>{product.description}</p><div className="product-details"><span>${product.price.toFixed(2)}</span><span>{product.status}</span></div><button type="button" className="button product-button" onClick={() => addToCart(product)}><ShoppingBag size={17}/> Add to Cart</button></div></article>)}</div></section>
-      <section className="drop-system" id="drop-system"><div className="section-heading"><p className="eyebrow">Release System</p><h2>Built for episodic Neural Breach drops</h2></div><div className="drop-grid">{dropSchedule.map((drop) => <article key={drop.phase} className="drop-card"><p className="drop-phase">{drop.phase}</p><h3>{drop.title}</h3><p>{drop.description}</p></article>)}</div></section>
-      <section className="cart-panel" id="cart"><div><p className="eyebrow">Live Cart</p><h2>Checkout node</h2><p>Cart creation uses Shopify Storefront API when the store domain, public Storefront access token, and product variant IDs are configured. Until then, this works as a complete storefront preview and integration-ready sales page.</p></div><div className="cart-box">{!cart.length ? <p className="empty-cart">No items selected yet.</p> : <ul>{cart.map((item) => <li key={item.id}><span>{item.name} <small>x{item.quantity}</small></span><button type="button" onClick={() => removeFromCart(item.id)}>Remove</button></li>)}</ul>}<div className="cart-total"><span>Total</span><strong>${cartTotal.toFixed(2)}</strong></div><button type="button" className="button primary checkout-button" onClick={checkout}>Secure Shopify Checkout <Lock size={17}/></button>{status && <p className="status-line">{status}</p>}</div></section>
-      <section className="integration" id="integration"><div className="section-heading"><p className="eyebrow">Neural Breach Integration</p><h2>How this shop fills the missing pieces</h2></div><div className="integration-grid"><article><Sparkles size={24}/><h3>Standalone shop</h3><p>Deploy as a Vite site, link from bios, ads, QR codes, Neural Breach pages, and capsule campaigns.</p></article><article><Cpu size={24}/><h3>Project-page module</h3><p>The root anchor <code>#mad-evil-genius-shop</code> lets Neural Breach embed or route here cleanly.</p></article><article><ShoppingBag size={24}/><h3>Shopify path</h3><p>Create/import products in Shopify, then paste each variant GID into the matching product object.</p></article></div></section>
-      <footer className="footer">Mad Evil Genius — a Neural Breach commerce node by Saga Solutions.</footer>
+
+      <section className="initiative-section" id="links">
+        <div className="section-heading">
+          <p className="eyebrow">Connected properties</p>
+          <h2>Every major Saga Solutions button now has a destination.</h2>
+          <p>
+            Internal links move through this page. External links open the live reference, GitHub repository,
+            Codespaces entry point, or original blog archive.
+          </p>
+        </div>
+
+        <div className="initiative-grid">
+          {initiatives.map((item) => {
+            const Icon = item.icon;
+            return (
+              <article className="initiative-card" key={item.title}>
+                <div className="card-icon">
+                  <Icon size={24} />
+                </div>
+                <p className="kicker">{item.kicker}</p>
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
+                <ExternalAwareLink href={item.href} external={item.external} className="text-link">
+                  {item.action}
+                </ExternalAwareLink>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="saga-vibes-section" id="saga-vibes">
+        <div className="section-heading wide">
+          <p className="eyebrow">Saga Vibes</p>
+          <h2>The creative build studio becomes an operating system.</h2>
+          <p>
+            The public page should not stop at inspiration. Saga Vibes needs to become the command surface
+            where projects are defined, generated, audited, previewed, committed, documented, and shipped.
+          </p>
+        </div>
+
+        <div className="hero-actions compact">
+          <ExternalAwareLink href={links.sagaVibesLive} className="button primary">
+            Open live Saga Vibes
+          </ExternalAwareLink>
+          <ExternalAwareLink href="#working-system" className="button ghost">
+            View system blueprint
+          </ExternalAwareLink>
+          <ExternalAwareLink href="#codex-prompt" className="button ghost">
+            Open Codex prompt
+          </ExternalAwareLink>
+          <ExternalAwareLink href="#intake-queue" className="button ghost">
+            Start with intake
+          </ExternalAwareLink>
+        </div>
+
+        <div className="capability-grid">
+          {vibeCapabilities.map((item) => {
+            const Icon = item.icon;
+            return (
+              <a href={item.href} className="capability-card" key={item.title}>
+                <Icon size={25} />
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="system-section" id="working-system">
+        <div className="section-heading">
+          <p className="eyebrow">Working-system architecture</p>
+          <h2>From attractive landing page to real build platform.</h2>
+          <p>
+            The first production target is a full-stack studio shell: project intake, AI console, repository
+            workspace, prompt library, preview desk, deployment desk, and governance layer.
+          </p>
+        </div>
+
+        <div className="module-grid">
+          {systemModules.map((module) => {
+            const Icon = module.icon;
+            return (
+              <article className="module-card" id={module.id} key={module.title}>
+                <Icon size={24} />
+                <h3>{module.title}</h3>
+                <p>{module.body}</p>
+                <a href="#codex-prompt" className="text-link">Build this module</a>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="codex-section" id="codex-prompt">
+        <div className="prompt-shell">
+          <div>
+            <p className="eyebrow">Codex master prompt</p>
+            <h2>Paste this into Codex inside GitHub Codespaces.</h2>
+            <p>
+              This prompt directs Codex to build Saga Vibes as a full-stack app-construction system with
+              mocked fallbacks, clear missing-integration states, project memory, and deployment discipline.
+            </p>
+            <div className="prompt-meta">
+              <span><CheckCircle2 size={16} /> {promptStats.words} words</span>
+              <span><Lock size={16} /> No invented credentials</span>
+              <span><Database size={16} /> Supabase-ready</span>
+            </div>
+            <button type="button" className="button primary" onClick={copyPrompt}>
+              Copy complete prompt
+            </button>
+            {copyStatus ? <p className="status-line">{copyStatus}</p> : null}
+          </div>
+          <textarea
+            aria-label="Saga Vibes complete Codex prompt"
+            value={sagaVibesSystemPrompt}
+            readOnly
+          />
+        </div>
+      </section>
+
+      <section className="transparency-section" id="transparency-institute">
+        <div className="section-heading">
+          <p className="eyebrow">Citizens Transparency Institute</p>
+          <h2>A civic research desk inside the Saga Solutions ecosystem.</h2>
+          <p>
+            This page is routed as a working resource hub, ready for records-request guides, government-data
+            tools, budget research, corporate accountability, and downloadable civic templates.
+          </p>
+        </div>
+
+        <div className="resource-list">
+          {transparencyResources.map((resource) => (
+            <a href="#codex-prompt" className="resource-row" key={resource}>
+              <Search size={18} />
+              <span>{resource}</span>
+              <ArrowRight size={16} />
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section className="shop-section" id="neural-breach-shop">
+        <div className="section-heading">
+          <p className="eyebrow">Neural Breach commerce node</p>
+          <h2>Mad Evil Genius remains linked as a commerce surface.</h2>
+          <p>
+            The shop concept is preserved as a routable section. Product buttons now lead to a live cart
+            placeholder instead of disappearing into dead interface space.
+          </p>
+        </div>
+
+        <div className="shop-grid">
+          {shopProducts.map((product) => (
+            <article className="shop-card" key={product.title}>
+              <div className="product-art">
+                <Store size={28} />
+              </div>
+              <h3>{product.title}</h3>
+              <p>{product.body}</p>
+              <div className="product-line">
+                <strong>{product.price}</strong>
+                <a href="#shop-cart" className="button small">Add to staged cart</a>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div className="cart-note" id="shop-cart">
+          <ShoppingStatus />
+        </div>
+      </section>
+
+      <section className="link-section">
+        <div className="section-heading">
+          <p className="eyebrow">Button destination audit</p>
+          <h2>Primary action map</h2>
+        </div>
+        <div className="link-grid">
+          {resourceLinks.map((resource) => {
+            const Icon = resource.icon;
+            return (
+              <ExternalAwareLink href={resource.href} className="link-card" key={resource.label}>
+                <Icon size={22} />
+                <span>
+                  <strong>{resource.label}</strong>
+                  <small>{resource.type}</small>
+                </span>
+              </ExternalAwareLink>
+            );
+          })}
+        </div>
+      </section>
+
+      <footer className="footer">
+        <a href="#top">Saga Solutions</a>
+        <a href="#saga-vibes">Saga Vibes</a>
+        <a href={links.questlyne} target="_blank" rel="noreferrer">Questlyne Blog</a>
+        <a href="#transparency-institute">Citizens Transparency Institute</a>
+        <a href="#codex-prompt">Codex Prompt</a>
+      </footer>
     </main>
   );
 }
+
+function ShoppingStatus() {
+  const [status, setStatus] = useState('No staged product selected yet.');
+  return (
+    <div>
+      <p>{status}</p>
+      <button
+        type="button"
+        className="button primary"
+        onClick={() =>
+          setStatus(
+            'Cart staging is working. Add Shopify product variant IDs and Storefront API variables when the shop is ready for transactions.'
+          )
+        }
+      >
+        Test checkout path <KeyRound size={16} />
+      </button>
+    </div>
+  );
+}
+
+const styleText = `
+:root {
+  color-scheme: dark;
+  --bg: #03030a;
+  --panel: rgba(17, 19, 33, 0.84);
+  --panel-strong: rgba(23, 26, 45, 0.94);
+  --text: #f7f3ea;
+  --muted: #aeb5ca;
+  --line: rgba(160, 132, 255, 0.22);
+  --violet: #a88cff;
+  --cyan: #7cf7ff;
+  --rose: #ff5c9a;
+  --gold: #f7d774;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(168, 140, 255, 0.28), transparent 28%),
+    radial-gradient(circle at 88% 18%, rgba(124, 247, 255, 0.16), transparent 26%),
+    linear-gradient(135deg, #03030a 0%, #080713 52%, #110817 100%);
+  color: var(--text);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.hero {
+  min-height: 92vh;
+  padding: 28px clamp(18px, 4vw, 64px) 70px;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(168, 140, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 247, 255, 0.035) 1px, transparent 1px);
+  background-size: 46px 46px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 90%);
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 90%);
+  pointer-events: none;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  position: relative;
+  z-index: 2;
+}
+
+.brandmark {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.brand-sigil {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(168, 140, 255, 0.26), rgba(124, 247, 255, 0.12));
+  color: var(--cyan);
+  font-weight: 950;
+  letter-spacing: -0.04em;
+}
+
+.brandmark strong,
+.brandmark small {
+  display: block;
+}
+
+.brandmark small,
+.nav-links,
+.section-heading p,
+.initiative-card p,
+.capability-card p,
+.module-card p,
+.shop-card p {
+  color: var(--muted);
+}
+
+.nav-links {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  font-size: 0.92rem;
+}
+
+.nav-links a:hover,
+.text-link:hover,
+.footer a:hover {
+  color: var(--cyan);
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.64fr);
+  gap: 42px;
+  align-items: center;
+  max-width: 1220px;
+  margin: 96px auto 0;
+  position: relative;
+  z-index: 1;
+}
+
+.eyebrow,
+.kicker {
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.hero h1,
+.section-heading h2,
+.prompt-shell h2 {
+  letter-spacing: -0.07em;
+}
+
+.hero h1 {
+  font-size: clamp(3.2rem, 8vw, 7.4rem);
+  line-height: 0.88;
+  margin: 16px 0 22px;
+  max-width: 880px;
+}
+
+.lede {
+  font-size: clamp(1.02rem, 2.2vw, 1.28rem);
+  line-height: 1.72;
+  color: #d7d9e8;
+  max-width: 760px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+}
+
+.hero-actions.compact {
+  margin: 8px 0 34px;
+}
+
+.button {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.055);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 13px 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  min-height: 46px;
+}
+
+.button:hover,
+.capability-card:hover,
+.initiative-card:hover,
+.module-card:hover,
+.link-card:hover,
+.resource-row:hover,
+.shop-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(124, 247, 255, 0.54);
+}
+
+.button.primary {
+  border: 0;
+  background: linear-gradient(135deg, var(--violet), var(--cyan));
+  color: #03030a;
+  font-weight: 950;
+}
+
+.button.ghost {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.button.small {
+  min-height: 38px;
+  padding: 9px 12px;
+  font-size: 0.85rem;
+}
+
+.terminal-card,
+.initiative-card,
+.capability-card,
+.module-card,
+.shop-card,
+.link-card,
+.prompt-shell,
+.cart-note {
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(23, 26, 45, 0.9), rgba(8, 9, 18, 0.92));
+  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.24);
+}
+
+.terminal-card {
+  border-radius: 30px;
+  padding: 24px;
+}
+
+.terminal-header {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.terminal-header span {
+  width: 10px;
+  height: 10px;
+  border-radius: 99px;
+  background: var(--muted);
+}
+
+.terminal-line {
+  font-family: 'Courier New', monospace;
+  color: #cfd5ed;
+  margin: 10px 0;
+}
+
+.terminal-line.green {
+  color: var(--cyan);
+}
+
+.scan-panel {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.scan-cell {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px;
+  background: rgba(168, 140, 255, 0.06);
+  color: var(--cyan);
+  display: grid;
+  gap: 12px;
+}
+
+.scan-cell span {
+  color: #e2e7fb;
+  font-size: 0.88rem;
+}
+
+.initiative-section,
+.saga-vibes-section,
+.system-section,
+.codex-section,
+.transparency-section,
+.shop-section,
+.link-section {
+  padding: 76px clamp(18px, 4vw, 64px);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.section-heading {
+  max-width: 790px;
+  margin-bottom: 30px;
+}
+
+.section-heading.wide {
+  max-width: 940px;
+}
+
+.section-heading h2,
+.prompt-shell h2 {
+  font-size: clamp(2.1rem, 4.6vw, 4.4rem);
+  line-height: 0.95;
+  margin: 10px 0 16px;
+}
+
+.section-heading p {
+  line-height: 1.72;
+}
+
+.initiative-grid,
+.capability-grid,
+.module-grid,
+.shop-grid,
+.link-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.initiative-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.capability-grid,
+.module-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.shop-grid,
+.link-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.initiative-card,
+.capability-card,
+.module-card,
+.shop-card,
+.link-card {
+  border-radius: 26px;
+  padding: 22px;
+  transition: 0.2s ease;
+}
+
+.card-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: rgba(124, 247, 255, 0.09);
+  color: var(--cyan);
+  margin-bottom: 22px;
+}
+
+.initiative-card h3,
+.capability-card h3,
+.module-card h3,
+.shop-card h3 {
+  font-size: 1.18rem;
+  margin: 12px 0 10px;
+}
+
+.text-link {
+  color: var(--cyan);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-weight: 800;
+}
+
+.saga-vibes-section {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.capability-card svg,
+.module-card svg,
+.link-card svg {
+  color: var(--cyan);
+}
+
+.prompt-shell {
+  border-radius: 30px;
+  padding: clamp(20px, 4vw, 34px);
+  display: grid;
+  grid-template-columns: minmax(0, 0.76fr) minmax(320px, 1fr);
+  gap: 26px;
+  align-items: stretch;
+}
+
+.prompt-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.prompt-meta span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 9px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #dfe5fb;
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.88rem;
+}
+
+textarea {
+  min-height: 560px;
+  width: 100%;
+  resize: vertical;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: rgba(3, 3, 10, 0.8);
+  color: #eef2ff;
+  padding: 18px;
+  line-height: 1.55;
+  font-size: 0.92rem;
+}
+
+.status-line {
+  color: var(--gold);
+  margin-top: 14px;
+  line-height: 1.5;
+}
+
+.resource-list {
+  display: grid;
+  gap: 10px;
+}
+
+.resource-row {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 15px 16px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.035);
+  transition: 0.2s ease;
+}
+
+.product-art {
+  min-height: 150px;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  color: var(--cyan);
+  background:
+    radial-gradient(circle at 50% 42%, rgba(124, 247, 255, 0.28), transparent 32%),
+    linear-gradient(145deg, #050510, #151629);
+  margin-bottom: 18px;
+}
+
+.product-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.cart-note {
+  margin-top: 18px;
+  border-radius: 22px;
+  padding: 20px;
+}
+
+.link-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.link-card small {
+  display: block;
+  color: var(--muted);
+}
+
+.footer {
+  border-top: 1px solid var(--line);
+  padding: 30px clamp(18px, 4vw, 64px);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  color: var(--muted);
+  background: rgba(0, 0, 0, 0.26);
+}
+
+@media (max-width: 980px) {
+  .hero-grid,
+  .prompt-shell,
+  .initiative-grid,
+  .capability-grid,
+  .module-grid,
+  .shop-grid,
+  .link-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nav {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .hero {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero h1 {
+    font-size: 3.3rem;
+  }
+
+  .scan-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .button {
+    width: 100%;
+  }
+
+  .hero-actions {
+    width: 100%;
+  }
+}
+`;
 
 createRoot(document.getElementById('root')).render(<App />);
