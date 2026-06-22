@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   ArrowRight,
@@ -7,336 +7,174 @@ import {
   BrainCircuit,
   CheckCircle2,
   Code2,
-  Database,
   ExternalLink,
   FileText,
   Globe2,
-  KeyRound,
   Landmark,
   Layers3,
-  Lock,
-  Radio,
   Rocket,
+  Search,
+  ShieldCheck,
   Sparkles,
   Store,
   TerminalSquare,
   Workflow,
-  Search,
-  Server,
-  ShieldCheck,
 } from 'lucide-react';
 
+const contactEmail = 'ericmichael.wil@gmail.com';
+
 const links = {
-  sagaVibesLive: 'https://saga-vibe-studio.lovable.app/',
-  githubRepo: 'https://github.com/MysticQuestion/saga-solutions',
-  githubCodespaces: 'https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=1259516437',
+  mysticSage: 'https://mysticsage.xyz/',
+  streets: 'https://oaklandstreets.live/',
   questlyne: 'https://thequestlyne.blogspot.com/',
+  sagaVibesPrototype: 'https://saga-vibe-studio.lovable.app/',
+  githubRepo: 'https://github.com/MysticQuestion/saga-solutions',
 };
 
-const sagaVibesSystemPrompt = `You are Codex operating inside the GitHub Codespaces workspace for the Saga Vibes application. Build Saga Vibes as a production-grade AI app-construction operating system: a web app that lets a user describe an idea, select a project type, generate a runnable repository, edit files with AI assistance, preview the app, manage tasks, connect GitHub, and prepare deployment.
+const packages = [
+  {
+    title: 'Local Presence Sprint',
+    price: '$750–$1,500',
+    timeline: '5–10 business days',
+    icon: Globe2,
+    audience: 'Local businesses, solo founders, community orgs, artists, service providers, and first-time operators who need credibility fast.',
+    deliverables: [
+      'Conversion-ready one-page website or landing page',
+      'Offer positioning, headline system, and contact flow',
+      'Basic SEO metadata, Open Graph text, and launch checklist',
+      'Google Business Profile setup checklist',
+      'Three reusable social or announcement templates',
+    ],
+  },
+  {
+    title: 'AI Operations Sprint',
+    price: '$1,500–$3,500',
+    timeline: '10–21 business days',
+    icon: Bot,
+    audience: 'Service businesses and lean teams that need intake, follow-up, documentation, and basic automation without hiring a full operations department.',
+    deliverables: [
+      'Client intake form and response workflow',
+      'CRM sheet, Airtable, or lightweight database structure',
+      'FAQ assistant or internal knowledge-base plan',
+      'Proposal, estimate, and follow-up templates',
+      'Automation map with risks, data boundaries, and next steps',
+    ],
+  },
+  {
+    title: 'Grant + Pitch Packet',
+    price: '$900–$2,500',
+    timeline: '7–14 business days',
+    icon: FileText,
+    audience: 'Nonprofits, civic startups, artists, cultural workers, and social-impact founders preparing for grants, sponsors, pilots, or partnerships.',
+    deliverables: [
+      'One-page executive brief',
+      'Five-to-eight-slide pitch structure',
+      'Budget narrative and impact logic',
+      'Outreach email sequence',
+      'Public landing page or proposal summary section',
+    ],
+  },
+  {
+    title: 'Content Engine Retainer',
+    price: '$600–$2,000/mo',
+    timeline: 'Monthly',
+    icon: BookOpen,
+    audience: 'Founders, writers, advocates, and organizations that need a steady publishing system instead of sporadic posts.',
+    deliverables: [
+      'Four articles, essays, or blog posts per month',
+      'Eight social posts or newsletter segments per month',
+      'SEO topic map and editorial calendar',
+      'Monthly analytics and positioning review',
+      'Repurposing plan for email, social, and website updates',
+    ],
+  },
+];
 
-Primary objective:
-Create a working full-stack app that feels like a serious alternative to Lovable, Bolt, Replit Agent, v0, and other vibe-coding interfaces, but with a stronger operating model: project memory, requirements discipline, security checks, reproducible builds, and transparent execution logs.
-
-Non-negotiable result:
-The repository must run locally in Codespaces with:
-- npm install
-- npm run dev
-- npm run build
-- npm run test when tests are present
-
-Recommended stack:
-- Next.js App Router with TypeScript
-- Tailwind CSS
-- shadcn/ui or an equivalent accessible component system
-- Supabase/Postgres for persistence, with local fallback mocks when Supabase variables are absent
-- Auth-ready architecture, even if local dev uses a demo user
-- OpenAI-compatible provider abstraction, supporting OPENAI_API_KEY when available and a deterministic mock agent when absent
-- GitHub integration boundary with a service layer and mocked local adapter when credentials are absent
-- Optional sandbox execution adapter for E2B, Docker, or local child-process execution, but never execute untrusted code without explicit isolation
-
-Core modules to implement:
-1. Studio Dashboard
-   - Project list
-   - New project wizard
-   - Recent activity
-   - Build health cards
-   - Prompt library entry points
-
-2. New Project Wizard
-   - Input: project name, one-sentence idea, target users, app type, required features, data sources, integrations, tone/design direction, deployment target
-   - Output: structured project brief, file plan, route plan, data model, test plan, risks, first sprint backlog
-   - Save generated brief as a project artifact
-
-3. AI Build Console
-   - Chat interface with system, user, assistant, and tool-event messages
-   - Agent modes: Architect, Builder, Debugger, Refactorer, Security Reviewer, Product Strategist
-   - Every response must produce either a plan, patch, test result, question, or documented decision
-   - Include a visible execution ledger: what changed, why, what still needs attention
-
-4. Repository Workspace
-   - File tree
-   - Code editor area
-   - Diff viewer
-   - Patch apply/reject controls
-   - Commit message generator
-   - Branch naming helper
-   - README and environment variable inspector
-
-5. Live Preview
-   - Preview panel with loading/error states
-   - Route shortcuts
-   - Responsive viewport presets
-   - Console/error display
-   - Build status
-
-6. Deployment Desk
-   - Deployment checklist
-   - Environment variable checklist
-   - GitHub push instructions
-   - Vercel/Netlify/Railway deployment notes
-   - Domain and SEO readiness checklist
-   - Rollback notes
-
-7. Prompt Library
-   - Codex-ready prompts for creating apps, debugging, adding auth, adding payments, adding dashboards, scraping/importing public data, writing tests, and creating documentation
-   - Each prompt has title, use case, required inputs, full prompt body, and copy button
-
-8. System Memory
-   - Store project briefs, decisions, tasks, file changes, deployment notes, and unresolved risks
-   - Create a “project constitution” per app: purpose, users, design law, forbidden assumptions, security posture, revenue model, and success metrics
-
-9. Governance and Safety Layer
-   - Never claim a build passed unless tests actually ran
-   - Never invent credentials, API keys, private URLs, or successful deployments
-   - Mark missing integrations as pending
-   - Add dependency/license checks
-   - Add security checklist for auth, secrets, user data, API routes, prompt injection, rate limits, and server-side execution
-
-10. Saga Solutions Integration
-   - Include navigation links back to Saga Solutions, Questlyne Blog, Citizens Transparency Institute, Neural Breach/Mad Evil Genius, and the live Saga Vibes reference URL
-   - Build a public-facing landing page and a logged-in studio shell
-
-Data model:
-Create TypeScript interfaces and, if using Supabase, SQL migrations for:
-- users
-- projects
-- project_briefs
-- conversations
-- messages
-- artifacts
-- tasks
-- builds
-- deployments
-- prompt_templates
-- decisions
-- integrations
-
-Minimum screens/routes:
-- /
-- /studio
-- /studio/new
-- /studio/projects/[projectId]
-- /studio/projects/[projectId]/files
-- /studio/projects/[projectId]/preview
-- /studio/projects/[projectId]/deploy
-- /prompts
-- /docs
-- /settings
-
-Implementation discipline:
-- Build in vertical slices, not empty placeholder pages.
-- Use meaningful mock data only where real credentials are absent.
-- Keep all buttons, forms, and navigation functional.
-- Add loading, empty, error, and success states.
-- Add tests for utilities, data transforms, prompt generation, and project creation logic.
-- Add a seed script for demo projects.
-- Add clear README instructions for Codespaces, local dev, environment variables, and deployment.
-- Add .env.example.
-- Add a CHANGELOG.md.
-- Add a docs/ARCHITECTURE.md explaining the agent loop, data model, integrations, and security limits.
-
-Design direction:
-The visual language should feel like a sovereign creative lab: cinematic, dark, luminous, editorial, operationally serious. Avoid toy-like dashboards. Use strong hierarchy, exact labels, readable typography, status panels, command surfaces, and crisp cards. The app should feel powerful enough for entrepreneurs, journalists, policy researchers, creators, civic technologists, and small-business operators.
-
-Acceptance criteria:
-- npm run build passes.
-- All routes render.
-- Navigation has no dead buttons.
-- New project wizard saves a project brief locally or in Supabase.
-- Prompt library copy buttons work.
-- AI console works with a mock provider when no API key exists and switches to a real provider when configured.
-- README explains setup clearly.
-- The app makes missing integrations visible instead of pretending they work.
-- The resulting codebase is clean enough for GitHub, Codespaces, and deployment.`;
-
-const initiatives = [
+const divisions = [
   {
     title: 'Saga Vibes',
-    kicker: 'AI build studio',
-    body:
-      'A creative operating system for turning ideas into structured briefs, working repositories, previews, deployments, and project memory.',
+    kicker: 'Web, brand, and AI build studio',
+    body: 'Paid launch systems for people who need websites, product pages, forms, automations, and client-ready presentation fast.',
     icon: Sparkles,
-    href: '#saga-vibes',
-    action: 'Open Saga Vibes page',
+    href: '#packages',
+    cta: 'View service packages',
   },
   {
-    title: 'The Questlyne Blog',
-    kicker: 'Original essay archive',
-    body:
-      'A minimal literary archive linked to the wider Saga Solutions system, built for essays, spiritual analysis, journalism, and durable authorship.',
-    icon: BookOpen,
-    href: links.questlyne,
-    action: 'Visit Questlyne',
-    external: true,
-  },
-  {
-    title: 'Citizens Transparency Institute',
+    title: 'Saga Civic',
     kicker: 'Public-interest research desk',
-    body:
-      'A civic resource hub for records requests, budgets, public health data, food systems, corporate accountability, and government transparency.',
+    body: 'Grant packets, public-data briefs, records-request support, and civic intelligence products for organizations trying to prove need and win support.',
     icon: Landmark,
-    href: '#transparency-institute',
-    action: 'Open resources',
+    href: '#civic',
+    cta: 'See civic products',
   },
   {
-    title: 'Neural Breach / Mad Evil Genius',
-    kicker: 'Commerce and storyworld node',
-    body:
-      'A cyberpunk commerce surface for Neural Breach, preserving the existing shop concept while routing it into the broader Saga ecosystem.',
-    icon: Store,
-    href: '#neural-breach-shop',
-    action: 'View shop node',
-  },
-];
-
-const vibeCapabilities = [
-  {
-    title: 'Prompt-to-App Studio',
-    body: 'Convert rough ideas into app briefs, route maps, component plans, database schemas, and first-sprint task lists.',
-    icon: BrainCircuit,
-    href: '#working-system',
-  },
-  {
-    title: 'Repository Control Tower',
-    body: 'Inspect files, review proposed patches, generate commits, track decisions, and keep the build history intelligible.',
-    icon: Code2,
-    href: '#repo-workspace',
-  },
-  {
-    title: 'AI Orchestration Layer',
-    body: 'Run architect, builder, debugger, refactorer, security, and product strategy modes with a visible work ledger.',
-    icon: Bot,
-    href: '#agent-loop',
-  },
-  {
-    title: 'Preview and Deployment Desk',
-    body: 'Move from prototype to deployable app with checks for routes, environment variables, security, domains, and rollback.',
-    icon: Rocket,
-    href: '#deployment-desk',
-  },
-];
-
-const systemModules = [
-  {
-    id: 'studio-dashboard',
-    title: 'Studio Dashboard',
-    icon: Layers3,
-    body: 'Project inventory, recent activity, build health, prompt library entry points, and clear next actions.',
-  },
-  {
-    id: 'intake-queue',
-    title: 'New Project Wizard',
-    icon: FileText,
-    body: 'Collects idea, users, features, data needs, integrations, design direction, success metrics, and deployment target.',
-  },
-  {
-    id: 'agent-loop',
-    title: 'AI Build Console',
-    icon: TerminalSquare,
-    body: 'Chat plus execution ledger. Every agent answer must produce a plan, patch, test result, question, or documented decision.',
-  },
-  {
-    id: 'repo-workspace',
-    title: 'Repository Workspace',
-    icon: Workflow,
-    body: 'File tree, editor, diff viewer, patch controls, branch helper, commit message generator, and README inspector.',
-  },
-  {
-    id: 'deployment-desk',
-    title: 'Deployment Desk',
-    icon: Server,
-    body: 'Environment checklist, deploy readiness, GitHub push notes, Vercel/Railway/Netlify notes, domain checks, and rollback notes.',
-  },
-  {
-    id: 'governance-layer',
-    title: 'Governance Layer',
-    icon: ShieldCheck,
-    body: 'No false success claims, no invented keys, no fake deployments, explicit risk register, and security review surfaces.',
-  },
-];
-
-const resourceLinks = [
-  {
-    label: 'Saga Vibes live reference',
-    href: links.sagaVibesLive,
-    icon: Globe2,
-    type: 'External',
-  },
-  {
-    label: 'GitHub repository',
-    href: links.githubRepo,
-    icon: Code2,
-    type: 'Repo',
-  },
-  {
-    label: 'Open in GitHub Codespaces',
-    href: links.githubCodespaces,
-    icon: TerminalSquare,
-    type: 'Build',
-  },
-  {
-    label: 'Questlyne Blog',
-    href: links.questlyne,
+    title: 'Saga Media',
+    kicker: 'Writing and narrative systems',
+    body: 'Articles, research-backed essays, campaign language, content calendars, newsletters, and editorial infrastructure for serious public communication.',
     icon: BookOpen,
-    type: 'Archive',
+    href: '#media',
+    cta: 'Open media lane',
+  },
+  {
+    title: 'Saga Labs',
+    kicker: 'Experimental venture shelf',
+    body: 'Neural Breach, Questlyne, CTI, software experiments, and commerce concepts stay visible but do not distract from the paid studio offers.',
+    icon: TerminalSquare,
+    href: '#ventures',
+    cta: 'Review ventures',
   },
 ];
 
-const transparencyResources = [
-  'Public records request strategy and request logs',
-  'Budget, contract, and tax-spending research workflows',
-  'Food, medicine, housing, policing, and infrastructure accountability links',
-  'NextRequest-style civic request platform directory',
-  'Downloadable request templates and evidence checklists',
-  'Corporate ownership, lobbying, procurement, and campaign finance research notes',
+const ventures = [
+  {
+    title: 'Mystic Sage',
+    type: 'Scalable IP product',
+    body: 'Symbolic intelligence, Aethos reports, tools, workshops, and paid interpretive products. This is the long-term digital product lane.',
+    icon: BrainCircuit,
+    href: links.mysticSage,
+  },
+  {
+    title: 'Oakland STREETS / Pure Street',
+    type: 'Civic infrastructure product',
+    body: 'Environmental condition audits, corridor monitoring, grant-ready civic intelligence, and field-response documentation for Oakland and beyond.',
+    icon: Search,
+    href: links.streets,
+  },
+  {
+    title: 'Questlyne',
+    type: 'Essay and authorship archive',
+    body: 'A publication lane for essays, spiritual analysis, cultural criticism, and long-form intellectual work that can feed paid content packages.',
+    icon: BookOpen,
+    href: links.questlyne,
+  },
+  {
+    title: 'Neural Breach',
+    type: 'Commerce/storyworld experiment',
+    body: 'A future apparel and storyworld node. Kept as a concept shelf until audience, product photos, fulfillment, and demand are stronger.',
+    icon: Store,
+    href: '#labs',
+  },
 ];
 
-const shopProducts = [
-  {
-    title: 'Neural Circuit Cargo Joggers',
-    price: '$78',
-    body: 'Technical black cargo joggers with circuit panel language and utility-pocket silhouette.',
-  },
-  {
-    title: 'Crowned Circuit Crewneck',
-    price: '$82',
-    body: 'Oversized crewneck built around the crowned-brain mark and neon circuit language.',
-  },
-  {
-    title: 'Blacksite Tactical Jacket',
-    price: '$148',
-    body: 'Premium outerwear concept with modular patch logic and cyber-field styling.',
-  },
+const proofPoints = [
+  'The offer is understandable in ten seconds: websites, automation, pitch packets, content systems, and civic research.',
+  'Every primary CTA resolves to an internal section, external property, repository, or pre-filled inquiry email.',
+  'The site separates immediate cashflow from experimental ventures, so the umbrella feels strategic instead of scattered.',
+  'Search and accessibility crawlers get real page text through the static fallback in index.html plus live React content.',
 ];
 
-function ExternalAwareLink({ href, children, className = '', external = false, onClick }) {
+function inquiryHref(subject, body = '') {
+  const normalizedBody = body || `Hi Eric-Michael,\n\nI am interested in ${subject}.\n\nProject or organization:\nGoal:\nTimeline:\nBudget range:\nBest way to reach me:\n\nThanks.`;
+  return `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(normalizedBody)}`;
+}
+
+function ExternalAwareLink({ href, children, className = '', external = false, ariaLabel }) {
   const isExternal = external || href?.startsWith('http');
   return (
     <a
       href={href}
+      aria-label={ariaLabel}
       className={className}
-      onClick={onClick}
       target={isExternal ? '_blank' : undefined}
       rel={isExternal ? 'noreferrer' : undefined}
     >
@@ -346,22 +184,74 @@ function ExternalAwareLink({ href, children, className = '', external = false, o
   );
 }
 
+function PackageCard({ item }) {
+  const Icon = item.icon;
+  return (
+    <article className="package-card">
+      <div className="card-topline">
+        <span className="card-icon"><Icon size={23} /></span>
+        <span className="timeline">{item.timeline}</span>
+      </div>
+      <p className="kicker">Paid offer</p>
+      <h3>{item.title}</h3>
+      <p className="price">{item.price}</p>
+      <p className="audience">{item.audience}</p>
+      <ul>
+        {item.deliverables.map((deliverable) => (
+          <li key={deliverable}><CheckCircle2 size={16} /> {deliverable}</li>
+        ))}
+      </ul>
+      <ExternalAwareLink href={inquiryHref(`Saga inquiry: ${item.title}`)} className="button primary full">
+        Start this sprint <ArrowRight size={17} />
+      </ExternalAwareLink>
+    </article>
+  );
+}
+
+function InquiryBuilder() {
+  const [selectedPackage, setSelectedPackage] = useState(packages[0].title);
+  const [goal, setGoal] = useState('');
+
+  const selected = packages.find((item) => item.title === selectedPackage) || packages[0];
+  const body = `Hi Eric-Michael,\n\nI am interested in the ${selected.title}.\n\nMy project goal:\n${goal || '[Add your goal here]'}\n\nTimeline:\nBudget range:\nCurrent website or social link:\nBest way to reach me:\n\nThanks.`;
+
+  return (
+    <div className="inquiry-panel" id="contact">
+      <div>
+        <p className="eyebrow">Lead capture</p>
+        <h2>Turn the next conversation into a paid scope.</h2>
+        <p>
+          Use this as the working contact flow until Stripe, Calendly, or a CRM form is added. It creates a
+          pre-filled inquiry email instead of sending visitors into a dead button.
+        </p>
+      </div>
+      <div className="inquiry-form" aria-label="Saga Solutions inquiry builder">
+        <label>
+          Choose a service
+          <select value={selectedPackage} onChange={(event) => setSelectedPackage(event.target.value)}>
+            {packages.map((item) => (
+              <option key={item.title} value={item.title}>{item.title}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          What do you need built, clarified, or packaged?
+          <textarea
+            value={goal}
+            onChange={(event) => setGoal(event.target.value)}
+            placeholder="Example: I run a cleaning business and need a one-page website, quote form, and client follow-up system."
+          />
+        </label>
+        <ExternalAwareLink href={inquiryHref(`Saga inquiry: ${selected.title}`, body)} className="button primary full">
+          Email Saga Solutions <ArrowRight size={17} />
+        </ExternalAwareLink>
+        <p className="microcopy">The email opens in your mail app. No personal information is stored on this page.</p>
+      </div>
+    </div>
+  );
+}
+
 function App() {
-  const [copyStatus, setCopyStatus] = useState('');
-  const promptStats = useMemo(() => {
-    const words = sagaVibesSystemPrompt.trim().split(/\s+/).length;
-    return { words, characters: sagaVibesSystemPrompt.length };
-  }, []);
-
-  const copyPrompt = async () => {
-    try {
-      await navigator.clipboard.writeText(sagaVibesSystemPrompt);
-      setCopyStatus('Codex prompt copied. Paste it into Codex inside GitHub Codespaces.');
-    } catch {
-      setCopyStatus('Copy blocked by browser permissions. Select the prompt text manually.');
-    }
-  };
-
   return (
     <main className="app-shell">
       <style>{styleText}</style>
@@ -369,92 +259,114 @@ function App() {
       <section className="hero" id="top">
         <nav className="nav" aria-label="Primary navigation">
           <a href="#top" className="brandmark" aria-label="Saga Solutions home">
-            <span className="brand-sigil">SV</span>
+            <span className="brand-sigil">S</span>
             <span>
               <strong>Saga Solutions</strong>
-              <small>Saga Vibes system gateway</small>
+              <small>Launch systems for serious operators</small>
             </span>
           </a>
           <div className="nav-links">
-            <a href="#saga-vibes">Saga Vibes</a>
-            <a href="#working-system">System</a>
-            <a href="#transparency-institute">Transparency</a>
-            <a href="#codex-prompt">Codex Prompt</a>
-            <a href="#links">Links</a>
+            <a href="#packages">Services</a>
+            <a href="#divisions">Divisions</a>
+            <a href="#ventures">Ventures</a>
+            <a href="#proof">Proof</a>
+            <a href="#contact">Contact</a>
           </div>
         </nav>
 
         <div className="hero-grid">
           <div className="hero-copy">
-            <p className="eyebrow">Saga Solutions / AI systems / civic creative infrastructure</p>
-            <h1>Build the studio that builds the work.</h1>
+            <p className="eyebrow">Saga Solutions Studio / Websites / AI operations / grants / content systems</p>
+            <h1>Make the idea payable.</h1>
             <p className="lede">
-              Saga Solutions now routes cleanly into Saga Vibes: a working-system blueprint for turning creative,
-              civic, journalistic, entrepreneurial, and technical ideas into structured software projects.
+              Saga Solutions turns scattered concepts into launch-ready websites, client intake systems,
+              grant packets, content engines, and civic research products. The priority is clear:
+              package the work, capture leads, and sell useful systems now.
             </p>
             <div className="hero-actions">
-              <ExternalAwareLink href="#saga-vibes" className="button primary">
-                Open Saga Vibes <ArrowRight size={18} />
+              <ExternalAwareLink href="#packages" className="button primary">
+                View paid packages <ArrowRight size={18} />
               </ExternalAwareLink>
-              <ExternalAwareLink href={links.sagaVibesLive} className="button ghost">
-                Live Saga Vibes reference
+              <ExternalAwareLink href="#contact" className="button ghost">
+                Start an inquiry
               </ExternalAwareLink>
-              <ExternalAwareLink href="#codex-prompt" className="button ghost">
-                Use Codex build prompt
+              <ExternalAwareLink href={links.githubRepo} className="button ghost">
+                GitHub repo
               </ExternalAwareLink>
             </div>
           </div>
 
-          <aside className="terminal-card" aria-label="Saga Vibes status panel">
-            <div className="terminal-header">
-              <span />
-              <span />
-              <span />
-            </div>
-            <p className="terminal-line">node://saga-solutions/saga-vibes</p>
-            <p className="terminal-line green">STATUS: PAGE LINKED</p>
-            <p className="terminal-line">BUTTON AUDIT: ROUTED</p>
-            <p className="terminal-line">PROMPT: CODEX READY</p>
-            <div className="scan-panel">
-              {[
-                ['Briefs', FileText],
-                ['Builds', Code2],
-                ['Preview', Radio],
-                ['Deploy', Rocket],
-              ].map(([label, Icon]) => (
-                <a href="#working-system" className="scan-cell" key={label}>
-                  <Icon size={22} />
-                  <span>{label}</span>
-                </a>
-              ))}
-            </div>
+          <aside className="signal-card" aria-label="Saga monetization hierarchy">
+            <p className="terminal-line">saga://business-model</p>
+            <h2>Commercial order</h2>
+            <ol>
+              <li><strong>Saga pays the bills.</strong><span>Services, retainers, launch systems.</span></li>
+              <li><strong>Mystic Sage scales IP.</strong><span>Reports, tools, workshops, membership.</span></li>
+              <li><strong>STREETS builds institutional upside.</strong><span>Audits, pilots, dashboards, grants.</span></li>
+            </ol>
           </aside>
         </div>
       </section>
 
-      <section className="initiative-section" id="links">
-        <div className="section-heading">
-          <p className="eyebrow">Connected properties</p>
-          <h2>Every major Saga Solutions button now has a destination.</h2>
+      <section className="section" id="packages">
+        <div className="section-heading wide">
+          <p className="eyebrow">Revenue-first service menu</p>
+          <h2>Four offers a visitor can understand, request, and pay for.</h2>
           <p>
-            Internal links move through this page. External links open the live reference, GitHub repository,
-            Codespaces entry point, or original blog archive.
+            The site now leads with purchasable outcomes instead of broad ambition. These packages can be delivered
+            manually now, then automated once repetition proves demand.
           </p>
         </div>
+        <div className="package-grid">
+          {packages.map((item) => <PackageCard key={item.title} item={item} />)}
+        </div>
+      </section>
 
-        <div className="initiative-grid">
-          {initiatives.map((item) => {
+      <section className="section alt" id="divisions">
+        <div className="section-heading">
+          <p className="eyebrow">Operating structure</p>
+          <h2>The umbrella becomes legible.</h2>
+          <p>
+            Saga can still hold several ventures, but the public site needs hierarchy. The paid studio sits first;
+            experimental properties sit behind it.
+          </p>
+        </div>
+        <div className="division-grid">
+          {divisions.map((item) => {
             const Icon = item.icon;
             return (
-              <article className="initiative-card" key={item.title}>
-                <div className="card-icon">
-                  <Icon size={24} />
-                </div>
+              <article className="division-card" key={item.title} id={item.title === 'Saga Civic' ? 'civic' : item.title === 'Saga Media' ? 'media' : item.title === 'Saga Labs' ? 'labs' : undefined}>
+                <Icon size={24} />
                 <p className="kicker">{item.kicker}</p>
                 <h3>{item.title}</h3>
                 <p>{item.body}</p>
-                <ExternalAwareLink href={item.href} external={item.external} className="text-link">
-                  {item.action}
+                <a href={item.href} className="text-link">{item.cta} <ArrowRight size={15} /></a>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="section" id="ventures">
+        <div className="section-heading wide">
+          <p className="eyebrow">Portfolio discipline</p>
+          <h2>Not every project has the same job.</h2>
+          <p>
+            The portfolio now explains what each property is supposed to do financially. That makes the ambition look
+            intentional instead of unfinished.
+          </p>
+        </div>
+        <div className="venture-grid">
+          {ventures.map((item) => {
+            const Icon = item.icon;
+            return (
+              <article className="venture-card" key={item.title}>
+                <Icon size={25} />
+                <p className="kicker">{item.type}</p>
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
+                <ExternalAwareLink href={item.href} className="text-link" external={item.href.startsWith('http')}>
+                  Open property
                 </ExternalAwareLink>
               </article>
             );
@@ -462,736 +374,203 @@ function App() {
         </div>
       </section>
 
-      <section className="saga-vibes-section" id="saga-vibes">
-        <div className="section-heading wide">
-          <p className="eyebrow">Saga Vibes</p>
-          <h2>The creative build studio becomes an operating system.</h2>
-          <p>
-            The public page should not stop at inspiration. Saga Vibes needs to become the command surface
-            where projects are defined, generated, audited, previewed, committed, documented, and shipped.
-          </p>
-        </div>
-
-        <div className="hero-actions compact">
-          <ExternalAwareLink href={links.sagaVibesLive} className="button primary">
-            Open live Saga Vibes
-          </ExternalAwareLink>
-          <ExternalAwareLink href="#working-system" className="button ghost">
-            View system blueprint
-          </ExternalAwareLink>
-          <ExternalAwareLink href="#codex-prompt" className="button ghost">
-            Open Codex prompt
-          </ExternalAwareLink>
-          <ExternalAwareLink href="#intake-queue" className="button ghost">
-            Start with intake
-          </ExternalAwareLink>
-        </div>
-
-        <div className="capability-grid">
-          {vibeCapabilities.map((item) => {
-            const Icon = item.icon;
-            return (
-              <a href={item.href} className="capability-card" key={item.title}>
-                <Icon size={25} />
-                <h3>{item.title}</h3>
-                <p>{item.body}</p>
-              </a>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="system-section" id="working-system">
-        <div className="section-heading">
-          <p className="eyebrow">Working-system architecture</p>
-          <h2>From attractive landing page to real build platform.</h2>
-          <p>
-            The first production target is a full-stack studio shell: project intake, AI console, repository
-            workspace, prompt library, preview desk, deployment desk, and governance layer.
-          </p>
-        </div>
-
-        <div className="module-grid">
-          {systemModules.map((module) => {
-            const Icon = module.icon;
-            return (
-              <article className="module-card" id={module.id} key={module.title}>
-                <Icon size={24} />
-                <h3>{module.title}</h3>
-                <p>{module.body}</p>
-                <a href="#codex-prompt" className="text-link">Build this module</a>
-              </article>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="codex-section" id="codex-prompt">
-        <div className="prompt-shell">
-          <div>
-            <p className="eyebrow">Codex master prompt</p>
-            <h2>Paste this into Codex inside GitHub Codespaces.</h2>
+      <section className="section alt" id="proof">
+        <div className="proof-grid">
+          <div className="section-heading">
+            <p className="eyebrow">Credibility upgrades</p>
+            <h2>What changed from concept page to sales page.</h2>
             <p>
-              This prompt directs Codex to build Saga Vibes as a full-stack app-construction system with
-              mocked fallbacks, clear missing-integration states, project memory, and deployment discipline.
+              The rebuild makes the page more useful for prospects, funders, collaborators, search engines, and AI
+              assistants that need readable text and crawlable links.
             </p>
-            <div className="prompt-meta">
-              <span><CheckCircle2 size={16} /> {promptStats.words} words</span>
-              <span><Lock size={16} /> No invented credentials</span>
-              <span><Database size={16} /> Supabase-ready</span>
-            </div>
-            <button type="button" className="button primary" onClick={copyPrompt}>
-              Copy complete prompt
-            </button>
-            {copyStatus ? <p className="status-line">{copyStatus}</p> : null}
           </div>
-          <textarea
-            aria-label="Saga Vibes complete Codex prompt"
-            value={sagaVibesSystemPrompt}
-            readOnly
-          />
+          <div className="proof-list">
+            {proofPoints.map((point) => (
+              <div className="proof-row" key={point}>
+                <ShieldCheck size={19} />
+                <span>{point}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section className="transparency-section" id="transparency-institute">
-        <div className="section-heading">
-          <p className="eyebrow">Citizens Transparency Institute</p>
-          <h2>A civic research desk inside the Saga Solutions ecosystem.</h2>
-          <p>
-            This page is routed as a working resource hub, ready for records-request guides, government-data
-            tools, budget research, corporate accountability, and downloadable civic templates.
-          </p>
+      <section className="section" id="process">
+        <div className="section-heading wide">
+          <p className="eyebrow">Delivery method</p>
+          <h2>A clean path from first message to finished asset.</h2>
         </div>
-
-        <div className="resource-list">
-          {transparencyResources.map((resource) => (
-            <a href="#codex-prompt" className="resource-row" key={resource}>
-              <Search size={18} />
-              <span>{resource}</span>
-              <ArrowRight size={16} />
-            </a>
-          ))}
-        </div>
-      </section>
-
-      <section className="shop-section" id="neural-breach-shop">
-        <div className="section-heading">
-          <p className="eyebrow">Neural Breach commerce node</p>
-          <h2>Mad Evil Genius remains linked as a commerce surface.</h2>
-          <p>
-            The shop concept is preserved as a routable section. Product buttons now lead to a live cart
-            placeholder instead of disappearing into dead interface space.
-          </p>
-        </div>
-
-        <div className="shop-grid">
-          {shopProducts.map((product) => (
-            <article className="shop-card" key={product.title}>
-              <div className="product-art">
-                <Store size={28} />
-              </div>
-              <h3>{product.title}</h3>
-              <p>{product.body}</p>
-              <div className="product-line">
-                <strong>{product.price}</strong>
-                <a href="#shop-cart" className="button small">Add to staged cart</a>
-              </div>
+        <div className="process-grid">
+          {[
+            ['Diagnose', 'Clarify the buyer, offer, constraints, assets, deadline, and revenue target.', Layers3],
+            ['Package', 'Turn the work into a scoped offer, landing page, deck, report, automation, or content system.', Workflow],
+            ['Launch', 'Ship the public page, contact flow, SEO layer, outreach copy, and next-action checklist.', Rocket],
+            ['Refine', 'Use feedback, analytics, and sales conversations to tighten the offer and raise the price.', Code2],
+          ].map(([title, body, Icon]) => (
+            <article className="process-card" key={title}>
+              <Icon size={23} />
+              <h3>{title}</h3>
+              <p>{body}</p>
             </article>
           ))}
         </div>
-
-        <div className="cart-note" id="shop-cart">
-          <ShoppingStatus />
-        </div>
       </section>
 
-      <section className="link-section">
+      <section className="section alt">
+        <InquiryBuilder />
+      </section>
+
+      <section className="section resource-section" id="resources">
         <div className="section-heading">
-          <p className="eyebrow">Button destination audit</p>
-          <h2>Primary action map</h2>
+          <p className="eyebrow">Working links</p>
+          <h2>Primary destinations</h2>
         </div>
-        <div className="link-grid">
-          {resourceLinks.map((resource) => {
-            const Icon = resource.icon;
-            return (
-              <ExternalAwareLink href={resource.href} className="link-card" key={resource.label}>
-                <Icon size={22} />
-                <span>
-                  <strong>{resource.label}</strong>
-                  <small>{resource.type}</small>
-                </span>
-              </ExternalAwareLink>
-            );
-          })}
+        <div className="resource-grid">
+          <ExternalAwareLink href={links.mysticSage} className="resource-card"><Globe2 size={20} /><span>Mystic Sage</span></ExternalAwareLink>
+          <ExternalAwareLink href={links.streets} className="resource-card"><Landmark size={20} /><span>Oakland STREETS</span></ExternalAwareLink>
+          <ExternalAwareLink href={links.questlyne} className="resource-card"><BookOpen size={20} /><span>Questlyne Blog</span></ExternalAwareLink>
+          <ExternalAwareLink href={links.sagaVibesPrototype} className="resource-card"><Sparkles size={20} /><span>Saga Vibes Prototype</span></ExternalAwareLink>
+          <ExternalAwareLink href={links.githubRepo} className="resource-card"><Code2 size={20} /><span>GitHub Repository</span></ExternalAwareLink>
+          <ExternalAwareLink href={inquiryHref('Saga Solutions discovery inquiry')} className="resource-card"><ArrowRight size={20} /><span>Email Inquiry</span></ExternalAwareLink>
         </div>
       </section>
 
       <footer className="footer">
-        <a href="#top">Saga Solutions</a>
-        <a href="#saga-vibes">Saga Vibes</a>
-        <a href={links.questlyne} target="_blank" rel="noreferrer">Questlyne Blog</a>
-        <a href="#transparency-institute">Citizens Transparency Institute</a>
-        <a href="#codex-prompt">Codex Prompt</a>
+        <div>
+          <strong>Saga Solutions</strong>
+          <p>Launch systems, AI operations, civic research, content infrastructure, and venture packaging.</p>
+        </div>
+        <div className="footer-links">
+          <a href="#packages">Services</a>
+          <a href="#contact">Contact</a>
+          <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+        </div>
       </footer>
     </main>
-  );
-}
-
-function ShoppingStatus() {
-  const [status, setStatus] = useState('No staged product selected yet.');
-  return (
-    <div>
-      <p>{status}</p>
-      <button
-        type="button"
-        className="button primary"
-        onClick={() =>
-          setStatus(
-            'Cart staging is working. Add Shopify product variant IDs and Storefront API variables when the shop is ready for transactions.'
-          )
-        }
-      >
-        Test checkout path <KeyRound size={16} />
-      </button>
-    </div>
   );
 }
 
 const styleText = `
 :root {
   color-scheme: dark;
-  --bg: #03030a;
-  --panel: rgba(17, 19, 33, 0.84);
-  --panel-strong: rgba(23, 26, 45, 0.94);
-  --text: #f7f3ea;
-  --muted: #aeb5ca;
-  --line: rgba(160, 132, 255, 0.22);
-  --violet: #a88cff;
-  --cyan: #7cf7ff;
-  --rose: #ff5c9a;
-  --gold: #f7d774;
+  --bg: #050509;
+  --panel: rgba(20, 22, 34, 0.86);
+  --panel-strong: rgba(28, 31, 45, 0.96);
+  --text: #f8f2e8;
+  --muted: #b8bdcb;
+  --soft: #d7d9e3;
+  --line: rgba(255, 255, 255, 0.13);
+  --accent: #f4d06f;
+  --accent-2: #9df7ff;
+  --violet: #aa8cff;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-  background: var(--bg);
-}
-
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; background: var(--bg); }
 body {
   margin: 0;
-  background:
-    radial-gradient(circle at 18% 0%, rgba(168, 140, 255, 0.28), transparent 28%),
-    radial-gradient(circle at 88% 18%, rgba(124, 247, 255, 0.16), transparent 26%),
-    linear-gradient(135deg, #03030a 0%, #080713 52%, #110817 100%);
   color: var(--text);
+  background:
+    radial-gradient(circle at 14% 2%, rgba(170, 140, 255, 0.24), transparent 28%),
+    radial-gradient(circle at 86% 8%, rgba(157, 247, 255, 0.16), transparent 30%),
+    linear-gradient(135deg, #050509 0%, #080b12 52%, #130d16 100%);
 }
+a { color: inherit; text-decoration: none; }
+button, textarea, select { font: inherit; }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-button,
-textarea {
-  font: inherit;
-}
-
-.app-shell {
-  min-height: 100vh;
-  overflow: hidden;
-}
-
-.hero {
-  min-height: 92vh;
-  padding: 28px clamp(18px, 4vw, 64px) 70px;
-  position: relative;
-}
-
+.app-shell { min-height: 100vh; overflow: hidden; }
+.hero { padding: 28px clamp(18px, 4vw, 64px) 86px; position: relative; }
 .hero::before {
   content: '';
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(168, 140, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(124, 247, 255, 0.035) 1px, transparent 1px);
-  background-size: 46px 46px;
+    linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.028) 1px, transparent 1px);
+  background-size: 54px 54px;
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 90%);
   mask-image: linear-gradient(to bottom, #000 0%, transparent 90%);
   pointer-events: none;
 }
-
-.nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 22px;
-  position: relative;
-  z-index: 2;
-}
-
-.brandmark {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-}
-
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 22px; position: relative; z-index: 2; }
+.brandmark { display: flex; align-items: center; gap: 13px; }
 .brand-sigil {
-  width: 52px;
-  height: 52px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: linear-gradient(145deg, rgba(168, 140, 255, 0.26), rgba(124, 247, 255, 0.12));
-  color: var(--cyan);
-  font-weight: 950;
-  letter-spacing: -0.04em;
+  width: 52px; height: 52px; display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: 16px;
+  background: linear-gradient(145deg, rgba(244, 208, 111, 0.2), rgba(157, 247, 255, 0.09));
+  color: var(--accent); font-weight: 950; letter-spacing: -0.04em;
 }
-
-.brandmark strong,
-.brandmark small {
-  display: block;
-}
-
-.brandmark small,
-.nav-links,
-.section-heading p,
-.initiative-card p,
-.capability-card p,
-.module-card p,
-.shop-card p {
-  color: var(--muted);
-}
-
-.nav-links {
-  display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
-  font-size: 0.92rem;
-}
-
-.nav-links a:hover,
-.text-link:hover,
-.footer a:hover {
-  color: var(--cyan);
-}
-
-.hero-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.64fr);
-  gap: 42px;
-  align-items: center;
-  max-width: 1220px;
-  margin: 96px auto 0;
-  position: relative;
-  z-index: 1;
-}
-
-.eyebrow,
-.kicker {
-  color: var(--cyan);
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  font-size: 0.75rem;
-  font-weight: 900;
-}
-
-.hero h1,
-.section-heading h2,
-.prompt-shell h2 {
-  letter-spacing: -0.07em;
-}
-
-.hero h1 {
-  font-size: clamp(3.2rem, 8vw, 7.4rem);
-  line-height: 0.88;
-  margin: 16px 0 22px;
-  max-width: 880px;
-}
-
-.lede {
-  font-size: clamp(1.02rem, 2.2vw, 1.28rem);
-  line-height: 1.72;
-  color: #d7d9e8;
-  max-width: 760px;
-}
-
-.hero-actions {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-top: 32px;
-}
-
-.hero-actions.compact {
-  margin: 8px 0 34px;
-}
-
+.brandmark strong, .brandmark small { display: block; }
+.brandmark small, .nav-links, .section-heading p, .package-card p, .division-card p, .venture-card p, .process-card p, .footer p { color: var(--muted); }
+.nav-links { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.92rem; }
+.nav-links a:hover, .text-link:hover, .footer a:hover { color: var(--accent-2); }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(310px, 0.62fr); gap: 42px; align-items: center; max-width: 1240px; margin: 98px auto 0; position: relative; z-index: 1; }
+.eyebrow, .kicker { color: var(--accent-2); text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.75rem; font-weight: 900; }
+.hero h1, .section-heading h2, .inquiry-panel h2 { letter-spacing: -0.07em; }
+.hero h1 { font-size: clamp(3.4rem, 9vw, 8rem); line-height: 0.86; margin: 16px 0 22px; max-width: 880px; }
+.lede { font-size: clamp(1.04rem, 2.1vw, 1.3rem); line-height: 1.72; color: var(--soft); max-width: 780px; }
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 32px; }
 .button {
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.055);
-  color: var(--text);
-  border-radius: 999px;
-  padding: 13px 18px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  transition: 0.2s ease;
-  min-height: 46px;
+  border: 1px solid var(--line); background: rgba(255, 255, 255, 0.055); color: var(--text);
+  border-radius: 999px; padding: 13px 18px; display: inline-flex; align-items: center; justify-content: center;
+  gap: 10px; cursor: pointer; transition: 0.2s ease; min-height: 46px;
 }
-
-.button:hover,
-.capability-card:hover,
-.initiative-card:hover,
-.module-card:hover,
-.link-card:hover,
-.resource-row:hover,
-.shop-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(124, 247, 255, 0.54);
+.button:hover, .package-card:hover, .division-card:hover, .venture-card:hover, .process-card:hover, .resource-card:hover { transform: translateY(-2px); border-color: rgba(157, 247, 255, 0.54); }
+.button.primary { border: 0; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #050509; font-weight: 950; }
+.button.ghost { background: rgba(255, 255, 255, 0.04); }
+.button.full { width: 100%; margin-top: 18px; }
+.signal-card, .package-card, .division-card, .venture-card, .process-card, .resource-card, .inquiry-panel, .proof-row {
+  border: 1px solid var(--line); background: linear-gradient(180deg, rgba(28, 31, 45, 0.9), rgba(9, 10, 18, 0.92)); box-shadow: 0 24px 90px rgba(0,0,0,0.24);
 }
-
-.button.primary {
-  border: 0;
-  background: linear-gradient(135deg, var(--violet), var(--cyan));
-  color: #03030a;
-  font-weight: 950;
-}
-
-.button.ghost {
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.button.small {
-  min-height: 38px;
-  padding: 9px 12px;
-  font-size: 0.85rem;
-}
-
-.terminal-card,
-.initiative-card,
-.capability-card,
-.module-card,
-.shop-card,
-.link-card,
-.prompt-shell,
-.cart-note {
-  border: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(23, 26, 45, 0.9), rgba(8, 9, 18, 0.92));
-  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.24);
-}
-
-.terminal-card {
-  border-radius: 30px;
-  padding: 24px;
-}
-
-.terminal-header {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-
-.terminal-header span {
-  width: 10px;
-  height: 10px;
-  border-radius: 99px;
-  background: var(--muted);
-}
-
-.terminal-line {
-  font-family: 'Courier New', monospace;
-  color: #cfd5ed;
-  margin: 10px 0;
-}
-
-.terminal-line.green {
-  color: var(--cyan);
-}
-
-.scan-panel {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-top: 24px;
-}
-
-.scan-cell {
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 16px;
-  background: rgba(168, 140, 255, 0.06);
-  color: var(--cyan);
-  display: grid;
-  gap: 12px;
-}
-
-.scan-cell span {
-  color: #e2e7fb;
-  font-size: 0.88rem;
-}
-
-.initiative-section,
-.saga-vibes-section,
-.system-section,
-.codex-section,
-.transparency-section,
-.shop-section,
-.link-section {
-  padding: 76px clamp(18px, 4vw, 64px);
-  max-width: 1280px;
-  margin: 0 auto;
-}
-
-.section-heading {
-  max-width: 790px;
-  margin-bottom: 30px;
-}
-
-.section-heading.wide {
-  max-width: 940px;
-}
-
-.section-heading h2,
-.prompt-shell h2 {
-  font-size: clamp(2.1rem, 4.6vw, 4.4rem);
-  line-height: 0.95;
-  margin: 10px 0 16px;
-}
-
-.section-heading p {
-  line-height: 1.72;
-}
-
-.initiative-grid,
-.capability-grid,
-.module-grid,
-.shop-grid,
-.link-grid {
-  display: grid;
-  gap: 18px;
-}
-
-.initiative-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.capability-grid,
-.module-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.shop-grid,
-.link-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.initiative-card,
-.capability-card,
-.module-card,
-.shop-card,
-.link-card {
-  border-radius: 26px;
-  padding: 22px;
-  transition: 0.2s ease;
-}
-
-.card-icon {
-  width: 48px;
-  height: 48px;
-  display: grid;
-  place-items: center;
-  border-radius: 16px;
-  background: rgba(124, 247, 255, 0.09);
-  color: var(--cyan);
-  margin-bottom: 22px;
-}
-
-.initiative-card h3,
-.capability-card h3,
-.module-card h3,
-.shop-card h3 {
-  font-size: 1.18rem;
-  margin: 12px 0 10px;
-}
-
-.text-link {
-  color: var(--cyan);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 14px;
-  font-weight: 800;
-}
-
-.saga-vibes-section {
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-}
-
-.capability-card svg,
-.module-card svg,
-.link-card svg {
-  color: var(--cyan);
-}
-
-.prompt-shell {
-  border-radius: 30px;
-  padding: clamp(20px, 4vw, 34px);
-  display: grid;
-  grid-template-columns: minmax(0, 0.76fr) minmax(320px, 1fr);
-  gap: 26px;
-  align-items: stretch;
-}
-
-.prompt-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 20px 0;
-}
-
-.prompt-meta span {
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 9px 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: #dfe5fb;
-  background: rgba(255, 255, 255, 0.04);
-  font-size: 0.88rem;
-}
-
-textarea {
-  min-height: 560px;
-  width: 100%;
-  resize: vertical;
-  border-radius: 22px;
-  border: 1px solid var(--line);
-  background: rgba(3, 3, 10, 0.8);
-  color: #eef2ff;
-  padding: 18px;
-  line-height: 1.55;
-  font-size: 0.92rem;
-}
-
-.status-line {
-  color: var(--gold);
-  margin-top: 14px;
-  line-height: 1.5;
-}
-
-.resource-list {
-  display: grid;
-  gap: 10px;
-}
-
-.resource-row {
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 15px 16px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 12px;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.035);
-  transition: 0.2s ease;
-}
-
-.product-art {
-  min-height: 150px;
-  border-radius: 20px;
-  display: grid;
-  place-items: center;
-  color: var(--cyan);
-  background:
-    radial-gradient(circle at 50% 42%, rgba(124, 247, 255, 0.28), transparent 32%),
-    linear-gradient(145deg, #050510, #151629);
-  margin-bottom: 18px;
-}
-
-.product-line {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 18px;
-}
-
-.cart-note {
-  margin-top: 18px;
-  border-radius: 22px;
-  padding: 20px;
-}
-
-.link-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.link-card small {
-  display: block;
-  color: var(--muted);
-}
-
-.footer {
-  border-top: 1px solid var(--line);
-  padding: 30px clamp(18px, 4vw, 64px);
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 18px;
-  color: var(--muted);
-  background: rgba(0, 0, 0, 0.26);
-}
-
-@media (max-width: 980px) {
-  .hero-grid,
-  .prompt-shell,
-  .initiative-grid,
-  .capability-grid,
-  .module-grid,
-  .shop-grid,
-  .link-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .nav {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .hero {
-    min-height: auto;
-  }
-}
-
-@media (max-width: 640px) {
-  .hero h1 {
-    font-size: 3.3rem;
-  }
-
-  .scan-panel {
-    grid-template-columns: 1fr;
-  }
-
-  .button {
-    width: 100%;
-  }
-
-  .hero-actions {
-    width: 100%;
-  }
-}
+.signal-card { border-radius: 30px; padding: 26px; }
+.signal-card h2 { font-size: clamp(1.8rem, 3vw, 2.8rem); margin: 10px 0 20px; letter-spacing: -0.05em; }
+.signal-card ol { margin: 0; padding-left: 20px; display: grid; gap: 18px; }
+.signal-card li { color: var(--soft); line-height: 1.5; }
+.signal-card li span { display: block; color: var(--muted); margin-top: 4px; }
+.terminal-line { font-family: 'Courier New', monospace; color: var(--accent-2); margin: 0; }
+.section { padding: 80px clamp(18px, 4vw, 64px); max-width: 1320px; margin: 0 auto; }
+.section.alt { max-width: none; background: rgba(255,255,255,0.027); border-block: 1px solid rgba(255,255,255,0.05); }
+.section.alt > * { max-width: 1320px; margin-left: auto; margin-right: auto; }
+.section-heading { max-width: 820px; margin-bottom: 34px; }
+.section-heading.wide { max-width: 980px; }
+.section-heading h2, .inquiry-panel h2 { font-size: clamp(2.1rem, 4.8vw, 4.6rem); line-height: 0.95; margin: 10px 0 16px; }
+.section-heading p, .inquiry-panel p { line-height: 1.72; }
+.package-grid, .division-grid, .venture-grid, .process-grid, .resource-grid { display: grid; gap: 18px; }
+.package-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.division-grid, .venture-grid, .process-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.resource-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.package-card, .division-card, .venture-card, .process-card { border-radius: 26px; padding: 24px; transition: 0.2s ease; }
+.card-topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.card-icon { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 15px; background: rgba(244,208,111,0.12); color: var(--accent); }
+.timeline { color: var(--muted); font-size: 0.82rem; }
+.package-card h3, .division-card h3, .venture-card h3, .process-card h3 { font-size: 1.35rem; margin: 10px 0; letter-spacing: -0.03em; }
+.price { color: var(--accent); font-weight: 950; font-size: 1.2rem; }
+.audience { min-height: 94px; }
+ul { padding: 0; margin: 18px 0 0; list-style: none; display: grid; gap: 10px; }
+li { display: flex; gap: 9px; align-items: flex-start; color: var(--soft); line-height: 1.45; }
+li svg { color: var(--accent-2); flex: 0 0 auto; margin-top: 2px; }
+.text-link { color: var(--accent); font-weight: 800; display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; }
+.proof-grid { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(320px, 1fr); gap: 28px; align-items: start; }
+.proof-list { display: grid; gap: 12px; }
+.proof-row { border-radius: 18px; padding: 18px; display: flex; gap: 12px; align-items: flex-start; color: var(--soft); line-height: 1.5; }
+.proof-row svg { color: var(--accent-2); flex: 0 0 auto; margin-top: 2px; }
+.inquiry-panel { border-radius: 30px; padding: clamp(24px, 5vw, 46px); display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(320px, 0.72fr); gap: 32px; }
+.inquiry-form { display: grid; gap: 16px; }
+label { color: var(--soft); display: grid; gap: 8px; font-weight: 750; }
+select, textarea { width: 100%; border: 1px solid var(--line); border-radius: 16px; background: rgba(255,255,255,0.06); color: var(--text); padding: 13px 14px; }
+option { color: #050509; }
+textarea { min-height: 150px; resize: vertical; }
+.microcopy { font-size: 0.86rem; color: var(--muted); margin: 0; }
+.resource-section { padding-top: 54px; }
+.resource-card { min-height: 86px; border-radius: 22px; padding: 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; transition: 0.2s ease; color: var(--soft); }
+.resource-card span { margin-right: auto; font-weight: 850; }
+.footer { padding: 34px clamp(18px, 4vw, 64px); border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; gap: 22px; align-items: center; max-width: 1320px; margin: 0 auto; }
+.footer p { margin: 8px 0 0; max-width: 680px; }
+.footer-links { display: flex; gap: 16px; flex-wrap: wrap; justify-content: flex-end; color: var(--muted); }
+@media (max-width: 1120px) { .package-grid, .division-grid, .venture-grid, .process-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .audience { min-height: auto; } }
+@media (max-width: 820px) { .nav, .footer { align-items: flex-start; flex-direction: column; } .hero-grid, .proof-grid, .inquiry-panel { grid-template-columns: 1fr; } .resource-grid { grid-template-columns: 1fr; } .hero { padding-bottom: 54px; } }
+@media (max-width: 620px) { .package-grid, .division-grid, .venture-grid, .process-grid { grid-template-columns: 1fr; } .hero h1 { font-size: clamp(3rem, 18vw, 4.4rem); } .section { padding-block: 56px; } }
 `;
 
 createRoot(document.getElementById('root')).render(<App />);
