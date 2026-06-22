@@ -90,14 +90,45 @@ const packages = [
   },
 ];
 
+const vibeProducts = [
+  {
+    title: 'Culture Signal Brief',
+    price: '$49–$149',
+    body: 'A concise interpretation of a trend, artist, aesthetic, public figure, album, show, platform behavior, or social mood through the Saga Vibes lens.',
+  },
+  {
+    title: 'Identity + Aesthetic Audit',
+    price: '$149–$500',
+    body: 'A consumer-facing reflection product for creators, personal brands, artists, and founders who need sharper self-presentation and emotional resonance.',
+  },
+  {
+    title: 'Music Mood Map',
+    price: '$29–$99',
+    body: 'A playlist, listening note, or music-personality interpretation that connects sound, memory, taste, mood, and self-understanding.',
+  },
+  {
+    title: 'Social Energy Reading',
+    price: '$39–$125',
+    body: 'A structured reflection on group dynamics, attraction patterns, lifestyle signals, friendship chemistry, and the social codes shaping a person or scene.',
+  },
+];
+
 const divisions = [
   {
-    title: 'Saga Vibes',
-    kicker: 'Web, brand, and AI build studio',
-    body: 'Paid launch systems for people who need websites, product pages, forms, automations, and client-ready presentation fast.',
+    title: 'Saga Solutions Studio',
+    kicker: 'Web, automation, and launch systems',
+    body: 'The cashflow desk for websites, landing pages, offer pages, client intake systems, automations, grant packets, and content infrastructure.',
     icon: Sparkles,
     href: '#packages',
     cta: 'View service packages',
+  },
+  {
+    title: 'Saga Vibes',
+    kicker: 'Cultural & emotional intelligence',
+    body: 'Media, identity, mysticism, music, lifestyle psychology, social energy, trend interpretation, and consumer-facing reflection tools.',
+    icon: BrainCircuit,
+    href: '#saga-vibes',
+    cta: 'Open Saga Vibes lane',
   },
   {
     title: 'Saga Civic',
@@ -157,9 +188,9 @@ const ventures = [
 ];
 
 const proofPoints = [
-  'The offer is understandable in ten seconds: websites, automation, pitch packets, content systems, and civic research.',
+  'The offer is understandable in ten seconds: websites, automation, pitch packets, content systems, cultural intelligence, and civic research.',
   'Every primary CTA resolves to an internal section, external property, repository, or pre-filled inquiry email.',
-  'The site separates immediate cashflow from experimental ventures, so the umbrella feels strategic instead of scattered.',
+  'Saga Vibes is now separated from the technical build studio, so the emotional/cultural intelligence brand has room to become its own product lane.',
   'Search and accessibility crawlers get real page text through the static fallback in index.html plus live React content.',
 ];
 
@@ -262,36 +293,36 @@ function App() {
             <span className="brand-sigil">S</span>
             <span>
               <strong>Saga Solutions</strong>
-              <small>Launch systems for serious operators</small>
+              <small>Launch systems and cultural intelligence</small>
             </span>
           </a>
           <div className="nav-links">
             <a href="#packages">Services</a>
+            <a href="#saga-vibes">Saga Vibes</a>
             <a href="#divisions">Divisions</a>
             <a href="#ventures">Ventures</a>
-            <a href="#proof">Proof</a>
             <a href="#contact">Contact</a>
           </div>
         </nav>
 
         <div className="hero-grid">
           <div className="hero-copy">
-            <p className="eyebrow">Saga Solutions Studio / Websites / AI operations / grants / content systems</p>
+            <p className="eyebrow">Saga Solutions Studio / Saga Vibes / civic research / content systems</p>
             <h1>Make the idea payable.</h1>
             <p className="lede">
               Saga Solutions turns scattered concepts into launch-ready websites, client intake systems,
-              grant packets, content engines, and civic research products. The priority is clear:
-              package the work, capture leads, and sell useful systems now.
+              grant packets, content engines, civic research products, and cultural intelligence tools.
+              The priority is clear: package the work, capture leads, and sell useful systems now.
             </p>
             <div className="hero-actions">
               <ExternalAwareLink href="#packages" className="button primary">
                 View paid packages <ArrowRight size={18} />
               </ExternalAwareLink>
+              <ExternalAwareLink href="#saga-vibes" className="button ghost">
+                Open Saga Vibes
+              </ExternalAwareLink>
               <ExternalAwareLink href="#contact" className="button ghost">
                 Start an inquiry
-              </ExternalAwareLink>
-              <ExternalAwareLink href={links.githubRepo} className="button ghost">
-                GitHub repo
               </ExternalAwareLink>
             </div>
           </div>
@@ -300,7 +331,8 @@ function App() {
             <p className="terminal-line">saga://business-model</p>
             <h2>Commercial order</h2>
             <ol>
-              <li><strong>Saga pays the bills.</strong><span>Services, retainers, launch systems.</span></li>
+              <li><strong>Saga Solutions Studio pays the bills.</strong><span>Services, retainers, launch systems.</span></li>
+              <li><strong>Saga Vibes builds consumer insight products.</strong><span>Culture, music, identity, mysticism, social energy.</span></li>
               <li><strong>Mystic Sage scales IP.</strong><span>Reports, tools, workshops, membership.</span></li>
               <li><strong>STREETS builds institutional upside.</strong><span>Audits, pilots, dashboards, grants.</span></li>
             </ol>
@@ -313,7 +345,7 @@ function App() {
           <p className="eyebrow">Revenue-first service menu</p>
           <h2>Four offers a visitor can understand, request, and pay for.</h2>
           <p>
-            The site now leads with purchasable outcomes instead of broad ambition. These packages can be delivered
+            These packages belong to Saga Solutions Studio, the practical cashflow desk. They can be delivered
             manually now, then automated once repetition proves demand.
           </p>
         </div>
@@ -322,13 +354,39 @@ function App() {
         </div>
       </section>
 
-      <section className="section alt" id="divisions">
+      <section className="section alt" id="saga-vibes">
+        <div className="section-heading wide">
+          <p className="eyebrow">Saga Vibes</p>
+          <h2>Cultural and emotional intelligence for consumer-facing reflection.</h2>
+          <p>
+            Saga Vibes is not the technical build studio. It is the interpretive lane for media, identity,
+            mysticism, music, lifestyle psychology, social energy, trend interpretation, and emotionally literate
+            reflection tools.
+          </p>
+        </div>
+        <div className="vibes-grid">
+          {vibeProducts.map((item) => (
+            <article className="vibe-card" key={item.title}>
+              <BrainCircuit size={24} />
+              <p className="kicker">Saga Vibes product</p>
+              <h3>{item.title}</h3>
+              <p className="price">{item.price}</p>
+              <p>{item.body}</p>
+              <ExternalAwareLink href={inquiryHref(`Saga Vibes inquiry: ${item.title}`)} className="text-link">
+                Request this product <ArrowRight size={15} />
+              </ExternalAwareLink>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section" id="divisions">
         <div className="section-heading">
           <p className="eyebrow">Operating structure</p>
           <h2>The umbrella becomes legible.</h2>
           <p>
             Saga can still hold several ventures, but the public site needs hierarchy. The paid studio sits first;
-            experimental properties sit behind it.
+            Saga Vibes becomes its own culture-and-identity product lane.
           </p>
         </div>
         <div className="division-grid">
@@ -403,7 +461,7 @@ function App() {
         <div className="process-grid">
           {[
             ['Diagnose', 'Clarify the buyer, offer, constraints, assets, deadline, and revenue target.', Layers3],
-            ['Package', 'Turn the work into a scoped offer, landing page, deck, report, automation, or content system.', Workflow],
+            ['Package', 'Turn the work into a scoped offer, landing page, deck, report, automation, cultural brief, or content system.', Workflow],
             ['Launch', 'Ship the public page, contact flow, SEO layer, outreach copy, and next-action checklist.', Rocket],
             ['Refine', 'Use feedback, analytics, and sales conversations to tighten the offer and raise the price.', Code2],
           ].map(([title, body, Icon]) => (
@@ -438,10 +496,11 @@ function App() {
       <footer className="footer">
         <div>
           <strong>Saga Solutions</strong>
-          <p>Launch systems, AI operations, civic research, content infrastructure, and venture packaging.</p>
+          <p>Launch systems, AI operations, cultural intelligence, civic research, content infrastructure, and venture packaging.</p>
         </div>
         <div className="footer-links">
           <a href="#packages">Services</a>
+          <a href="#saga-vibes">Saga Vibes</a>
           <a href="#contact">Contact</a>
           <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
         </div>
@@ -502,7 +561,7 @@ button, textarea, select { font: inherit; }
   color: var(--accent); font-weight: 950; letter-spacing: -0.04em;
 }
 .brandmark strong, .brandmark small { display: block; }
-.brandmark small, .nav-links, .section-heading p, .package-card p, .division-card p, .venture-card p, .process-card p, .footer p { color: var(--muted); }
+.brandmark small, .nav-links, .section-heading p, .package-card p, .division-card p, .venture-card p, .process-card p, .vibe-card p, .footer p { color: var(--muted); }
 .nav-links { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.92rem; }
 .nav-links a:hover, .text-link:hover, .footer a:hover { color: var(--accent-2); }
 .hero-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(310px, 0.62fr); gap: 42px; align-items: center; max-width: 1240px; margin: 98px auto 0; position: relative; z-index: 1; }
@@ -516,17 +575,17 @@ button, textarea, select { font: inherit; }
   border-radius: 999px; padding: 13px 18px; display: inline-flex; align-items: center; justify-content: center;
   gap: 10px; cursor: pointer; transition: 0.2s ease; min-height: 46px;
 }
-.button:hover, .package-card:hover, .division-card:hover, .venture-card:hover, .process-card:hover, .resource-card:hover { transform: translateY(-2px); border-color: rgba(157, 247, 255, 0.54); }
+.button:hover, .package-card:hover, .division-card:hover, .venture-card:hover, .process-card:hover, .resource-card:hover, .vibe-card:hover { transform: translateY(-2px); border-color: rgba(157, 247, 255, 0.54); }
 .button.primary { border: 0; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #050509; font-weight: 950; }
 .button.ghost { background: rgba(255, 255, 255, 0.04); }
 .button.full { width: 100%; margin-top: 18px; }
-.signal-card, .package-card, .division-card, .venture-card, .process-card, .resource-card, .inquiry-panel, .proof-row {
+.signal-card, .package-card, .division-card, .venture-card, .process-card, .resource-card, .inquiry-panel, .proof-row, .vibe-card {
   border: 1px solid var(--line); background: linear-gradient(180deg, rgba(28, 31, 45, 0.9), rgba(9, 10, 18, 0.92)); box-shadow: 0 24px 90px rgba(0,0,0,0.24);
 }
 .signal-card { border-radius: 30px; padding: 26px; }
 .signal-card h2 { font-size: clamp(1.8rem, 3vw, 2.8rem); margin: 10px 0 20px; letter-spacing: -0.05em; }
 .signal-card ol { margin: 0; padding-left: 20px; display: grid; gap: 18px; }
-.signal-card li { color: var(--soft); line-height: 1.5; }
+.signal-card li { color: var(--soft); line-height: 1.5; display: list-item; }
 .signal-card li span { display: block; color: var(--muted); margin-top: 4px; }
 .terminal-line { font-family: 'Courier New', monospace; color: var(--accent-2); margin: 0; }
 .section { padding: 80px clamp(18px, 4vw, 64px); max-width: 1320px; margin: 0 auto; }
@@ -536,15 +595,16 @@ button, textarea, select { font: inherit; }
 .section-heading.wide { max-width: 980px; }
 .section-heading h2, .inquiry-panel h2 { font-size: clamp(2.1rem, 4.8vw, 4.6rem); line-height: 0.95; margin: 10px 0 16px; }
 .section-heading p, .inquiry-panel p { line-height: 1.72; }
-.package-grid, .division-grid, .venture-grid, .process-grid, .resource-grid { display: grid; gap: 18px; }
+.package-grid, .division-grid, .venture-grid, .process-grid, .resource-grid, .vibes-grid { display: grid; gap: 18px; }
 .package-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.division-grid, .venture-grid, .process-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.division-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.venture-grid, .process-grid, .vibes-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .resource-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.package-card, .division-card, .venture-card, .process-card { border-radius: 26px; padding: 24px; transition: 0.2s ease; }
+.package-card, .division-card, .venture-card, .process-card, .vibe-card { border-radius: 26px; padding: 24px; transition: 0.2s ease; }
 .card-topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .card-icon { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 15px; background: rgba(244,208,111,0.12); color: var(--accent); }
 .timeline { color: var(--muted); font-size: 0.82rem; }
-.package-card h3, .division-card h3, .venture-card h3, .process-card h3 { font-size: 1.35rem; margin: 10px 0; letter-spacing: -0.03em; }
+.package-card h3, .division-card h3, .venture-card h3, .process-card h3, .vibe-card h3 { font-size: 1.35rem; margin: 10px 0; letter-spacing: -0.03em; }
 .price { color: var(--accent); font-weight: 950; font-size: 1.2rem; }
 .audience { min-height: 94px; }
 ul { padding: 0; margin: 18px 0 0; list-style: none; display: grid; gap: 10px; }
@@ -568,9 +628,9 @@ textarea { min-height: 150px; resize: vertical; }
 .footer { padding: 34px clamp(18px, 4vw, 64px); border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; gap: 22px; align-items: center; max-width: 1320px; margin: 0 auto; }
 .footer p { margin: 8px 0 0; max-width: 680px; }
 .footer-links { display: flex; gap: 16px; flex-wrap: wrap; justify-content: flex-end; color: var(--muted); }
-@media (max-width: 1120px) { .package-grid, .division-grid, .venture-grid, .process-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .audience { min-height: auto; } }
+@media (max-width: 1180px) { .package-grid, .venture-grid, .process-grid, .vibes-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .division-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .audience { min-height: auto; } }
 @media (max-width: 820px) { .nav, .footer { align-items: flex-start; flex-direction: column; } .hero-grid, .proof-grid, .inquiry-panel { grid-template-columns: 1fr; } .resource-grid { grid-template-columns: 1fr; } .hero { padding-bottom: 54px; } }
-@media (max-width: 620px) { .package-grid, .division-grid, .venture-grid, .process-grid { grid-template-columns: 1fr; } .hero h1 { font-size: clamp(3rem, 18vw, 4.4rem); } .section { padding-block: 56px; } }
+@media (max-width: 620px) { .package-grid, .division-grid, .venture-grid, .process-grid, .vibes-grid { grid-template-columns: 1fr; } .hero h1 { font-size: clamp(3rem, 18vw, 4.4rem); } .section { padding-block: 56px; } }
 `;
 
 createRoot(document.getElementById('root')).render(<App />);
