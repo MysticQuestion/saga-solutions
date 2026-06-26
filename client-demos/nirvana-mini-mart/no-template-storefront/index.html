@@ -1,0 +1,936 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nirvana Mini Mart | Emeryville Snack Drops, Exotic Drinks & Apparel Finds</title>
+  <meta name="description" content="Sample no-template microsite prototype for Nirvana Mini Mart at 3823 San Pablo Ave, Emeryville: viral snacks, exotic drinks, rare candy, apparel wall, delivery links, and social embeds." />
+  <meta name="theme-color" content="#090909" />
+  <meta property="og:title" content="Nirvana Mini Mart | Digital Storefront Prototype" />
+  <meta property="og:description" content="A hand-coded digital storefront concept for Nirvana Mini Mart: snacks, drinks, apparel, social drops, delivery, and directions." />
+  <meta property="og:type" content="website" />
+  <style>
+    :root {
+      --ink: #070707;
+      --ink-2: #101010;
+      --paper: #f5efe2;
+      --paper-2: #fff8e8;
+      --lime: #c7ff2e;
+      --acid: #e4ff63;
+      --hot: #ff5b2e;
+      --blue: #44d7ff;
+      --pink: #ff4faf;
+      --chrome: #cfd6d8;
+      --muted: #a9a49a;
+      --line: rgba(255,255,255,.18);
+      --glass: rgba(255,255,255,.08);
+      --shadow: 0 24px 80px rgba(0,0,0,.52);
+      --radius-sm: 8px;
+      --radius-md: 18px;
+      --radius-lg: 30px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: Georgia, "Times New Roman", serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at 12% 4%, rgba(199,255,46,.18), transparent 32rem),
+        radial-gradient(circle at 90% 10%, rgba(255,79,175,.15), transparent 28rem),
+        linear-gradient(180deg, #030303 0%, #0a0a0a 50%, #111 100%);
+      color: var(--paper);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+      background-size: 26px 26px;
+      mix-blend-mode: screen;
+      opacity: .4;
+      z-index: 0;
+    }
+
+    a { color: inherit; }
+    .page { position: relative; z-index: 1; }
+
+    .ticker {
+      width: 100%;
+      background: var(--lime);
+      color: #090909;
+      overflow: hidden;
+      border-bottom: 3px solid #000;
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: .75rem;
+      font-weight: 900;
+    }
+    .ticker span {
+      display: inline-block;
+      white-space: nowrap;
+      padding: .65rem 0;
+      animation: move 28s linear infinite;
+    }
+    @keyframes move { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(7,7,7,.88);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: .85rem 1rem;
+    }
+    .brand-lockup {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      text-decoration: none;
+    }
+    .mark {
+      width: 42px;
+      height: 42px;
+      border: 2px solid var(--paper);
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      transform: rotate(-3deg);
+      background: #000;
+      box-shadow: inset 0 0 0 4px rgba(199,255,46,.12);
+      font-family: var(--mono);
+      font-weight: 900;
+    }
+    .brand-name {
+      display: grid;
+      line-height: 1;
+    }
+    .brand-name strong {
+      font-family: var(--mono);
+      font-size: .94rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .brand-name small {
+      color: var(--muted);
+      font-size: .72rem;
+      margin-top: .25rem;
+    }
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: .35rem;
+      padding: 0;
+      margin: 0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--paper);
+      font-size: .78rem;
+      font-family: var(--mono);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+      padding: .55rem .72rem;
+      border-radius: 999px;
+    }
+    nav a:hover, nav a:focus-visible {
+      border-color: var(--lime);
+      color: var(--lime);
+      outline: none;
+    }
+
+    .hero {
+      min-height: 90vh;
+      display: grid;
+      align-items: center;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: clamp(2rem, 6vw, 5rem) 1rem 3rem;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .street-sign {
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      width: fit-content;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color: var(--paper-2);
+      border-radius: 999px;
+      padding: .45rem .7rem;
+      font-family: var(--mono);
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .dot { width: .55rem; height: .55rem; background: var(--lime); border-radius: 50%; box-shadow: 0 0 18px var(--lime); }
+
+    .hero h1 {
+      max-width: 950px;
+      margin: 1rem 0 0;
+      font-size: clamp(3.05rem, 11vw, 8.4rem);
+      line-height: .86;
+      letter-spacing: -.085em;
+      text-transform: uppercase;
+      font-weight: 1000;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--ink);
+      -webkit-text-stroke: 1.5px var(--paper);
+      text-shadow: 5px 5px 0 var(--hot);
+    }
+    .hero p.lede {
+      max-width: 710px;
+      margin: 1.2rem 0 0;
+      color: #ded6c8;
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
+      line-height: 1.55;
+    }
+    .cta-strip {
+      margin-top: 1.5rem;
+      display: flex;
+      gap: .7rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      text-decoration: none;
+      border: 2px solid var(--paper);
+      padding: .9rem 1rem;
+      font-family: var(--mono);
+      text-transform: uppercase;
+      font-weight: 900;
+      letter-spacing: .04em;
+      border-radius: 0;
+      box-shadow: 5px 5px 0 #000;
+      transition: transform .16s ease, box-shadow .16s ease;
+    }
+    .btn:hover, .btn:focus-visible { transform: translate(3px, 3px); box-shadow: 2px 2px 0 #000; outline: none; }
+    .btn.primary { background: var(--lime); color: #080808; }
+    .btn.secondary { background: #111; color: var(--paper); }
+    .btn.hot { background: var(--hot); color: #080808; }
+
+    .storefront {
+      position: relative;
+      border: 4px solid #222;
+      background: linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.025));
+      box-shadow: var(--shadow);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .store-awning {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      height: 54px;
+      border-bottom: 4px solid #111;
+    }
+    .store-awning div:nth-child(odd) { background: var(--lime); }
+    .store-awning div:nth-child(even) { background: var(--ink); }
+    .store-window {
+      position: relative;
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 1rem;
+      background:
+        linear-gradient(115deg, rgba(255,255,255,.12), transparent 24%),
+        linear-gradient(180deg, rgba(68,215,255,.08), rgba(255,79,175,.06)),
+        #050505;
+    }
+    .store-window::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, transparent 0 42%, rgba(255,255,255,.12) 43%, transparent 48% 100%);
+      pointer-events: none;
+    }
+    .neon-box {
+      border: 2px solid var(--lime);
+      padding: 1rem;
+      min-height: 220px;
+      display: grid;
+      align-content: end;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(199,255,46,.18), transparent 14rem),
+        rgba(0,0,0,.72);
+      position: relative;
+      overflow: hidden;
+    }
+    .neon-box h2 {
+      margin: 0;
+      font-size: clamp(2.1rem, 6vw, 4.8rem);
+      line-height: .86;
+      text-transform: uppercase;
+      font-weight: 1000;
+      letter-spacing: -.06em;
+    }
+    .window-stack { display: grid; gap: 1rem; }
+    .window-ticket {
+      min-height: 100px;
+      background: var(--paper-2);
+      color: #080808;
+      padding: 1rem;
+      font-family: var(--mono);
+      text-transform: uppercase;
+      border: 2px dashed #080808;
+    }
+    .window-ticket strong { display: block; font-size: 1.1rem; margin-bottom: .35rem; }
+    .window-ticket span { font-size: .78rem; line-height: 1.45; display: block; }
+
+    section {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: clamp(3rem, 7vw, 6rem) 1rem;
+    }
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.4rem;
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 1rem;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4.8rem);
+      line-height: .9;
+      text-transform: uppercase;
+      letter-spacing: -.06em;
+      font-weight: 1000;
+    }
+    .section-head p {
+      max-width: 400px;
+      margin: 0;
+      color: #c7c1b7;
+      line-height: 1.5;
+    }
+
+    .shelf {
+      border: 3px solid #222;
+      background: #090909;
+      box-shadow: var(--shadow);
+    }
+    .shelf-row {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      border-bottom: 5px solid #191919;
+    }
+    .shelf-row:last-child { border-bottom: 0; }
+    .product-tile {
+      min-height: 180px;
+      border-right: 1px solid #222;
+      padding: .8rem;
+      display: grid;
+      align-content: space-between;
+      background:
+        radial-gradient(circle at 50% 26%, var(--tile), transparent 5.6rem),
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.01));
+    }
+    .product-tile:last-child { border-right: 0; }
+    .product-tile small {
+      font-family: var(--mono);
+      color: var(--paper);
+      background: #000;
+      width: fit-content;
+      padding: .25rem .4rem;
+      border: 1px solid rgba(255,255,255,.25);
+      text-transform: uppercase;
+      font-size: .62rem;
+    }
+    .product-shape {
+      width: 74px;
+      height: 98px;
+      margin: .3rem auto;
+      border-radius: 12px 12px 4px 4px;
+      border: 2px solid rgba(255,255,255,.28);
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.18), transparent 30%),
+        var(--tile);
+      box-shadow: 9px 10px 0 rgba(0,0,0,.32);
+    }
+    .product-tile strong {
+      font-family: var(--mono);
+      font-size: .82rem;
+      text-transform: uppercase;
+      line-height: 1.1;
+      letter-spacing: -.02em;
+    }
+    .shelf-label {
+      background: var(--paper-2);
+      color: #080808;
+      font-family: var(--mono);
+      text-transform: uppercase;
+      padding: .55rem .7rem;
+      border-top: 2px solid #000;
+      display: flex;
+      justify-content: space-between;
+      gap: .4rem;
+      font-weight: 900;
+      font-size: .75rem;
+    }
+
+    .rack {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .rack-rail {
+      grid-column: 1 / -1;
+      height: 18px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #777, #f3f3f3, #777);
+      box-shadow: inset 0 0 8px rgba(0,0,0,.6), 0 18px 30px rgba(0,0,0,.4);
+    }
+    .hanger-card {
+      position: relative;
+      min-height: 320px;
+      background: #0e0e0e;
+      border: 2px solid var(--line);
+      display: grid;
+      align-content: end;
+      padding: 1rem;
+      overflow: hidden;
+    }
+    .hanger-card::before {
+      content: "";
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      width: 80px;
+      height: 80px;
+      border: 5px solid var(--chrome);
+      border-bottom: 0;
+      border-radius: 80px 80px 0 0;
+      transform: translateX(-50%);
+    }
+    .garment {
+      position: absolute;
+      inset: 46px 18% auto;
+      height: 180px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.15), transparent 25%),
+        var(--garment);
+      border-radius: 28px 28px 16px 16px;
+      clip-path: polygon(18% 0, 82% 0, 100% 24%, 86% 42%, 86% 100%, 14% 100%, 14% 42%, 0 24%);
+      box-shadow: 0 18px 42px rgba(0,0,0,.44);
+    }
+    .hangtag {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      background: var(--lime);
+      color: #080808;
+      font-family: var(--mono);
+      font-weight: 900;
+      text-transform: uppercase;
+      padding: .45rem .55rem;
+      transform: rotate(3deg);
+      box-shadow: 4px 4px 0 #000;
+      font-size: .7rem;
+    }
+    .hanger-card h3 {
+      position: relative;
+      margin: 0 0 .3rem;
+      font-size: clamp(1.6rem, 4vw, 3rem);
+      line-height: .9;
+      text-transform: uppercase;
+      letter-spacing: -.05em;
+      z-index: 1;
+    }
+    .hanger-card p {
+      position: relative;
+      margin: 0;
+      color: #cfc8ba;
+      line-height: 1.45;
+      z-index: 1;
+    }
+
+    .drop-board {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: .65rem;
+      background: #070707;
+      border: 3px solid #222;
+      padding: .7rem;
+      box-shadow: var(--shadow);
+    }
+    .drop-line {
+      display: grid;
+      grid-template-columns: 1.1fr .8fr .4fr;
+      align-items: center;
+      gap: .7rem;
+      padding: .9rem;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      font-family: var(--mono);
+      text-transform: uppercase;
+    }
+    .drop-line b { font-size: .98rem; }
+    .drop-line span { color: #c7c1b7; font-size: .78rem; }
+    .status {
+      justify-self: end;
+      color: #080808;
+      background: var(--status);
+      padding: .35rem .5rem;
+      font-weight: 900;
+      font-size: .7rem;
+      white-space: nowrap;
+    }
+
+    .receipt-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .receipt {
+      background: var(--paper-2);
+      color: #080808;
+      padding: 1rem;
+      font-family: var(--mono);
+      min-height: 260px;
+      position: relative;
+      box-shadow: 8px 8px 0 rgba(0,0,0,.5);
+    }
+    .receipt::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: -10px;
+      height: 10px;
+      background: repeating-linear-gradient(90deg, transparent 0 10px, var(--paper-2) 10px 20px);
+    }
+    .receipt h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      border-bottom: 2px dashed #111;
+      padding-bottom: .8rem;
+    }
+    .receipt p { line-height: 1.55; font-size: .9rem; }
+    .receipt .total { border-top: 2px dashed #111; padding-top: .8rem; font-weight: 900; }
+
+    .media-wall {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .75rem;
+      background: #050505;
+      padding: .75rem;
+      border: 3px solid #222;
+    }
+    .screen {
+      aspect-ratio: 9 / 16;
+      min-height: 320px;
+      border: 2px solid #333;
+      background:
+        linear-gradient(160deg, rgba(68,215,255,.18), rgba(255,79,175,.13)),
+        #0d0d0d;
+      display: grid;
+      align-content: space-between;
+      padding: .8rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(180deg, rgba(255,255,255,.04) 0 1px, transparent 1px 4px);
+      opacity: .45;
+    }
+    .screen > * { position: relative; z-index: 1; }
+    .screen small {
+      font-family: var(--mono);
+      color: var(--lime);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .screen strong {
+      font-size: 1.55rem;
+      line-height: .95;
+      text-transform: uppercase;
+      letter-spacing: -.05em;
+    }
+    .embed-note {
+      grid-column: 1 / -1;
+      color: #c9c1b4;
+      font-size: .9rem;
+      line-height: 1.55;
+      border: 1px dashed rgba(255,255,255,.22);
+      padding: .9rem;
+      background: rgba(255,255,255,.04);
+    }
+
+    .counter {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 1rem;
+    }
+    .sticker-board {
+      background: var(--paper-2);
+      color: #080808;
+      padding: 1rem;
+      min-height: 320px;
+      border: 3px solid #000;
+      box-shadow: 9px 9px 0 rgba(0,0,0,.5);
+    }
+    .sticker-board h3 {
+      font-family: var(--mono);
+      margin: 0 0 1rem;
+      text-transform: uppercase;
+      font-size: 1.1rem;
+    }
+    .stickers { display: flex; flex-wrap: wrap; gap: .65rem; }
+    .sticker {
+      display: inline-flex;
+      text-decoration: none;
+      border: 2px solid #000;
+      color: #000;
+      padding: .7rem .85rem;
+      font-family: var(--mono);
+      font-weight: 900;
+      text-transform: uppercase;
+      background: var(--sticker);
+      box-shadow: 4px 4px 0 #000;
+      transform: rotate(var(--rot));
+    }
+    .counter-note {
+      background: #0b0b0b;
+      border: 2px solid var(--line);
+      padding: 1rem;
+    }
+    .counter-note h3 {
+      margin: 0 0 .6rem;
+      text-transform: uppercase;
+      font-size: clamp(1.7rem, 4vw, 3.5rem);
+      letter-spacing: -.06em;
+      line-height: .9;
+    }
+    .counter-note p { color: #cfc8ba; line-height: 1.55; }
+
+    .visit {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 1rem;
+    }
+    .map-card {
+      min-height: 360px;
+      background:
+        linear-gradient(90deg, transparent 49%, rgba(255,255,255,.07) 50%, transparent 51%),
+        linear-gradient(0deg, transparent 49%, rgba(255,255,255,.07) 50%, transparent 51%),
+        radial-gradient(circle at 52% 48%, var(--lime) 0 8px, transparent 9px),
+        #0b0b0b;
+      background-size: 42px 42px, 42px 42px, auto, auto;
+      border: 3px solid #222;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 1rem;
+    }
+    .map-card b {
+      display: block;
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: .9;
+      letter-spacing: -.06em;
+      text-transform: uppercase;
+      max-width: 520px;
+    }
+    .address-card {
+      background: var(--paper-2);
+      color: #080808;
+      padding: 1rem;
+      border: 3px solid #000;
+      font-family: var(--mono);
+    }
+    .address-card h3 { margin: 0 0 1rem; font-size: 1.4rem; text-transform: uppercase; }
+    .address-card p { font-size: 1rem; line-height: 1.5; }
+    .address-card .big-phone { font-size: 1.65rem; font-weight: 900; letter-spacing: -.05em; }
+
+    .compliance {
+      max-width: 1180px;
+      margin: 0 auto 2rem;
+      padding: 1rem;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.045);
+      color: #cfc8ba;
+      font-size: .9rem;
+      line-height: 1.55;
+    }
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 2rem 1rem;
+      color: #bdb6aa;
+      font-family: var(--mono);
+      font-size: .8rem;
+    }
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      nav ul { display: none; }
+      .store-window,
+      .rack,
+      .counter,
+      .visit { grid-template-columns: 1fr; }
+      .shelf-row { grid-template-columns: repeat(3, 1fr); }
+      .receipt-grid { grid-template-columns: 1fr; }
+      .media-wall { grid-template-columns: 1fr 1fr; }
+      .section-head { align-items: start; flex-direction: column; }
+    }
+    @media (max-width: 560px) {
+      .hero { min-height: auto; padding-top: 2rem; }
+      .hero h1 { font-size: clamp(3.1rem, 20vw, 5rem); }
+      .store-awning { height: 38px; }
+      .shelf-row { grid-template-columns: repeat(2, 1fr); }
+      .product-tile { min-height: 150px; }
+      .drop-line { grid-template-columns: 1fr; }
+      .drop-line .status { justify-self: start; }
+      .media-wall { grid-template-columns: 1fr; }
+      .screen { min-height: 280px; }
+      .btn { width: 100%; }
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ConvenienceStore",
+    "name": "Nirvana Mini Mart",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "3823 San Pablo Ave",
+      "addressLocality": "Emeryville",
+      "addressRegion": "CA",
+      "postalCode": "94608",
+      "addressCountry": "US"
+    },
+    "telephone": "+1-510-927-8070",
+    "sameAs": [
+      "https://www.instagram.com/nirvana_mini_mart/",
+      "https://www.ubereats.com/store/nirvana-mini-marts/Ez8RjTa5XC6J9exOT9omWQ",
+      "https://www.grubhub.com/restaurant/nirvana-mini-mart-3823-san-pablo-ave-emeryville/7940912",
+      "https://maps.roadtrippers.com/us/emeryville-ca/shopping/nirvana-mini-mart"
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="page">
+    <div class="ticker" aria-label="Store announcement ticker">
+      <span>Viral snacks · Exotic drinks · Rare candy · Apparel wall · Delivery links · Social drops · Call before visiting for specific items · Viral snacks · Exotic drinks · Rare candy · Apparel wall · Delivery links · Social drops · Call before visiting for specific items ·&nbsp;</span>
+    </div>
+
+    <header>
+      <div class="nav">
+        <a class="brand-lockup" href="#top" aria-label="Nirvana Mini Mart home">
+          <span class="mark">NM</span>
+          <span class="brand-name"><strong>Nirvana Mini Mart</strong><small>3823 San Pablo Ave</small></span>
+        </a>
+        <nav aria-label="Main navigation">
+          <ul>
+            <li><a href="#snack-wall">Snack Wall</a></li>
+            <li><a href="#apparel">Apparel</a></li>
+            <li><a href="#drops">Drops</a></li>
+            <li><a href="#social">Social</a></li>
+            <li><a href="#delivery">Delivery</a></li>
+            <li><a href="#visit">Visit</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div>
+          <span class="street-sign"><span class="dot" aria-hidden="true"></span> San Pablo Ave · Emeryville / West Oakland edge</span>
+          <h1 id="hero-title">Rare snacks. Cold drinks. <em>Wall fits.</em></h1>
+          <p class="lede">A no-template digital storefront concept for Nirvana Mini Mart: viral snacks, exotic drinks, rare candy, convenience essentials, sporty sweatsuits, and social-media discovery in one official base.</p>
+          <div class="cta-strip">
+            <a class="btn primary" href="https://www.instagram.com/nirvana_mini_mart/">Follow Instagram</a>
+            <a class="btn hot" href="https://www.ubereats.com/store/nirvana-mini-marts/Ez8RjTa5XC6J9exOT9omWQ">Order Delivery</a>
+            <a class="btn secondary" href="https://www.google.com/maps/search/?api=1&query=3823%20San%20Pablo%20Ave%20Emeryville%20CA%2094608">Get Directions</a>
+          </div>
+        </div>
+
+        <div class="storefront" aria-label="Digital storefront window concept">
+          <div class="store-awning" aria-hidden="true"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+          <div class="store-window">
+            <div class="neon-box">
+              <h2>Open the feed before you pull up.</h2>
+            </div>
+            <div class="window-stack">
+              <div class="window-ticket"><strong>Address</strong><span>3823 San Pablo Ave · Emeryville, CA 94608</span></div>
+              <div class="window-ticket"><strong>Phone</strong><span>(510) 927-8070 · call for hours, drops, and apparel availability</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="snack-wall" aria-labelledby="snack-wall-title">
+        <div class="section-head">
+          <h2 id="snack-wall-title">Snack wall, not stock cards.</h2>
+          <p>The product display should feel dense, fast-moving, and physical: shelves, labels, flavors, colors, restocks, and rare finds.</p>
+        </div>
+        <div class="shelf" aria-label="Snack wall sample grid">
+          <div class="shelf-row">
+            <article class="product-tile" style="--tile:#ff512f"><small>Viral</small><div class="product-shape"></div><strong>Hot chips & limited crunch</strong></article>
+            <article class="product-tile" style="--tile:#44d7ff"><small>Cold</small><div class="product-shape"></div><strong>Exotic sodas & imported drinks</strong></article>
+            <article class="product-tile" style="--tile:#ff4faf"><small>Sweet</small><div class="product-shape"></div><strong>Rare candy & sour drops</strong></article>
+            <article class="product-tile" style="--tile:#c7ff2e"><small>New</small><div class="product-shape"></div><strong>Internet-famous snack finds</strong></article>
+            <article class="product-tile" style="--tile:#f5efe2"><small>Local</small><div class="product-shape"></div><strong>Creator treats & local restocks</strong></article>
+            <article class="product-tile" style="--tile:#b08cff"><small>Fast</small><div class="product-shape"></div><strong>Call before visiting</strong></article>
+          </div>
+          <div class="shelf-label"><span>Replace with approved snack wall photos later</span><span>Inventory changes fast</span></div>
+        </div>
+      </section>
+
+      <section id="apparel" aria-labelledby="apparel-title">
+        <div class="section-head">
+          <h2 id="apparel-title">Apparel wall as a feature.</h2>
+          <p>The sweatsuits and sporty attire should not be hidden under “miscellaneous.” They are part of the store identity.</p>
+        </div>
+        <div class="rack">
+          <div class="rack-rail" aria-hidden="true"></div>
+          <article class="hanger-card" style="--garment: linear-gradient(135deg, #111, #626262);">
+            <span class="hangtag">In-store find</span>
+            <div class="garment" aria-hidden="true"></div>
+            <h3>Sporty sets</h3>
+            <p>Matching sweatsuits, casual sets, and wall pieces customers can see in person before buying.</p>
+          </article>
+          <article class="hanger-card" style="--garment: linear-gradient(135deg, #e5e5e5, #7f7f7f);">
+            <span class="hangtag">Wall rack</span>
+            <div class="garment" aria-hidden="true"></div>
+            <h3>Layers & statement pieces</h3>
+            <p>Use owner-approved apparel photos here: wall displays, racks, tags, sizes, and seasonal finds.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="drops" aria-labelledby="drops-title">
+        <div class="section-head">
+          <h2 id="drops-title">Drop board.</h2>
+          <p>A living board for what just came in, what sold fast, what people are asking for, and what to check on Instagram.</p>
+        </div>
+        <div class="drop-board">
+          <div class="drop-line"><b>Exotic drinks</b><span>Cold case / imported flavors / limited restocks</span><i class="status" style="--status:#44d7ff">Restocked</i></div>
+          <div class="drop-line"><b>Viral candy</b><span>Sour, sweet, rare, social-media driven</span><i class="status" style="--status:#ff4faf">New</i></div>
+          <div class="drop-line"><b>Apparel rack</b><span>Sweatsuits, sporty fits, wall finds</span><i class="status" style="--status:#c7ff2e">Ask staff</i></div>
+          <div class="drop-line"><b>Sweet treats</b><span>Creator/vendor drop space</span><i class="status" style="--status:#ff5b2e">Limited</i></div>
+          <div class="drop-line"><b>Convenience run</b><span>Daily essentials, late-night needs, quick stop</span><i class="status" style="--status:#f5efe2">Call first</i></div>
+        </div>
+      </section>
+
+      <section aria-labelledby="proof-title">
+        <div class="section-head">
+          <h2 id="proof-title">Review energy.</h2>
+          <p>No fake testimonials. These are paraphrased public-review themes to replace with verified copy later.</p>
+        </div>
+        <div class="receipt-grid">
+          <article class="receipt"><h3>Hidden-gem pull</h3><p>Customers describe the shop as more interesting than a standard convenience stop, with rare finds and unexpected selection.</p><div class="total">Use verified review excerpts only after permission/checking.</div></article>
+          <article class="receipt"><h3>Social discovery</h3><p>People find stores like this through TikTok, Instagram, reels, restocks, and word-of-mouth before they ever search Google.</p><div class="total">Social feed belongs near the top.</div></article>
+          <article class="receipt"><h3>Bigger selection</h3><p>The site should make the physical store feel worth visiting: snacks, drinks, apparel, essentials, and drop culture in one place.</p><div class="total">Design goal: make the store legible.</div></article>
+        </div>
+      </section>
+
+      <section id="social" aria-labelledby="social-title">
+        <div class="section-head">
+          <h2 id="social-title">Fresh from Nirvana.</h2>
+          <p>Use official embeds or owner-approved media. Do not scrape photos. Let the feed prove the store is active.</p>
+        </div>
+        <div class="media-wall">
+          <article class="screen"><small>Instagram embed</small><strong>Latest snack reel</strong><span>Paste approved Instagram embed here.</span></article>
+          <article class="screen"><small>TikTok embed</small><strong>Customer find</strong><span>Paste approved TikTok embed here.</span></article>
+          <article class="screen"><small>Instagram embed</small><strong>Apparel wall</strong><span>Show sweatsuits, racks, and wall pieces.</span></article>
+          <article class="screen"><small>Creator post</small><strong>Restock clip</strong><span>Feature vendor or local creator drops.</span></article>
+          <p class="embed-note">Implementation note: TikTok and Instagram posts should be embedded with attribution or replaced with owner-provided photos/videos. This keeps the site professional, safer, and easier to approve.</p>
+        </div>
+      </section>
+
+      <section id="delivery" aria-labelledby="delivery-title">
+        <div class="section-head">
+          <h2 id="delivery-title">Counter stickers, not boring links.</h2>
+          <p>Delivery buttons should feel like stickers on the front counter: useful, immediate, and part of the store environment.</p>
+        </div>
+        <div class="counter">
+          <div class="sticker-board">
+            <h3>Order / follow / verify</h3>
+            <div class="stickers">
+              <a class="sticker" style="--sticker:#c7ff2e; --rot:-2deg" href="https://www.instagram.com/nirvana_mini_mart/">Instagram</a>
+              <a class="sticker" style="--sticker:#ff5b2e; --rot:1.5deg" href="https://www.ubereats.com/store/nirvana-mini-marts/Ez8RjTa5XC6J9exOT9omWQ">Uber Eats</a>
+              <a class="sticker" style="--sticker:#44d7ff; --rot:-1deg" href="https://www.grubhub.com/restaurant/nirvana-mini-mart-3823-san-pablo-ave-emeryville/7940912">Grubhub</a>
+              <a class="sticker" style="--sticker:#ff4faf; --rot:2deg" href="#">DoorDash link TBD</a>
+              <a class="sticker" style="--sticker:#f5efe2; --rot:-2.5deg" href="https://maps.roadtrippers.com/us/emeryville-ca/shopping/nirvana-mini-mart">Reviews / Listing</a>
+              <a class="sticker" style="--sticker:#cfd6d8; --rot:1deg" href="tel:+15109278070">Call store</a>
+            </div>
+          </div>
+          <div class="counter-note">
+            <h3>Delivery menus do not show the whole store.</h3>
+            <p>Use the site to clarify that apparel, rare drops, and certain in-store finds may not appear on delivery apps. The call-to-action becomes: check Instagram, call first, then pull up.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="visit" aria-labelledby="visit-title">
+        <div class="section-head">
+          <h2 id="visit-title">Find the store.</h2>
+          <p>Prime corridor location: San Pablo Ave at the Emeryville / West Oakland edge.</p>
+        </div>
+        <div class="visit">
+          <div class="map-card"><b>3823 San Pablo Ave</b></div>
+          <div class="address-card">
+            <h3>Nirvana Mini Mart</h3>
+            <p>3823 San Pablo Ave<br />Emeryville, CA 94608</p>
+            <p class="big-phone">(510) 927-8070</p>
+            <p><strong>Hours:</strong> confirm with owner before publishing.</p>
+            <p><strong>Best customer note:</strong> Call before visiting for late-night hours, specific snack drops, or apparel availability.</p>
+            <p><a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=3823%20San%20Pablo%20Ave%20Emeryville%20CA%2094608">Open Map</a></p>
+          </div>
+        </div>
+      </section>
+
+      <div class="compliance" role="note">
+        <strong>Responsible 21+ note:</strong> Some age-restricted products may be available in-store. Valid ID required. Availability is subject to law and store policy. This prototype does not sell regulated products online and does not make health claims.
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <span>Nirvana Mini Mart · 3823 San Pablo Ave · Emeryville, CA 94608</span>
+        <span>Prototype by Saga Solutions · Replace all placeholders with approved client assets.</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
