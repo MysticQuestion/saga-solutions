@@ -1,1197 +1,877 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   ArrowRight,
+  ArrowUpRight,
+  BadgeCheck,
+  Banknote,
+  BarChart3,
   BookOpen,
   Bot,
-  BrainCircuit,
-  CheckCircle2,
+  BriefcaseBusiness,
+  Building2,
+  Check,
+  CircleDollarSign,
+  ClipboardList,
   Code2,
   Database,
-  ExternalLink,
-  FileText,
-  Globe2,
-  KeyRound,
-  Landmark,
-  Layers3,
-  Lock,
-  Radio,
-  Rocket,
-  Sparkles,
-  Store,
-  TerminalSquare,
-  Workflow,
+  FileSearch,
+  Gauge,
+  Mail,
+  Menu,
+  MessageSquareText,
+  Network,
+  Phone,
+  ReceiptText,
   Search,
-  Server,
   ShieldCheck,
+  Sparkles,
+  Target,
+  Workflow,
+  X,
+  Zap,
 } from 'lucide-react';
+import { heroImage } from './assets.js';
+import './styles.css';
 
-const links = {
-  sagaVibesLive: 'https://saga-vibe-studio.lovable.app/',
-  githubRepo: 'https://github.com/MysticQuestion/saga-solutions',
-  githubCodespaces: 'https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=1259516437',
-  questlyne: 'https://thequestlyne.blogspot.com/',
+const coordinator = {
+  name: 'Eric-Michael Wilson II',
+  role: 'Project Coordinator',
+  email: 'ericmichael.wil@gmail.com',
+  phone: '+1 (510) 882-3649',
 };
 
-const sagaVibesSystemPrompt = `You are Codex operating inside the GitHub Codespaces workspace for the Saga Vibes application. Build Saga Vibes as a production-grade AI app-construction operating system: a web app that lets a user describe an idea, select a project type, generate a runnable repository, edit files with AI assistance, preview the app, manage tasks, connect GitHub, and prepare deployment.
-
-Primary objective:
-Create a working full-stack app that feels like a serious alternative to Lovable, Bolt, Replit Agent, v0, and other vibe-coding interfaces, but with a stronger operating model: project memory, requirements discipline, security checks, reproducible builds, and transparent execution logs.
-
-Non-negotiable result:
-The repository must run locally in Codespaces with:
-- npm install
-- npm run dev
-- npm run build
-- npm run test when tests are present
-
-Recommended stack:
-- Next.js App Router with TypeScript
-- Tailwind CSS
-- shadcn/ui or an equivalent accessible component system
-- Supabase/Postgres for persistence, with local fallback mocks when Supabase variables are absent
-- Auth-ready architecture, even if local dev uses a demo user
-- OpenAI-compatible provider abstraction, supporting OPENAI_API_KEY when available and a deterministic mock agent when absent
-- GitHub integration boundary with a service layer and mocked local adapter when credentials are absent
-- Optional sandbox execution adapter for E2B, Docker, or local child-process execution, but never execute untrusted code without explicit isolation
-
-Core modules to implement:
-1. Studio Dashboard
-   - Project list
-   - New project wizard
-   - Recent activity
-   - Build health cards
-   - Prompt library entry points
-
-2. New Project Wizard
-   - Input: project name, one-sentence idea, target users, app type, required features, data sources, integrations, tone/design direction, deployment target
-   - Output: structured project brief, file plan, route plan, data model, test plan, risks, first sprint backlog
-   - Save generated brief as a project artifact
-
-3. AI Build Console
-   - Chat interface with system, user, assistant, and tool-event messages
-   - Agent modes: Architect, Builder, Debugger, Refactorer, Security Reviewer, Product Strategist
-   - Every response must produce either a plan, patch, test result, question, or documented decision
-   - Include a visible execution ledger: what changed, why, what still needs attention
-
-4. Repository Workspace
-   - File tree
-   - Code editor area
-   - Diff viewer
-   - Patch apply/reject controls
-   - Commit message generator
-   - Branch naming helper
-   - README and environment variable inspector
-
-5. Live Preview
-   - Preview panel with loading/error states
-   - Route shortcuts
-   - Responsive viewport presets
-   - Console/error display
-   - Build status
-
-6. Deployment Desk
-   - Deployment checklist
-   - Environment variable checklist
-   - GitHub push instructions
-   - Vercel/Netlify/Railway deployment notes
-   - Domain and SEO readiness checklist
-   - Rollback notes
-
-7. Prompt Library
-   - Codex-ready prompts for creating apps, debugging, adding auth, adding payments, adding dashboards, scraping/importing public data, writing tests, and creating documentation
-   - Each prompt has title, use case, required inputs, full prompt body, and copy button
-
-8. System Memory
-   - Store project briefs, decisions, tasks, file changes, deployment notes, and unresolved risks
-   - Create a “project constitution” per app: purpose, users, design law, forbidden assumptions, security posture, revenue model, and success metrics
-
-9. Governance and Safety Layer
-   - Never claim a build passed unless tests actually ran
-   - Never invent credentials, API keys, private URLs, or successful deployments
-   - Mark missing integrations as pending
-   - Add dependency/license checks
-   - Add security checklist for auth, secrets, user data, API routes, prompt injection, rate limits, and server-side execution
-
-10. Saga Solutions Integration
-   - Include navigation links back to Saga Solutions, Questlyne Blog, Citizens Transparency Institute, Neural Breach/Mad Evil Genius, and the live Saga Vibes reference URL
-   - Build a public-facing landing page and a logged-in studio shell
-
-Data model:
-Create TypeScript interfaces and, if using Supabase, SQL migrations for:
-- users
-- projects
-- project_briefs
-- conversations
-- messages
-- artifacts
-- tasks
-- builds
-- deployments
-- prompt_templates
-- decisions
-- integrations
-
-Minimum screens/routes:
-- /
-- /studio
-- /studio/new
-- /studio/projects/[projectId]
-- /studio/projects/[projectId]/files
-- /studio/projects/[projectId]/preview
-- /studio/projects/[projectId]/deploy
-- /prompts
-- /docs
-- /settings
-
-Implementation discipline:
-- Build in vertical slices, not empty placeholder pages.
-- Use meaningful mock data only where real credentials are absent.
-- Keep all buttons, forms, and navigation functional.
-- Add loading, empty, error, and success states.
-- Add tests for utilities, data transforms, prompt generation, and project creation logic.
-- Add a seed script for demo projects.
-- Add clear README instructions for Codespaces, local dev, environment variables, and deployment.
-- Add .env.example.
-- Add a CHANGELOG.md.
-- Add a docs/ARCHITECTURE.md explaining the agent loop, data model, integrations, and security limits.
-
-Design direction:
-The visual language should feel like a sovereign creative lab: cinematic, dark, luminous, editorial, operationally serious. Avoid toy-like dashboards. Use strong hierarchy, exact labels, readable typography, status panels, command surfaces, and crisp cards. The app should feel powerful enough for entrepreneurs, journalists, policy researchers, creators, civic technologists, and small-business operators.
-
-Acceptance criteria:
-- npm run build passes.
-- All routes render.
-- Navigation has no dead buttons.
-- New project wizard saves a project brief locally or in Supabase.
-- Prompt library copy buttons work.
-- AI console works with a mock provider when no API key exists and switches to a real provider when configured.
-- README explains setup clearly.
-- The app makes missing integrations visible instead of pretending they work.
-- The resulting codebase is clean enough for GitHub, Codespaces, and deployment.`;
-
-const initiatives = [
+const portfolio = [
   {
-    title: 'Saga Vibes',
-    kicker: 'AI build studio',
-    body:
-      'A creative operating system for turning ideas into structured briefs, working repositories, previews, deployments, and project memory.',
-    icon: Sparkles,
-    href: '#saga-vibes',
-    action: 'Open Saga Vibes page',
+    name: 'STREETS Environmental Sentinel Network',
+    category: 'Civic systems',
+    description:
+      'A public-interest conditions platform pairing resident documentation, OAK311-ready evidence, explainable analysis, and field-service coordination.',
+    href: 'https://oaklandstreets.live/',
+    status: 'Live',
+    tags: ['Civic data', 'Field operations', 'Evidence'],
   },
   {
-    title: 'The Questlyne Blog',
-    kicker: 'Original essay archive',
-    body:
-      'A minimal literary archive linked to the wider Saga Solutions system, built for essays, spiritual analysis, journalism, and durable authorship.',
-    icon: BookOpen,
-    href: links.questlyne,
-    action: 'Visit Questlyne',
-    external: true,
+    name: 'Saga Vibes',
+    category: 'Product development',
+    description:
+      'An AI-assisted build studio designed to convert ideas into disciplined briefs, repositories, working interfaces, and deployment plans.',
+    href: 'https://saga-vibe-studio.lovable.app/',
+    status: 'Active build',
+    tags: ['AI systems', 'Product', 'Automation'],
   },
   {
-    title: 'Citizens Transparency Institute',
-    kicker: 'Public-interest research desk',
-    body:
-      'A civic resource hub for records requests, budgets, public health data, food systems, corporate accountability, and government transparency.',
-    icon: Landmark,
-    href: '#transparency-institute',
-    action: 'Open resources',
+    name: 'Mystic Sage',
+    category: 'Knowledge product',
+    description:
+      'A publishing and timing-intelligence platform joining structured interpretation, educational products, workshops, and digital tools.',
+    href: 'https://mysticsage.xyz/',
+    status: 'Live',
+    tags: ['Publishing', 'Product design', 'Commerce'],
   },
   {
-    title: 'Neural Breach / Mad Evil Genius',
-    kicker: 'Commerce and storyworld node',
-    body:
-      'A cyberpunk commerce surface for Neural Breach, preserving the existing shop concept while routing it into the broader Saga ecosystem.',
-    icon: Store,
-    href: '#neural-breach-shop',
-    action: 'View shop node',
+    name: 'Bay Evidence Hub',
+    category: 'Investigative research',
+    description:
+      'A regional research desk built to organize public records, homelessness policy evidence, data notes, and publication-ready investigations.',
+    href: 'https://bay-evidence-hub.lovable.app/',
+    status: 'Development',
+    tags: ['Research', 'Public records', 'Journalism'],
+  },
+  {
+    name: 'Ark of Bones',
+    category: 'Client platform',
+    description:
+      'A commercial and cultural platform for high-technology domino tables, recorded play, events, merchandise, and licensing opportunities.',
+    href: 'https://www.arkofbones.com/',
+    status: 'Client work',
+    tags: ['Commerce', 'Media', 'Experience'],
+  },
+  {
+    name: 'The Questlyne',
+    category: 'Editorial archive',
+    description:
+      'An independent essay and analysis archive supporting durable authorship, cultural criticism, spiritual inquiry, and long-form publishing.',
+    href: 'https://thequestlyne.blogspot.com/',
+    status: 'Published',
+    tags: ['Editorial', 'SEO', 'Archive'],
   },
 ];
 
-const vibeCapabilities = [
+const capabilities = [
   {
-    title: 'Prompt-to-App Studio',
-    body: 'Convert rough ideas into app briefs, route maps, component plans, database schemas, and first-sprint task lists.',
-    icon: BrainCircuit,
-    href: '#working-system',
+    icon: Target,
+    title: 'Strategy and research',
+    detail:
+      'Market scans, stakeholder analysis, public-records research, behavioral insight, competitive positioning, and decision briefs.',
+    keywords: ['strategy', 'research', 'market', 'policy', 'competitor', 'analysis', 'grant'],
   },
   {
-    title: 'Repository Control Tower',
-    body: 'Inspect files, review proposed patches, generate commits, track decisions, and keep the build history intelligible.',
     icon: Code2,
-    href: '#repo-workspace',
+    title: 'Websites and digital products',
+    detail:
+      'Conversion-focused websites, microsites, portals, dashboards, product prototypes, repositories, and deployment architecture.',
+    keywords: ['website', 'app', 'portal', 'dashboard', 'product', 'prototype', 'software'],
   },
   {
-    title: 'AI Orchestration Layer',
-    body: 'Run architect, builder, debugger, refactorer, security, and product strategy modes with a visible work ledger.',
-    icon: Bot,
-    href: '#agent-loop',
-  },
-  {
-    title: 'Preview and Deployment Desk',
-    body: 'Move from prototype to deployable app with checks for routes, environment variables, security, domains, and rollback.',
-    icon: Rocket,
-    href: '#deployment-desk',
-  },
-];
-
-const systemModules = [
-  {
-    id: 'studio-dashboard',
-    title: 'Studio Dashboard',
-    icon: Layers3,
-    body: 'Project inventory, recent activity, build health, prompt library entry points, and clear next actions.',
-  },
-  {
-    id: 'intake-queue',
-    title: 'New Project Wizard',
-    icon: FileText,
-    body: 'Collects idea, users, features, data needs, integrations, design direction, success metrics, and deployment target.',
-  },
-  {
-    id: 'agent-loop',
-    title: 'AI Build Console',
-    icon: TerminalSquare,
-    body: 'Chat plus execution ledger. Every agent answer must produce a plan, patch, test result, question, or documented decision.',
-  },
-  {
-    id: 'repo-workspace',
-    title: 'Repository Workspace',
     icon: Workflow,
-    body: 'File tree, editor, diff viewer, patch controls, branch helper, commit message generator, and README inspector.',
+    title: 'Automation and operations',
+    detail:
+      'Intake systems, document pipelines, alerts, CRM workflows, content operations, project ledgers, and repeatable back-office processes.',
+    keywords: ['automation', 'workflow', 'crm', 'operations', 'intake', 'pipeline', 'process'],
   },
   {
-    id: 'deployment-desk',
-    title: 'Deployment Desk',
-    icon: Server,
-    body: 'Environment checklist, deploy readiness, GitHub push notes, Vercel/Railway/Netlify notes, domain checks, and rollback notes.',
+    icon: FileSearch,
+    title: 'Civic intelligence',
+    detail:
+      'Public records requests, transparency systems, evidence management, government research, service mapping, and accountability tools.',
+    keywords: ['government', 'records', 'transparency', 'civic', 'evidence', 'foia', 'cpra'],
   },
   {
-    id: 'governance-layer',
-    title: 'Governance Layer',
-    icon: ShieldCheck,
-    body: 'No false success claims, no invented keys, no fake deployments, explicit risk register, and security review surfaces.',
+    icon: BarChart3,
+    title: 'Data and decision systems',
+    detail:
+      'Data models, research databases, scorecards, dashboards, source tracking, reporting systems, and explainable metrics.',
+    keywords: ['data', 'database', 'metrics', 'report', 'analytics', 'dashboard', 'tracking'],
+  },
+  {
+    icon: Sparkles,
+    title: 'Brand, media, and commerce',
+    detail:
+      'Brand systems, editorial strategy, campaign assets, merchandise architecture, sales funnels, content libraries, and launch plans.',
+    keywords: ['brand', 'media', 'content', 'commerce', 'store', 'campaign', 'merchandise'],
   },
 ];
 
-const resourceLinks = [
+const packages = [
   {
-    label: 'Saga Vibes live reference',
-    href: links.sagaVibesLive,
-    icon: Globe2,
-    type: 'External',
+    id: 'diagnostic',
+    name: 'Diagnostic Sprint',
+    price: '$150',
+    cadence: 'one-time',
+    description:
+      'A focused review of one project, problem, site, offer, or operational bottleneck.',
+    includes: ['60-minute working session', 'Written findings', 'Prioritized next actions', 'One follow-up clarification'],
+    bestFor: 'A defined problem that needs an expert second look.',
   },
   {
-    label: 'GitHub repository',
-    href: links.githubRepo,
-    icon: Code2,
-    type: 'Repo',
+    id: 'blueprint',
+    name: 'Build Blueprint',
+    price: '$450',
+    cadence: 'one-time',
+    description:
+      'A structured plan for turning an idea into a credible, buildable, monetizable project.',
+    includes: ['Research and positioning', 'Feature and route plan', 'Revenue model', 'Implementation roadmap'],
+    bestFor: 'Founders who need architecture before spending heavily.',
+    featured: true,
   },
   {
-    label: 'Open in GitHub Codespaces',
-    href: links.githubCodespaces,
-    icon: TerminalSquare,
-    type: 'Build',
+    id: 'prototype',
+    name: 'Prototype Sprint',
+    price: '$1,250',
+    cadence: 'starting price',
+    description:
+      'A working first version of a site, portal, campaign surface, dashboard, or digital service.',
+    includes: ['Blueprint included', 'Working interface', 'Repository and deployment prep', 'Review and revision round'],
+    bestFor: 'Projects ready to move from planning into visible execution.',
   },
   {
-    label: 'Questlyne Blog',
-    href: links.questlyne,
-    icon: BookOpen,
-    type: 'Archive',
-  },
-];
-
-const transparencyResources = [
-  'Public records request strategy and request logs',
-  'Budget, contract, and tax-spending research workflows',
-  'Food, medicine, housing, policing, and infrastructure accountability links',
-  'NextRequest-style civic request platform directory',
-  'Downloadable request templates and evidence checklists',
-  'Corporate ownership, lobbying, procurement, and campaign finance research notes',
-];
-
-const shopProducts = [
-  {
-    title: 'Neural Circuit Cargo Joggers',
-    price: '$78',
-    body: 'Technical black cargo joggers with circuit panel language and utility-pocket silhouette.',
-  },
-  {
-    title: 'Crowned Circuit Crewneck',
-    price: '$82',
-    body: 'Oversized crewneck built around the crowned-brain mark and neon circuit language.',
-  },
-  {
-    title: 'Blacksite Tactical Jacket',
-    price: '$148',
-    body: 'Premium outerwear concept with modular patch logic and cyber-field styling.',
+    id: 'partner',
+    name: 'Embedded Project Partner',
+    price: '$3,500+',
+    cadence: 'per engagement',
+    description:
+      'A multi-stage engagement spanning strategy, research, build execution, launch, and operating systems.',
+    includes: ['Custom scope', 'Weekly decision ledger', 'Cross-platform implementation', 'Launch and handoff'],
+    bestFor: 'Organizations requiring coordinated work across disciplines.',
   },
 ];
 
-function ExternalAwareLink({ href, children, className = '', external = false, onClick }) {
-  const isExternal = external || href?.startsWith('http');
-  return (
-    <a
-      href={href}
-      className={className}
-      onClick={onClick}
-      target={isExternal ? '_blank' : undefined}
-      rel={isExternal ? 'noreferrer' : undefined}
-    >
-      {children}
-      {isExternal ? <ExternalLink size={15} aria-hidden="true" /> : null}
-    </a>
-  );
+const initialLead = {
+  name: '',
+  email: '',
+  phone: '',
+  organization: '',
+  projectTitle: '',
+  projectSummary: '',
+  budget: '',
+  timeline: '',
+};
+
+const initialBrief = {
+  desiredOutcome: '',
+  primaryUsers: '',
+  requiredFeatures: '',
+  referenceLinks: '',
+  existingAssets: '',
+  integrations: '',
+  successMeasures: '',
+  constraints: '',
+  decisionMakers: '',
+  targetLaunch: '',
+};
+
+function classNames(...values) {
+  return values.filter(Boolean).join(' ');
+}
+
+async function postJSON(url, body) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const error = new Error(data.error || 'The request could not be completed.');
+    error.code = data.code;
+    throw error;
+  }
+  return data;
 }
 
 function App() {
-  const [copyStatus, setCopyStatus] = useState('');
-  const promptStats = useMemo(() => {
-    const words = sagaVibesSystemPrompt.trim().split(/\s+/).length;
-    return { words, characters: sagaVibesSystemPrompt.length };
-  }, []);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [capabilityQuery, setCapabilityQuery] = useState('');
+  const [selectedPackage, setSelectedPackage] = useState('blueprint');
+  const [lead, setLead] = useState(initialLead);
+  const [leadState, setLeadState] = useState({ status: 'idle', message: '' });
+  const [checkoutState, setCheckoutState] = useState({ status: 'idle', message: '' });
+  const [brief, setBrief] = useState(initialBrief);
+  const [briefState, setBriefState] = useState({ status: 'idle', message: '' });
+  const [paymentState, setPaymentState] = useState({ status: 'idle', message: '' });
 
-  const copyPrompt = async () => {
+  const params = useMemo(() => new URLSearchParams(window.location.search), []);
+  const paymentSucceeded = params.get('payment') === 'success';
+  const paymentCancelled = params.get('payment') === 'cancelled';
+  const sessionId = params.get('session_id') || '';
+  const paidPackage = params.get('package') || selectedPackage;
+
+  const matchedCapabilities = useMemo(() => {
+    const normalized = capabilityQuery.trim().toLowerCase();
+    if (!normalized) return capabilities.slice(0, 3);
+    const matches = capabilities
+      .map((capability) => ({
+        ...capability,
+        score: capability.keywords.reduce(
+          (total, keyword) => total + (normalized.includes(keyword) ? 2 : 0),
+          normalized
+            .split(/\s+/)
+            .reduce((total, word) => total + (capability.detail.toLowerCase().includes(word) ? 1 : 0), 0),
+        ),
+      }))
+      .sort((a, b) => b.score - a.score);
+    return matches.filter((item) => item.score > 0).slice(0, 3).length
+      ? matches.filter((item) => item.score > 0).slice(0, 3)
+      : capabilities.slice(0, 3);
+  }, [capabilityQuery]);
+
+  const selectedPackageData = packages.find((item) => item.id === selectedPackage) || packages[1];
+
+  useEffect(() => {
+    if (!paymentSucceeded || !sessionId) return;
+    const storageKey = `saga-payment-confirmed:${sessionId}`;
+    if (window.sessionStorage.getItem(storageKey)) {
+      setPaymentState({ status: 'success', message: 'Payment was verified during this browser session.' });
+      return;
+    }
+
+    setPaymentState({ status: 'loading', message: 'Verifying payment and notifying the project coordinator…' });
+    postJSON('/api/payment-confirmation', { sessionId, packageId: paidPackage })
+      .then((data) => {
+        window.sessionStorage.setItem(storageKey, 'true');
+        setPaymentState({
+          status: 'success',
+          message: `Payment verified. Coordinator notification reference: ${data.reference}.`,
+        });
+      })
+      .catch((error) => {
+        setPaymentState({
+          status: 'error',
+          message: error.message || 'Payment verification could not be completed automatically.',
+        });
+      });
+  }, [paymentSucceeded, sessionId, paidPackage]);
+
+  const updateLead = (event) => {
+    const { name, value } = event.target;
+    setLead((current) => ({ ...current, [name]: value }));
+  };
+
+  const updateBrief = (event) => {
+    const { name, value } = event.target;
+    setBrief((current) => ({ ...current, [name]: value }));
+  };
+
+  const validateLead = () => {
+    if (!lead.name.trim() || !lead.email.trim() || !lead.projectTitle.trim() || !lead.projectSummary.trim()) {
+      setLeadState({
+        status: 'error',
+        message: 'Name, email, project title, and a concise project summary are required.',
+      });
+      return false;
+    }
+    return true;
+  };
+
+  const submitLead = async (event) => {
+    event.preventDefault();
+    if (!validateLead()) return;
+
+    setLeadState({ status: 'loading', message: 'Sending your project outline…' });
     try {
-      await navigator.clipboard.writeText(sagaVibesSystemPrompt);
-      setCopyStatus('Codex prompt copied. Paste it into Codex inside GitHub Codespaces.');
-    } catch {
-      setCopyStatus('Copy blocked by browser permissions. Select the prompt text manually.');
+      const data = await postJSON('/api/contact', {
+        ...lead,
+        packageId: selectedPackage,
+        packageName: selectedPackageData.name,
+        source: 'Saga Solutions project intake',
+      });
+      setLeadState({
+        status: 'success',
+        message: `Project outline received. Reference ${data.reference || 'created'}.`,
+      });
+    } catch (error) {
+      setLeadState({
+        status: 'error',
+        message:
+          error.code === 'CONTACT_NOT_CONFIGURED'
+            ? `The automated inbox is not configured yet. Email ${coordinator.email} directly with your project title.`
+            : error.message,
+      });
+    }
+  };
+
+  const startCheckout = async () => {
+    if (!validateLead()) {
+      document.querySelector('#project-form')?.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+
+    setCheckoutState({ status: 'loading', message: 'Opening secure checkout…' });
+    try {
+      const data = await postJSON('/api/create-checkout', {
+        packageId: selectedPackage,
+        customerEmail: lead.email,
+        customerName: lead.name,
+        projectTitle: lead.projectTitle,
+      });
+      window.location.assign(data.url);
+    } catch (error) {
+      setCheckoutState({
+        status: 'error',
+        message:
+          error.code === 'PAYMENTS_NOT_CONFIGURED'
+            ? 'Secure checkout is prepared but Stripe environment variables still need to be connected. Submit the project outline to request an invoice meanwhile.'
+            : error.message,
+      });
+    }
+  };
+
+  const submitBrief = async (event) => {
+    event.preventDefault();
+    if (!paymentSucceeded || !sessionId) {
+      setBriefState({
+        status: 'error',
+        message: 'A verified checkout session is required before this commissioning brief can be submitted.',
+      });
+      return;
+    }
+
+    const required = ['desiredOutcome', 'primaryUsers', 'requiredFeatures', 'successMeasures'];
+    if (required.some((field) => !brief[field].trim())) {
+      setBriefState({
+        status: 'error',
+        message: 'Complete the outcome, users, required features, and success measures fields.',
+      });
+      return;
+    }
+
+    setBriefState({ status: 'loading', message: 'Submitting your commissioning brief…' });
+    try {
+      const data = await postJSON('/api/submit-project', {
+        sessionId,
+        packageId: paidPackage,
+        lead,
+        brief,
+      });
+      setBriefState({
+        status: 'success',
+        message: `Commissioning brief received. Project reference: ${data.reference}. A summary has been sent to the project coordinator.`,
+      });
+    } catch (error) {
+      setBriefState({ status: 'error', message: error.message });
     }
   };
 
   return (
-    <main className="app-shell">
-      <style>{styleText}</style>
+    <div className="site-shell">
+      <header className="site-header">
+        <a className="wordmark" href="#top" aria-label="Saga Solutions home">
+          <span className="wordmark-primary">SAGA</span>
+          <span className="wordmark-secondary">SOLUTIONS</span>
+        </a>
 
-      <section className="hero" id="top">
-        <nav className="nav" aria-label="Primary navigation">
-          <a href="#top" className="brandmark" aria-label="Saga Solutions home">
-            <span className="brand-sigil">SV</span>
-            <span>
-              <strong>Saga Solutions</strong>
-              <small>Saga Vibes system gateway</small>
-            </span>
-          </a>
-          <div className="nav-links">
-            <a href="#saga-vibes">Saga Vibes</a>
-            <a href="#working-system">System</a>
-            <a href="#transparency-institute">Transparency</a>
-            <a href="#codex-prompt">Codex Prompt</a>
-            <a href="#links">Links</a>
-          </div>
+        <button
+          className="menu-button"
+          type="button"
+          aria-label="Toggle navigation"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((value) => !value)}
+        >
+          {menuOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+
+        <nav className={classNames('main-nav', menuOpen && 'is-open')} aria-label="Primary navigation">
+          <a href="#work" onClick={() => setMenuOpen(false)}>Work</a>
+          <a href="#capabilities" onClick={() => setMenuOpen(false)}>Capabilities</a>
+          <a href="#process" onClick={() => setMenuOpen(false)}>Process</a>
+          <a href="#start-project" onClick={() => setMenuOpen(false)}>Start a project</a>
+          <a className="nav-cta" href={`mailto:${coordinator.email}`}>Contact</a>
         </nav>
+      </header>
 
-        <div className="hero-grid">
-          <div className="hero-copy">
-            <p className="eyebrow">Saga Solutions / AI systems / civic creative infrastructure</p>
-            <h1>Build the studio that builds the work.</h1>
-            <p className="lede">
-              Saga Solutions now routes cleanly into Saga Vibes: a working-system blueprint for turning creative,
-              civic, journalistic, entrepreneurial, and technical ideas into structured software projects.
+      <main id="top">
+        <section className="hero-section">
+          <div className="hero-image" style={{ backgroundImage: `url("${heroImage}")` }} aria-hidden="true" />
+          <div className="hero-scrim" aria-hidden="true" />
+          <div className="hero-content">
+            <p className="eyebrow">Independent strategy, research, technology, and venture development</p>
+            <h1>
+              Difficult projects.
+              <span>Clear operating systems.</span>
+            </h1>
+            <p className="hero-lede">
+              Saga Solutions researches the problem, defines the offer, builds the system, and prepares the work
+              for launch. One coordinated practice for organizations and founders who do not need another vague
+              consultancy deck.
             </p>
             <div className="hero-actions">
-              <ExternalAwareLink href="#saga-vibes" className="button primary">
-                Open Saga Vibes <ArrowRight size={18} />
-              </ExternalAwareLink>
-              <ExternalAwareLink href={links.sagaVibesLive} className="button ghost">
-                Live Saga Vibes reference
-              </ExternalAwareLink>
-              <ExternalAwareLink href="#codex-prompt" className="button ghost">
-                Use Codex build prompt
-              </ExternalAwareLink>
+              <a className="button button-primary" href="#start-project">
+                Start a paid engagement <ArrowRight size={18} />
+              </a>
+              <a className="button button-secondary" href="#work">
+                Inspect the portfolio
+              </a>
             </div>
           </div>
 
-          <aside className="terminal-card" aria-label="Saga Vibes status panel">
-            <div className="terminal-header">
-              <span />
-              <span />
-              <span />
+          <div className="hero-index">
+            <span>Oakland / Bay Area / Remote</span>
+            <span>Research · Systems · Product · Operations</span>
+            <span>Project coordination: {coordinator.name}</span>
+          </div>
+        </section>
+
+        <section className="proof-strip" aria-label="Saga Solutions operating principles">
+          <div><BadgeCheck size={17} /> Evidence before claims</div>
+          <div><Gauge size={17} /> Scope before execution</div>
+          <div><ReceiptText size={17} /> Written decisions and deliverables</div>
+          <div><ShieldCheck size={17} /> No invented results or hidden dependencies</div>
+        </section>
+
+        <section className="section" id="capabilities">
+          <div className="section-heading split-heading">
+            <div>
+              <p className="section-kicker">Capability architecture</p>
+              <h2>Broad enough to coordinate the whole problem. Specific enough to deliver.</h2>
             </div>
-            <p className="terminal-line">node://saga-solutions/saga-vibes</p>
-            <p className="terminal-line green">STATUS: PAGE LINKED</p>
-            <p className="terminal-line">BUTTON AUDIT: ROUTED</p>
-            <p className="terminal-line">PROMPT: CODEX READY</p>
-            <div className="scan-panel">
-              {[
-                ['Briefs', FileText],
-                ['Builds', Code2],
-                ['Preview', Radio],
-                ['Deploy', Rocket],
-              ].map(([label, Icon]) => (
-                <a href="#working-system" className="scan-cell" key={label}>
-                  <Icon size={22} />
-                  <span>{label}</span>
-                </a>
+            <p>
+              The practical advantage is not “doing everything.” It is reducing handoff failure between research,
+              strategy, design, technology, communications, and operations.
+            </p>
+          </div>
+
+          <div className="capability-grid">
+            {capabilities.map(({ icon: Icon, title, detail }) => (
+              <article className="capability-card" key={title}>
+                <Icon size={22} aria-hidden="true" />
+                <h3>{title}</h3>
+                <p>{detail}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="matcher-section">
+          <div className="matcher-copy">
+            <p className="section-kicker">Scope finder</p>
+            <h2>Describe the assignment in plain language.</h2>
+            <p>
+              This is not an AI chatbot and it does not pretend to quote a final scope. It identifies the operating
+              disciplines most likely to be involved so the first conversation starts at a higher level.
+            </p>
+          </div>
+
+          <div className="matcher-panel">
+            <label htmlFor="capability-query">What are you trying to build, repair, investigate, or sell?</label>
+            <div className="search-field">
+              <Search size={20} aria-hidden="true" />
+              <input
+                id="capability-query"
+                value={capabilityQuery}
+                onChange={(event) => setCapabilityQuery(event.target.value)}
+                placeholder="Example: create a public records database and publish a paid research report"
+              />
+            </div>
+            <div className="match-results" aria-live="pollite">
+              {matchedCapabilities.map(({ icon: Icon, title, detail }) => (
+                <div className="match-result" key={title}>
+                  <Icon size={18} />
+                  <div>
+                    <strong>{title}</strong>
+                    <span>{detail}</span>
+                  </div>
+                </div>
               ))}
             </div>
-          </aside>
-        </div>
-      </section>
-
-      <section className="initiative-section" id="links">
-        <div className="section-heading">
-          <p className="eyebrow">Connected properties</p>
-          <h2>Every major Saga Solutions button now has a destination.</h2>
-          <p>
-            Internal links move through this page. External links open the live reference, GitHub repository,
-            Codespaces entry point, or original blog archive.
-          </p>
-        </div>
-
-        <div className="initiative-grid">
-          {initiatives.map((item) => {
-            const Icon = item.icon;
-            return (
-              <article className="initiative-card" key={item.title}>
-                <div className="card-icon">
-                  <Icon size={24} />
-                </div>
-                <p className="kicker">{item.kicker}</p>
-                <h3>{item.title}</h3>
-                <p>{item.body}</p>
-                <ExternalAwareLink href={item.href} external={item.external} className="text-link">
-                  {item.action}
-                </ExternalAwareLink>
-              </article>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="saga-vibes-section" id="saga-vibes">
-        <div className="section-heading wide">
-          <p className="eyebrow">Saga Vibes</p>
-          <h2>The creative build studio becomes an operating system.</h2>
-          <p>
-            The public page should not stop at inspiration. Saga Vibes needs to become the command surface
-            where projects are defined, generated, audited, previewed, committed, documented, and shipped.
-          </p>
-        </div>
-
-        <div className="hero-actions compact">
-          <ExternalAwareLink href={links.sagaVibesLive} className="button primary">
-            Open live Saga Vibes
-          </ExternalAwareLink>
-          <ExternalAwareLink href="#working-system" className="button ghost">
-            View system blueprint
-          </ExternalAwareLink>
-          <ExternalAwareLink href="#codex-prompt" className="button ghost">
-            Open Codex prompt
-          </ExternalAwareLink>
-          <ExternalAwareLink href="#intake-queue" className="button ghost">
-            Start with intake
-          </ExternalAwareLink>
-        </div>
-
-        <div className="capability-grid">
-          {vibeCapabilities.map((item) => {
-            const Icon = item.icon;
-            return (
-              <a href={item.href} className="capability-card" key={item.title}>
-                <Icon size={25} />
-                <h3>{item.title}</h3>
-                <p>{item.body}</p>
-              </a>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="system-section" id="working-system">
-        <div className="section-heading">
-          <p className="eyebrow">Working-system architecture</p>
-          <h2>From attractive landing page to real build platform.</h2>
-          <p>
-            The first production target is a full-stack studio shell: project intake, AI console, repository
-            workspace, prompt library, preview desk, deployment desk, and governance layer.
-          </p>
-        </div>
-
-        <div className="module-grid">
-          {systemModules.map((module) => {
-            const Icon = module.icon;
-            return (
-              <article className="module-card" id={module.id} key={module.title}>
-                <Icon size={24} />
-                <h3>{module.title}</h3>
-                <p>{module.body}</p>
-                <a href="#codex-prompt" className="text-link">Build this module</a>
-              </article>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="codex-section" id="codex-prompt">
-        <div className="prompt-shell">
-          <div>
-            <p className="eyebrow">Codex master prompt</p>
-            <h2>Paste this into Codex inside GitHub Codespaces.</h2>
-            <p>
-              This prompt directs Codex to build Saga Vibes as a full-stack app-construction system with
-              mocked fallbacks, clear missing-integration states, project memory, and deployment discipline.
-            </p>
-            <div className="prompt-meta">
-              <span><CheckCircle2 size={16} /> {promptStats.words} words</span>
-              <span><Lock size={16} /> No invented credentials</span>
-              <span><Database size={16} /> Supabase-ready</span>
-            </div>
-            <button type="button" className="button primary" onClick={copyPrompt}>
-              Copy complete prompt
-            </button>
-            {copyStatus ? <p className="status-line">{copyStatus}</p> : null}
-          </div>
-          <textarea
-            aria-label="Saga Vibes complete Codex prompt"
-            value={sagaVibesSystemPrompt}
-            readOnly
-          />
-        </div>
-      </section>
-
-      <section className="transparency-section" id="transparency-institute">
-        <div className="section-heading">
-          <p className="eyebrow">Citizens Transparency Institute</p>
-          <h2>A civic research desk inside the Saga Solutions ecosystem.</h2>
-          <p>
-            This page is routed as a working resource hub, ready for records-request guides, government-data
-            tools, budget research, corporate accountability, and downloadable civic templates.
-          </p>
-        </div>
-
-        <div className="resource-list">
-          {transparencyResources.map((resource) => (
-            <a href="#codex-prompt" className="resource-row" key={resource}>
-              <Search size={18} />
-              <span>{resource}</span>
-              <ArrowRight size={16} />
+            <a className="text-link" href="#start-project">
+              Convert this into a project brief <ArrowRight size={16} />
             </a>
-          ))}
-        </div>
-      </section>
+          </div>
+        </section>
 
-      <section className="shop-section" id="neural-breach-shop">
-        <div className="section-heading">
-          <p className="eyebrow">Neural Breach commerce node</p>
-          <h2>Mad Evil Genius remains linked as a commerce surface.</h2>
-          <p>
-            The shop concept is preserved as a routable section. Product buttons now lead to a live cart
-            placeholder instead of disappearing into dead interface space.
-          </p>
-        </div>
+        <section className="section work-section" id="work">
+          <div className="section-heading">
+            <p className="section-kicker">Portfolio insight</p>
+            <h2>Projects that demonstrate the range without obscuring the method.</h2>
+          </div>
 
-        <div className="shop-grid">
-          {shopProducts.map((product) => (
-            <article className="shop-card" key={product.title}>
-              <div className="product-art">
-                <Store size={28} />
+          <div className="portfolio-grid">
+            {portfolio.map((project, index) => (
+              <a
+                className={classNames('portfolio-card', index === 0 && 'portfolio-card-featured')}
+                href={project.href}
+                target="_blank"
+                rel="noreferrer"
+                key={project.name}
+              >
+                <div className="portfolio-meta">
+                  <span>{project.category}</span>
+                  <span className="project-status">{project.status}</span>
+                </div>
+                <h3>{project.name}</h3>
+                <p>{project.description}</p>
+                <div className="tag-row">
+                  {project.tags.map((tag) => <span key={tag}>{tag}</span>)}
+                </div>
+                <div className="portfolio-link">
+                  Open project <ArrowUpRight size={17} />
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section className="process-section" id="process">
+          <div className="section-heading">
+            <p className="section-kicker">Delivery model</p>
+            <h2>A visible process from first question to working asset.</h2>
+          </div>
+
+          <ol className="process-list">
+            <li>
+              <span>01</span>
+              <div><h3>Diagnose</h3><p>Clarify the actual decision, user, constraint, risk, and commercial objective.</p></div>
+            </li>
+            <li>
+              <span>02</span>
+              <div><h3>Structure</h3><p>Produce a scope, evidence plan, system architecture, price logic, and acceptance criteria.</p></div>
+            </li>
+            <li>
+              <span>03</span>
+              <div><h3>Build</h3><p>Create the research, interface, database, content, workflow, or operational package.</p></div>
+            </li>
+            <li>
+              <span>04</span>
+              <div><h3>Verify</h3><p>Test links, claims, forms, routes, permissions, dependencies, and handoff documentation.</p></div>
+            </li>
+            <li>
+              <span>05</span>
+              <div><h3>Launch and compound</h3><p>Publish, measure, repair weak points, and convert the project into repeatable capacity.</p></div>
+            </li>
+          </ol>
+        </section>
+
+        <section className="section pricing-section" id="start-project">
+          <div className="section-heading split-heading">
+            <div>
+              <p className="section-kicker">Paid entry points</p>
+              <h2>Buy a defined first step instead of entering an indefinite sales process.</h2>
+            </div>
+            <p>
+              Launch pricing establishes a clean starting point. Materially larger scopes receive a written proposal
+              after the diagnostic or blueprint stage.
+            </p>
+          </div>
+
+          <div className="pricing-grid">
+            {packages.map((item) => (
+              <button
+                type="button"
+                className={classNames(
+                  'package-card',
+                  item.featured && 'featured',
+                  selectedPackage === item.id && 'selected',
+                )}
+                onClick={() => setSelectedPackage(item.id)}
+                key={item.id}
+              >
+                <div className="package-select">
+                  <span>{selectedPackage === item.id ? <Check size={15} /> : null}</span>
+                  {item.featured ? <em>Recommended starting point</em> : null}
+                </div>
+                <h3>{item.name}</h3>
+                <div className="package-price">{item.price} <small>{item.cadence}</small></div>
+                <p>{item.description}</p>
+                <ul>
+                  {item.includes.map((entry) => <li key={entry}><Check size={15} /> {entry}</li>)}
+                </ul>
+                <div className="best-for"><strong>Best for:</strong> {item.bestFor}</div>
+              </button>
+            ))}
+          </div>
+
+          <div className="project-console" id="project-form">
+            <div className="console-summary">
+              <p className="section-kicker">Selected engagement</p>
+              <h3>{selectedPackageData.name}</h3>
+              <div className="summary-price">{selectedPackageData.price}</div>
+              <p>{selectedPackageData.description}</p>
+              <div className="coordinator-card">
+                <span className="coordinator-mark">S</span>
+                <div>
+                  <strong>{coordinator.name}</strong>
+                  <small>{coordinator.role}</small>
+                  <a href={`mailto:${coordinator.email}`}><Mail size={15} /> {coordinator.email}</a>
+                  <a href={`tel:${coordinator.phone.replace(/[^\d+]/g, '')}`}><Phone size={15} /> {coordinator.phone}</a>
+                </div>
               </div>
-              <h3>{product.title}</h3>
-              <p>{product.body}</p>
-              <div className="product-line">
-                <strong>{product.price}</strong>
-                <a href="#shop-cart" className="button small">Add to staged cart</a>
+              <p className="fine-print">
+                Card details are entered only on Stripe’s hosted checkout. Saga Solutions does not collect or store
+                card numbers in this form.
+              </p>
+            </div>
+
+            <form className="project-form" onSubmit={submitLead}>
+              <div className="form-heading">
+                <ClipboardList size={20} />
+                <div>
+                  <h3>Project outline</h3>
+                  <p>Provide enough context to connect the payment to a real assignment.</p>
+                </div>
               </div>
-            </article>
-          ))}
-        </div>
 
-        <div className="cart-note" id="shop-cart">
-          <ShoppingStatus />
-        </div>
-      </section>
+              <div className="form-grid">
+                <label>
+                  Name *
+                  <input name="name" value={lead.name} onChange={updateLead} autoComplete="name" />
+                </label>
+                <label>
+                  Email *
+                  <input name="email" type="email" value={lead.email} onChange={updateLead} autoComplete="email" />
+                </label>
+                <label>
+                  Phone
+                  <input name="phone" value={lead.phone} onChange={updateLead} autoComplete="tel" />
+                </label>
+                <label>
+                  Organization
+                  <input name="organization" value={lead.organization} onChange={updateLead} />
+                </label>
+                <label className="span-two">
+                  Project title *
+                  <input name="projectTitle" value={lead.projectTitle} onChange={updateLead} />
+                </label>
+                <label className="span-two">
+                  What needs to be accomplished? *
+                  <textarea name="projectSummary" value={lead.projectSummary} onChange={updateLead} rows="5" />
+                </label>
+                <label>
+                  Working budget
+                  <select name="budget" value={lead.budget} onChange={updateLead}>
+                    <option value="">Select</option>
+                    <option>Under $500</option>
+                    <option>$500–$1,500</option>
+                    <option>$1,500–$5,000</option>
+                    <option>$5,000–$15,000</option>
+                    <option>$15,000+</option>
+                  </select>
+                </label>
+                <label>
+                  Desired timing
+                  <select name="timeline" value={lead.timeline} onChange={updateLead}>
+                    <option value="">Select</option>
+                    <option>As soon as responsibly possible</option>
+                    <option>Within 30 days</option>
+                    <option>Within 60–90 days</option>
+                    <option>This quarter</option>
+                    <option>Exploratory</option>
+                  </select>
+                </label>
+              </div>
 
-      <section className="link-section">
-        <div className="section-heading">
-          <p className="eyebrow">Button destination audit</p>
-          <h2>Primary action map</h2>
-        </div>
-        <div className="link-grid">
-          {resourceLinks.map((resource) => {
-            const Icon = resource.icon;
-            return (
-              <ExternalAwareLink href={resource.href} className="link-card" key={resource.label}>
-                <Icon size={22} />
-                <span>
-                  <strong>{resource.label}</strong>
-                  <small>{resource.type}</small>
-                </span>
-              </ExternalAwareLink>
-            );
-          })}
-        </div>
-      </section>
+              {leadState.message ? (
+                <div className={classNames('form-notice', leadState.status)}>{leadState.message}</div>
+              ) : null}
+              {checkoutState.message ? (
+                <div className={classNames('form-notice', checkoutState.status)}>{checkoutState.message}</div>
+              ) : null}
+              {paymentCancelled ? (
+                <div className="form-notice error">Checkout was cancelled. Your project information remains in the form.</div>
+              ) : null}
 
-      <footer className="footer">
-        <a href="#top">Saga Solutions</a>
-        <a href="#saga-vibes">Saga Vibes</a>
-        <a href={links.questlyne} target="_blank" rel="noreferrer">Questlyne Blog</a>
-        <a href="#transparency-institute">Citizens Transparency Institute</a>
-        <a href="#codex-prompt">Codex Prompt</a>
+              <div className="form-actions">
+                <button className="button button-secondary" type="submit" disabled={leadState.status === 'loading'}>
+                  <MessageSquareText size={18} />
+                  {leadState.status === 'loading' ? 'Sending…' : 'Send outline / request invoice'}
+                </button>
+                <button
+                  className="button button-primary"
+                  type="button"
+                  onClick={startCheckout}
+                  disabled={checkoutState.status === 'loading'}
+                >
+                  <CircleDollarSign size={18} />
+                  {checkoutState.status === 'loading' ? 'Opening checkout…' : `Pay ${selectedPackageData.price}`}
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <section className={classNames('commission-section', paymentSucceeded && 'is-active')} id="project-brief">
+          <div className="commission-intro">
+            <div className="payment-status">
+              {paymentSucceeded ? <BadgeCheck size={22} /> : <Banknote size={22} />}
+              {paymentSucceeded ? 'Payment return detected' : 'Post-purchase commissioning brief'}
+            </div>
+            <h2>Payment initiates the engagement. This brief supplies the operating facts.</h2>
+            <p>
+              After a successful checkout, the client completes this second-stage survey. The verified payment,
+              project outline, and detailed brief are consolidated into a coordinator summary and project record.
+            </p>
+            {paymentState.message ? (
+              <div className={classNames('form-notice', paymentState.status)}>{paymentState.message}</div>
+            ) : null}
+          </div>
+
+          {paymentSucceeded ? (
+            <form className="brief-form" onSubmit={submitBrief}>
+              <div className="form-grid">
+                <label className="span-two">
+                  What must be measurably different when the engagement is complete? *
+                  <textarea name="desiredOutcome" value={brief.desiredOutcome} onChange={updateBrief} rows="4" />
+                </label>
+                <label className="span-two">
+                  Who are the primary users, customers, readers, partners, or decision-makers? *
+                  <textarea name="primaryUsers" value={brief.primaryUsers} onChange={updateBrief} rows="4" />
+                </label>
+                <label className="span-two">
+                  Required functions, deliverables, pages, research questions, or services *
+                  <textarea name="requiredFeatures" value={brief.requiredFeatures} onChange={updateBrief} rows="5" />
+                </label>
+                <label>
+                  Reference links
+                  <textarea name="referenceLinks" value={brief.referenceLinks} onChange={updateBrief} rows="4" />
+                </label>
+                <label>
+                  Existing assets and accounts
+                  <textarea name="existingAssets" value={brief.existingAssets} onChange={updateBrief} rows="4" />
+                </label>
+                <label>
+                  Required integrations
+                  <textarea name="integrations" value={brief.integrations} onChange={updateBrief} rows="4" />
+                </label>
+                <label>
+                  Constraints, exclusions, or sensitive issues
+                  <textarea name="constraints" value={brief.constraints} onChange={updateBrief} rows="4" />
+                </label>
+                <label className="span-two">
+                  How will success be judged? *
+                  <textarea name="successMeasures" value={brief.successMeasures} onChange={updateBrief} rows="4" />
+                </label>
+                <label>
+                  Final decision-makers
+                  <input name="decisionMakers" value={brief.decisionMakers} onChange={updateBrief} />
+                </label>
+                <label>
+                  Target launch or delivery date
+                  <input name="targetLaunch" type="date" value={brief.targetLaunch} onChange={updateBrief} />
+                </label>
+              </div>
+
+              {briefState.message ? (
+                <div className={classNames('form-notice', briefState.status)}>{briefState.message}</div>
+              ) : null}
+
+              <button className="button button-primary" type="submit" disabled={briefState.status === 'loading'}>
+                <Zap size={18} />
+                {briefState.status === 'loading' ? 'Submitting brief…' : 'Submit commissioning brief'}
+              </button>
+            </form>
+          ) : (
+            <div className="locked-brief">
+              <ShieldCheck size={28} />
+              <div>
+                <strong>The detailed survey unlocks after checkout.</strong>
+                <span>The return URL carries the Stripe session ID used to verify payment server-side.</span>
+              </div>
+              <a href="#start-project">Select an engagement <ArrowRight size={16} /></a>
+            </div>
+          )}
+        </section>
+
+        <section className="section operating-section">
+          <div className="section-heading split-heading">
+            <div>
+              <p className="section-kicker">Additional commercial infrastructure</p>
+              <h2>What belongs on this page beyond a portfolio and contact form.</h2>
+            </div>
+            <p>
+              A credible commercial site should reduce uncertainty, collect qualified demand, document transactions,
+              and make the next operational action unmistakable.
+            </p>
+          </div>
+
+          <div className="operating-grid">
+            <article><Network size={21} /><h3>Partner network</h3><p>A reviewed bench of specialists for legal, finance, engineering, production, design, field work, and subject-matter research.</p></article>
+            <article><Database size={21} /><h3>Client workspace</h3><p>Secure access to briefs, files, decisions, milestones, invoices, approvals, and launch documentation.</p></article>
+            <article><BookOpen size={21} /><h3>Methods library</h3><p>Public explanations of how research, AI-assisted development, privacy, source control, and quality assurance are handled.</p></article>
+            <article><Building2 size={21} /><h3>Procurement desk</h3><p>W-9, capability statement, insurance, vendor details, sample scopes, service classifications, and contracting readiness.</p></article>
+            <article><BriefcaseBusiness size={21} /><h3>Retainer desk</h3><p>Recurring research, content, operations, maintenance, and product-development packages for ongoing clients.</p></article>
+            <article><Bot size={21} /><h3>Automation readiness</h3><p>Automated intake summaries, lead routing, project records, payment verification, client updates, and reporting without concealing human accountability.</p></article>
+          </div>
+        </section>
+
+        <section className="contact-section">
+          <div>
+            <p className="section-kicker">Direct contact</p>
+            <h2>Bring the problem, the evidence, and the actual constraints.</h2>
+          </div>
+          <div className="contact-actions">
+            <a href={`mailto:${coordinator.email}`}><Mail size={19} /> {coordinator.email}</a>
+            <a href={`tel:${coordinator.phone.replace(/[^\d+]/g, '')}`}><Phone size={19} /> {coordinator.phone}</a>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <div className="footer-brand">
+          <span>SAGA</span>
+          <small>SOLUTIONS</small>
+        </div>
+        <p>Strategy · Research · Technology · Media · Operations</p>
+        <div className="footer-links">
+          <a href="#top">Top</a>
+          <a href="#work">Portfolio</a>
+          <a href="#start-project">Engage</a>
+          <a href={`mailto:${coordinator.email}`}>Email</a>
+        </div>
+        <small>© {new Date().getFullYear()} Saga Solutions. Payment processing and project intake require configured Stripe, Supabase, and email-service credentials.</small>
       </footer>
-    </main>
-  );
-}
-
-function ShoppingStatus() {
-  const [status, setStatus] = useState('No staged product selected yet.');
-  return (
-    <div>
-      <p>{status}</p>
-      <button
-        type="button"
-        className="button primary"
-        onClick={() =>
-          setStatus(
-            'Cart staging is working. Add Shopify product variant IDs and Storefront API variables when the shop is ready for transactions.'
-          )
-        }
-      >
-        Test checkout path <KeyRound size={16} />
-      </button>
     </div>
   );
 }
-
-const styleText = `
-:root {
-  color-scheme: dark;
-  --bg: #03030a;
-  --panel: rgba(17, 19, 33, 0.84);
-  --panel-strong: rgba(23, 26, 45, 0.94);
-  --text: #f7f3ea;
-  --muted: #aeb5ca;
-  --line: rgba(160, 132, 255, 0.22);
-  --violet: #a88cff;
-  --cyan: #7cf7ff;
-  --rose: #ff5c9a;
-  --gold: #f7d774;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-  background: var(--bg);
-}
-
-body {
-  margin: 0;
-  background:
-    radial-gradient(circle at 18% 0%, rgba(168, 140, 255, 0.28), transparent 28%),
-    radial-gradient(circle at 88% 18%, rgba(124, 247, 255, 0.16), transparent 26%),
-    linear-gradient(135deg, #03030a 0%, #080713 52%, #110817 100%);
-  color: var(--text);
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-button,
-textarea {
-  font: inherit;
-}
-
-.app-shell {
-  min-height: 100vh;
-  overflow: hidden;
-}
-
-.hero {
-  min-height: 92vh;
-  padding: 28px clamp(18px, 4vw, 64px) 70px;
-  position: relative;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(168, 140, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(124, 247, 255, 0.035) 1px, transparent 1px);
-  background-size: 46px 46px;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 90%);
-  mask-image: linear-gradient(to bottom, #000 0%, transparent 90%);
-  pointer-events: none;
-}
-
-.nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 22px;
-  position: relative;
-  z-index: 2;
-}
-
-.brandmark {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-}
-
-.brand-sigil {
-  width: 52px;
-  height: 52px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: linear-gradient(145deg, rgba(168, 140, 255, 0.26), rgba(124, 247, 255, 0.12));
-  color: var(--cyan);
-  font-weight: 950;
-  letter-spacing: -0.04em;
-}
-
-.brandmark strong,
-.brandmark small {
-  display: block;
-}
-
-.brandmark small,
-.nav-links,
-.section-heading p,
-.initiative-card p,
-.capability-card p,
-.module-card p,
-.shop-card p {
-  color: var(--muted);
-}
-
-.nav-links {
-  display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
-  font-size: 0.92rem;
-}
-
-.nav-links a:hover,
-.text-link:hover,
-.footer a:hover {
-  color: var(--cyan);
-}
-
-.hero-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.64fr);
-  gap: 42px;
-  align-items: center;
-  max-width: 1220px;
-  margin: 96px auto 0;
-  position: relative;
-  z-index: 1;
-}
-
-.eyebrow,
-.kicker {
-  color: var(--cyan);
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  font-size: 0.75rem;
-  font-weight: 900;
-}
-
-.hero h1,
-.section-heading h2,
-.prompt-shell h2 {
-  letter-spacing: -0.07em;
-}
-
-.hero h1 {
-  font-size: clamp(3.2rem, 8vw, 7.4rem);
-  line-height: 0.88;
-  margin: 16px 0 22px;
-  max-width: 880px;
-}
-
-.lede {
-  font-size: clamp(1.02rem, 2.2vw, 1.28rem);
-  line-height: 1.72;
-  color: #d7d9e8;
-  max-width: 760px;
-}
-
-.hero-actions {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-top: 32px;
-}
-
-.hero-actions.compact {
-  margin: 8px 0 34px;
-}
-
-.button {
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.055);
-  color: var(--text);
-  border-radius: 999px;
-  padding: 13px 18px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  transition: 0.2s ease;
-  min-height: 46px;
-}
-
-.button:hover,
-.capability-card:hover,
-.initiative-card:hover,
-.module-card:hover,
-.link-card:hover,
-.resource-row:hover,
-.shop-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(124, 247, 255, 0.54);
-}
-
-.button.primary {
-  border: 0;
-  background: linear-gradient(135deg, var(--violet), var(--cyan));
-  color: #03030a;
-  font-weight: 950;
-}
-
-.button.ghost {
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.button.small {
-  min-height: 38px;
-  padding: 9px 12px;
-  font-size: 0.85rem;
-}
-
-.terminal-card,
-.initiative-card,
-.capability-card,
-.module-card,
-.shop-card,
-.link-card,
-.prompt-shell,
-.cart-note {
-  border: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(23, 26, 45, 0.9), rgba(8, 9, 18, 0.92));
-  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.24);
-}
-
-.terminal-card {
-  border-radius: 30px;
-  padding: 24px;
-}
-
-.terminal-header {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-
-.terminal-header span {
-  width: 10px;
-  height: 10px;
-  border-radius: 99px;
-  background: var(--muted);
-}
-
-.terminal-line {
-  font-family: 'Courier New', monospace;
-  color: #cfd5ed;
-  margin: 10px 0;
-}
-
-.terminal-line.green {
-  color: var(--cyan);
-}
-
-.scan-panel {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-top: 24px;
-}
-
-.scan-cell {
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 16px;
-  background: rgba(168, 140, 255, 0.06);
-  color: var(--cyan);
-  display: grid;
-  gap: 12px;
-}
-
-.scan-cell span {
-  color: #e2e7fb;
-  font-size: 0.88rem;
-}
-
-.initiative-section,
-.saga-vibes-section,
-.system-section,
-.codex-section,
-.transparency-section,
-.shop-section,
-.link-section {
-  padding: 76px clamp(18px, 4vw, 64px);
-  max-width: 1280px;
-  margin: 0 auto;
-}
-
-.section-heading {
-  max-width: 790px;
-  margin-bottom: 30px;
-}
-
-.section-heading.wide {
-  max-width: 940px;
-}
-
-.section-heading h2,
-.prompt-shell h2 {
-  font-size: clamp(2.1rem, 4.6vw, 4.4rem);
-  line-height: 0.95;
-  margin: 10px 0 16px;
-}
-
-.section-heading p {
-  line-height: 1.72;
-}
-
-.initiative-grid,
-.capability-grid,
-.module-grid,
-.shop-grid,
-.link-grid {
-  display: grid;
-  gap: 18px;
-}
-
-.initiative-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.capability-grid,
-.module-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.shop-grid,
-.link-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.initiative-card,
-.capability-card,
-.module-card,
-.shop-card,
-.link-card {
-  border-radius: 26px;
-  padding: 22px;
-  transition: 0.2s ease;
-}
-
-.card-icon {
-  width: 48px;
-  height: 48px;
-  display: grid;
-  place-items: center;
-  border-radius: 16px;
-  background: rgba(124, 247, 255, 0.09);
-  color: var(--cyan);
-  margin-bottom: 22px;
-}
-
-.initiative-card h3,
-.capability-card h3,
-.module-card h3,
-.shop-card h3 {
-  font-size: 1.18rem;
-  margin: 12px 0 10px;
-}
-
-.text-link {
-  color: var(--cyan);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 14px;
-  font-weight: 800;
-}
-
-.saga-vibes-section {
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-}
-
-.capability-card svg,
-.module-card svg,
-.link-card svg {
-  color: var(--cyan);
-}
-
-.prompt-shell {
-  border-radius: 30px;
-  padding: clamp(20px, 4vw, 34px);
-  display: grid;
-  grid-template-columns: minmax(0, 0.76fr) minmax(320px, 1fr);
-  gap: 26px;
-  align-items: stretch;
-}
-
-.prompt-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 20px 0;
-}
-
-.prompt-meta span {
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 9px 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: #dfe5fb;
-  background: rgba(255, 255, 255, 0.04);
-  font-size: 0.88rem;
-}
-
-textarea {
-  min-height: 560px;
-  width: 100%;
-  resize: vertical;
-  border-radius: 22px;
-  border: 1px solid var(--line);
-  background: rgba(3, 3, 10, 0.8);
-  color: #eef2ff;
-  padding: 18px;
-  line-height: 1.55;
-  font-size: 0.92rem;
-}
-
-.status-line {
-  color: var(--gold);
-  margin-top: 14px;
-  line-height: 1.5;
-}
-
-.resource-list {
-  display: grid;
-  gap: 10px;
-}
-
-.resource-row {
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 15px 16px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 12px;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.035);
-  transition: 0.2s ease;
-}
-
-.product-art {
-  min-height: 150px;
-  border-radius: 20px;
-  display: grid;
-  place-items: center;
-  color: var(--cyan);
-  background:
-    radial-gradient(circle at 50% 42%, rgba(124, 247, 255, 0.28), transparent 32%),
-    linear-gradient(145deg, #050510, #151629);
-  margin-bottom: 18px;
-}
-
-.product-line {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 18px;
-}
-
-.cart-note {
-  margin-top: 18px;
-  border-radius: 22px;
-  padding: 20px;
-}
-
-.link-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.link-card small {
-  display: block;
-  color: var(--muted);
-}
-
-.footer {
-  border-top: 1px solid var(--line);
-  padding: 30px clamp(18px, 4vw, 64px);
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 18px;
-  color: var(--muted);
-  background: rgba(0, 0, 0, 0.26);
-}
-
-@media (max-width: 980px) {
-  .hero-grid,
-  .prompt-shell,
-  .initiative-grid,
-  .capability-grid,
-  .module-grid,
-  .shop-grid,
-  .link-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .nav {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .hero {
-    min-height: auto;
-  }
-}
-
-@media (max-width: 640px) {
-  .hero h1 {
-    font-size: 3.3rem;
-  }
-
-  .scan-panel {
-    grid-template-columns: 1fr;
-  }
-
-  .button {
-    width: 100%;
-  }
-
-  .hero-actions {
-    width: 100%;
-  }
-}
-`;
 
 createRoot(document.getElementById('root')).render(<App />);

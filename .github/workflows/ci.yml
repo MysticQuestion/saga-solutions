@@ -1,0 +1,37 @@
+name: Saga Solutions CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, feature/revenue-ready-saga-site]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Check serverless JavaScript
+        run: |
+          node --check api/create-checkout.js
+          node --check api/contact.js
+          node --check api/payment-confirmation.js
+          node --check api/submit-project.js
+          node --check src/bridge.js
+
+      - name: Build production bundle
+        run: npm run build
