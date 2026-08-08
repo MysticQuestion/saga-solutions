@@ -4,188 +4,34 @@ import {
   ArrowRight,
   ArrowUpRight,
   BadgeCheck,
-  Banknote,
-  BarChart3,
   BookOpen,
-  Bot,
-  BriefcaseBusiness,
-  Building2,
   Check,
-  CircleDollarSign,
-  ClipboardList,
+  Clipboard,
   Code2,
   Database,
-  FileSearch,
   Gauge,
+  Laptop,
   Mail,
   Menu,
-  MessageSquareText,
-  Network,
-  Phone,
-  ReceiptText,
   Search,
   ShieldCheck,
   Sparkles,
-  Target,
-  Workflow,
+  Wrench,
   X,
   Zap,
 } from 'lucide-react';
 import { heroImage } from './assets.js';
+import {
+  capabilities,
+  coordinator,
+  fallbackBlogPosts,
+  fallbackCodeEntries,
+  lanes,
+  packages,
+  portfolio,
+  techServices,
+} from './content.js';
 import './styles.css';
-
-const coordinator = {
-  name: 'Eric-Michael Wilson II',
-  role: 'Project Coordinator',
-  email: 'ericmichael.wil@gmail.com',
-  phone: '+1 (510) 882-3649',
-};
-
-const portfolio = [
-  {
-    name: 'STREETS Environmental Sentinel Network',
-    category: 'Civic systems',
-    description:
-      'A public-interest conditions platform pairing resident documentation, OAK311-ready evidence, explainable analysis, and field-service coordination.',
-    href: 'https://oaklandstreets.live/',
-    status: 'Live',
-    tags: ['Civic data', 'Field operations', 'Evidence'],
-  },
-  {
-    name: 'Saga Vibes',
-    category: 'Product development',
-    description:
-      'An AI-assisted build studio designed to convert ideas into disciplined briefs, repositories, working interfaces, and deployment plans.',
-    href: 'https://saga-vibe-studio.lovable.app/',
-    status: 'Active build',
-    tags: ['AI systems', 'Product', 'Automation'],
-  },
-  {
-    name: 'Mystic Sage',
-    category: 'Knowledge product',
-    description:
-      'A publishing and timing-intelligence platform joining structured interpretation, educational products, workshops, and digital tools.',
-    href: 'https://mysticsage.xyz/',
-    status: 'Live',
-    tags: ['Publishing', 'Product design', 'Commerce'],
-  },
-  {
-    name: 'Bay Evidence Hub',
-    category: 'Investigative research',
-    description:
-      'A regional research desk built to organize public records, homelessness policy evidence, data notes, and publication-ready investigations.',
-    href: 'https://bay-evidence-hub.lovable.app/',
-    status: 'Development',
-    tags: ['Research', 'Public records', 'Journalism'],
-  },
-  {
-    name: 'Ark of Bones',
-    category: 'Client platform',
-    description:
-      'A commercial and cultural platform for high-technology domino tables, recorded play, events, merchandise, and licensing opportunities.',
-    href: 'https://www.arkofbones.com/',
-    status: 'Client work',
-    tags: ['Commerce', 'Media', 'Experience'],
-  },
-  {
-    name: 'The Questlyne',
-    category: 'Editorial archive',
-    description:
-      'An independent essay and analysis archive supporting durable authorship, cultural criticism, spiritual inquiry, and long-form publishing.',
-    href: 'https://thequestlyne.blogspot.com/',
-    status: 'Published',
-    tags: ['Editorial', 'SEO', 'Archive'],
-  },
-];
-
-const capabilities = [
-  {
-    icon: Target,
-    title: 'Strategy and research',
-    detail:
-      'Market scans, stakeholder analysis, public-records research, behavioral insight, competitive positioning, and decision briefs.',
-    keywords: ['strategy', 'research', 'market', 'policy', 'competitor', 'analysis', 'grant'],
-  },
-  {
-    icon: Code2,
-    title: 'Websites and digital products',
-    detail:
-      'Conversion-focused websites, microsites, portals, dashboards, product prototypes, repositories, and deployment architecture.',
-    keywords: ['website', 'app', 'portal', 'dashboard', 'product', 'prototype', 'software'],
-  },
-  {
-    icon: Workflow,
-    title: 'Automation and operations',
-    detail:
-      'Intake systems, document pipelines, alerts, CRM workflows, content operations, project ledgers, and repeatable back-office processes.',
-    keywords: ['automation', 'workflow', 'crm', 'operations', 'intake', 'pipeline', 'process'],
-  },
-  {
-    icon: FileSearch,
-    title: 'Civic intelligence',
-    detail:
-      'Public records requests, transparency systems, evidence management, government research, service mapping, and accountability tools.',
-    keywords: ['government', 'records', 'transparency', 'civic', 'evidence', 'foia', 'cpra'],
-  },
-  {
-    icon: BarChart3,
-    title: 'Data and decision systems',
-    detail:
-      'Data models, research databases, scorecards, dashboards, source tracking, reporting systems, and explainable metrics.',
-    keywords: ['data', 'database', 'metrics', 'report', 'analytics', 'dashboard', 'tracking'],
-  },
-  {
-    icon: Sparkles,
-    title: 'Brand, media, and commerce',
-    detail:
-      'Brand systems, editorial strategy, campaign assets, merchandise architecture, sales funnels, content libraries, and launch plans.',
-    keywords: ['brand', 'media', 'content', 'commerce', 'store', 'campaign', 'merchandise'],
-  },
-];
-
-const packages = [
-  {
-    id: 'diagnostic',
-    name: 'Diagnostic Sprint',
-    price: '$150',
-    cadence: 'one-time',
-    description:
-      'A focused review of one project, problem, site, offer, or operational bottleneck.',
-    includes: ['60-minute working session', 'Written findings', 'Prioritized next actions', 'One follow-up clarification'],
-    bestFor: 'A defined problem that needs an expert second look.',
-  },
-  {
-    id: 'blueprint',
-    name: 'Build Blueprint',
-    price: '$450',
-    cadence: 'one-time',
-    description:
-      'A structured plan for turning an idea into a credible, buildable, monetizable project.',
-    includes: ['Research and positioning', 'Feature and route plan', 'Revenue model', 'Implementation roadmap'],
-    bestFor: 'Founders who need architecture before spending heavily.',
-    featured: true,
-  },
-  {
-    id: 'prototype',
-    name: 'Prototype Sprint',
-    price: '$1,250',
-    cadence: 'starting price',
-    description:
-      'A working first version of a site, portal, campaign surface, dashboard, or digital service.',
-    includes: ['Blueprint included', 'Working interface', 'Repository and deployment prep', 'Review and revision round'],
-    bestFor: 'Projects ready to move from planning into visible execution.',
-  },
-  {
-    id: 'partner',
-    name: 'Embedded Project Partner',
-    price: '$3,500+',
-    cadence: 'per engagement',
-    description:
-      'A multi-stage engagement spanning strategy, research, build execution, launch, and operating systems.',
-    includes: ['Custom scope', 'Weekly decision ledger', 'Cross-platform implementation', 'Launch and handoff'],
-    bestFor: 'Organizations requiring coordinated work across disciplines.',
-  },
-];
 
 const initialLead = {
   name: '',
@@ -211,8 +57,22 @@ const initialBrief = {
   targetLaunch: '',
 };
 
-function classNames(...values) {
+const signalDimensions = [
+  ['novelty', 'Novelty'],
+  ['evidence_quality', 'Evidence'],
+  ['operational_consequence', 'Consequence'],
+  ['durable_value', 'Durable value'],
+];
+
+function cx(...values) {
   return values.filter(Boolean).join(' ');
+}
+
+function formatDate(value) {
+  if (!value) return 'Not yet verified';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric' }).format(date);
 }
 
 async function postJSON(url, body) {
@@ -221,7 +81,6 @@ async function postJSON(url, body) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
-
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
     const error = new Error(data.error || 'The request could not be completed.');
@@ -231,9 +90,484 @@ async function postJSON(url, body) {
   return data;
 }
 
-function App() {
+async function fetchPublicTable(table, query) {
+  const url = import.meta.env.VITE_SUPABASE_URL;
+  const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !key) throw new Error('Public content database is not configured for this deployment.');
+  const response = await fetch(`${url}/rest/v1/${table}?${query}`, {
+    headers: { apikey: key, Accept: 'application/json' },
+  });
+  if (!response.ok) throw new Error(`Content request failed with ${response.status}.`);
+  return response.json();
+}
+
+function usePathname() {
+  const [path, setPath] = useState(() => window.location.pathname || '/');
+  useEffect(() => {
+    const sync = () => setPath(window.location.pathname || '/');
+    window.addEventListener('popstate', sync);
+    return () => window.removeEventListener('popstate', sync);
+  }, []);
+  return path;
+}
+
+function InternalLink({ to, children, className, onClick, ...props }) {
+  const navigate = (event) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    window.history.pushState({}, '', to);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    onClick?.(event);
+  };
+  return <a href={to} className={className} onClick={navigate} {...props}>{children}</a>;
+}
+
+function Shell({ children, active }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [capabilityQuery, setCapabilityQuery] = useState('');
+  return (
+    <div className="site-shell">
+      <header className="site-header">
+        <InternalLink className="wordmark" to="/" aria-label="Saga Solutions home" onClick={() => setMenuOpen(false)}>
+          <span className="wordmark-primary">SAGA</span>
+          <span className="wordmark-secondary">SOLUTIONS</span>
+        </InternalLink>
+        <button className="menu-button" type="button" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen((v) => !v)}>
+          {menuOpen ? <X size={21} /> : <Menu size={21} />}
+        </button>
+        <nav className={cx('main-nav', menuOpen && 'is-open')} aria-label="Primary navigation">
+          {lanes.map((lane) => (
+            <InternalLink key={lane.key} to={lane.href} className={active === lane.key ? 'is-active' : ''} onClick={() => setMenuOpen(false)}>
+              {lane.label}
+            </InternalLink>
+          ))}
+          <a href="/#start-project" onClick={() => setMenuOpen(false)}>Commission</a>
+          <a className="nav-cta" href={`mailto:${coordinator.email}`}>Contact</a>
+        </nav>
+      </header>
+      {children}
+      <Footer />
+    </div>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="site-footer">
+      <div>
+        <strong>Saga Solutions</strong>
+        <p>Research, technology, code, and digital production converted into practical systems.</p>
+      </div>
+      <div className="footer-links">
+        {lanes.map((lane) => <InternalLink key={lane.key} to={lane.href}>{lane.label}</InternalLink>)}
+        <a href={`mailto:${coordinator.email}`}>{coordinator.email}</a>
+      </div>
+    </footer>
+  );
+}
+
+function LaneSwitchboard() {
+  const icons = { blog: BookOpen, tech: Wrench, vibes: Sparkles, code: Code2 };
+  return (
+    <section className="lane-grid" aria-label="Saga Solutions divisions">
+      {lanes.map((lane, index) => {
+        const Icon = icons[lane.key];
+        return (
+          <InternalLink className={`lane-card lane-${lane.key}`} to={lane.href} key={lane.key}>
+            <div className="lane-card-top"><span>0{index + 1}</span><Icon size={21} /></div>
+            <p className="lane-label">SAGA / {lane.label}</p>
+            <h2>{lane.title}</h2>
+            <p>{lane.description}</p>
+            <span className="lane-action">{lane.action} <ArrowRight size={16} /></span>
+          </InternalLink>
+        );
+      })}
+    </section>
+  );
+}
+
+function Home({ blogPosts, codeEntries }) {
+  const featuredBlog = blogPosts.find((item) => item.featured) || blogPosts[0];
+  const featuredCode = codeEntries.filter((item) => item.featured).slice(0, 3);
+  return (
+    <Shell>
+      <main id="top">
+        <section className="hero-section">
+          <div className="hero-image" style={{ backgroundImage: `url("${heroImage}")` }} aria-hidden="true" />
+          <div className="hero-scrim" aria-hidden="true" />
+          <div className="hero-content">
+            <p className="eyebrow">Oakland / Bay Area / Remote</p>
+            <h1>Saga Solutions turns <span>research, technology, code, and digital production</span> into practical systems.</h1>
+            <p className="hero-lede">
+              Four public lanes. One operating practice. Read the analysis, solve the technical problem, commission a digital build, or take a tested pattern directly into your own work.
+            </p>
+            <div className="hero-actions">
+              <a className="button button-primary" href="#start-project">Start a project <ArrowRight size={18} /></a>
+              <InternalLink className="button button-secondary" to="/blog">Read SAGA BLOG</InternalLink>
+            </div>
+          </div>
+          <div className="hero-index">
+            <span>BLOG · TECH · VIBES · CODE</span>
+            <span>Evidence before claims</span>
+            <span>Human review before release</span>
+          </div>
+        </section>
+
+        <LaneSwitchboard />
+
+        <section className="proof-strip">
+          <div><BadgeCheck size={17} /> Source discipline</div>
+          <div><Gauge size={17} /> Visible scope and pricing</div>
+          <div><ShieldCheck size={17} /> Security boundaries named</div>
+          <div><Zap size={17} /> AI used as leverage, not authority</div>
+        </section>
+
+        {(featuredBlog || featuredCode.length > 0) && (
+          <section className="section signal-preview">
+            <div className="section-heading split-heading">
+              <div>
+                <p className="section-kicker">Current signal</p>
+                <h2>Useful enough to act on. Specific enough to test.</h2>
+              </div>
+              <p>Editorial work and technical patterns are linked intentionally: analysis should lead to implementation, and implementation should generate better questions.</p>
+            </div>
+            <div className="preview-grid">
+              {featuredBlog && (
+                <InternalLink className="feature-card" to={`/blog/${featuredBlog.slug}`}>
+                  <span className="pill">BLOG / {featuredBlog.category}</span>
+                  <h3>{featuredBlog.title}</h3>
+                  <p>{featuredBlog.dek}</p>
+                  <span className="text-link">Read analysis <ArrowRight size={15} /></span>
+                </InternalLink>
+              )}
+              <div className="mini-stack">
+                {featuredCode.map((entry) => (
+                  <InternalLink className="mini-card" to={`/code/${entry.slug}`} key={entry.slug}>
+                    <span className="pill">CODE / {entry.kind}</span>
+                    <strong>{entry.title}</strong>
+                    <p>{entry.summary}</p>
+                  </InternalLink>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        <PortfolioSection />
+        <CapabilitiesSection />
+        <CommissionSection />
+      </main>
+    </Shell>
+  );
+}
+
+function PortfolioSection() {
+  return (
+    <section className="section" id="work">
+      <div className="section-heading split-heading">
+        <div><p className="section-kicker">Selected work</p><h2>Public properties, client work, and active builds.</h2></div>
+        <p>Status labels stay visible. Development work is not presented as finished work.</p>
+      </div>
+      <div className="portfolio-grid">
+        {portfolio.map((item) => (
+          <a key={item.name} className="portfolio-card" href={item.href} target="_blank" rel="noreferrer">
+            <div className="portfolio-meta"><span>{item.category}</span><span>{item.status}</span></div>
+            <h3>{item.name}</h3>
+            <p>{item.description}</p>
+            <div className="tag-row">{item.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
+            <ArrowUpRight className="card-arrow" size={18} />
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CapabilitiesSection() {
+  const [query, setQuery] = useState('');
+  const results = useMemo(() => {
+    const terms = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    if (!terms.length) return capabilities.slice(0, 3);
+    return capabilities
+      .map((item) => ({ ...item, score: terms.reduce((score, term) => score + (item.title.toLowerCase().includes(term) || item.detail.toLowerCase().includes(term) || item.keywords.some((k) => k.includes(term)) ? 1 : 0), 0) }))
+      .filter((item) => item.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
+  }, [query]);
+  return (
+    <section className="section muted-section" id="capabilities">
+      <div className="section-heading split-heading">
+        <div><p className="section-kicker">Capability map</p><h2>Describe the problem. We identify the disciplines involved.</h2></div>
+        <p>This finder does not pretend to quote a final scope. It helps reveal what the assignment actually touches before money is spent.</p>
+      </div>
+      <div className="scope-finder">
+        <label htmlFor="scope-search">What are you trying to build, repair, investigate, automate, or sell?</label>
+        <div className="search-field"><Search size={19} /><input id="scope-search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Example: publish a source-backed research database and automate updates" /></div>
+        <div className="scope-results">
+          {results.length ? results.map((item) => <article key={item.title}><h3>{item.title}</h3><p>{item.detail}</p></article>) : <article><h3>Cross-disciplinary scope</h3><p>No exact match yet. Submit the project outline and the scope will be reviewed manually.</p></article>}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BlogIndex({ posts }) {
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState('All');
+  const categories = ['All', ...new Set(posts.map((item) => item.category))];
+  const filtered = posts.filter((item) => {
+    const matchesCategory = category === 'All' || item.category === category;
+    const haystack = `${item.title} ${item.dek} ${(item.tags || []).join(' ')}`.toLowerCase();
+    return matchesCategory && haystack.includes(query.toLowerCase());
+  });
+  return (
+    <Shell active="blog">
+      <main>
+        <PageHero eyebrow="SAGA / BLOG" title="Analysis before consensus." lede="AI skills, agent systems, software shifts, security, technical economics, and consequential news — published only when the material survives a verification and usefulness test." />
+        <section className="section compact-top">
+          <SignalScoreExplainer />
+          <div className="library-toolbar">
+            <div className="search-field"><Search size={18} /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search analysis, tags, and topics" /></div>
+            <div className="filter-row">{categories.map((item) => <button className={category === item ? 'filter-active' : ''} key={item} onClick={() => setCategory(item)}>{item}</button>)}</div>
+          </div>
+          <div className="article-list">
+            {filtered.map((post) => (
+              <InternalLink className="article-row" to={`/blog/${post.slug}`} key={post.slug}>
+                <div><span className="pill">{post.category}</span><span className="meta-text">{formatDate(post.published_at)} · {post.reading_minutes} min</span></div>
+                <h2>{post.title}</h2>
+                <p>{post.dek}</p>
+                <div className="tag-row">{(post.tags || []).map((tag) => <span key={tag}>{tag}</span>)}</div>
+              </InternalLink>
+            ))}
+          </div>
+          {!filtered.length && <EmptyState text="No published analysis matches this filter yet." />}
+        </section>
+      </main>
+    </Shell>
+  );
+}
+
+function SignalScoreExplainer() {
+  return (
+    <div className="editorial-standard">
+      <div>
+        <p className="section-kicker">SAGA SIGNAL SCORE</p>
+        <h2>Trend-setting requires a standard, not volume.</h2>
+        <p>Each scored post is judged on novelty, evidence quality, operational consequence, and durable value. Material claims should be labeled internally as verified fact, inference, forecast, or unresolved.</p>
+      </div>
+      <div className="score-grid">
+        {signalDimensions.map(([, label], index) => <div key={label}><span>0{index + 1}</span><strong>{label}</strong></div>)}
+      </div>
+    </div>
+  );
+}
+
+function BlogDetail({ post }) {
+  if (!post) return <NotFound />;
+  const score = post.editorial_score || {};
+  const sections = Array.isArray(post.body) ? post.body : [];
+  const takeaways = Array.isArray(post.key_takeaways) ? post.key_takeaways : [];
+  const implications = Array.isArray(post.operational_implications) ? post.operational_implications : [];
+  const sources = Array.isArray(post.sources) ? post.sources : [];
+  useEffect(() => {
+    document.title = `${post.title} | Saga Solutions`;
+  }, [post.title]);
+  return (
+    <Shell active="blog">
+      <main className="article-page">
+        <section className="article-hero">
+          <InternalLink to="/blog" className="back-link">← SAGA BLOG</InternalLink>
+          <span className="pill">{post.hero_label || post.category}</span>
+          <h1>{post.title}</h1>
+          <p className="article-dek">{post.dek}</p>
+          <div className="article-byline">{post.author_name} · {formatDate(post.published_at)} · {post.reading_minutes} min</div>
+        </section>
+        <section className="article-layout">
+          <aside className="score-panel">
+            <p className="section-kicker">SAGA SIGNAL SCORE</p>
+            {signalDimensions.map(([key, label]) => <div className="score-line" key={key}><span>{label}</span><strong>{score[key] ?? '—'}/10</strong></div>)}
+            <p className="verify-note">Last verified: {formatDate(post.last_verified_at)}</p>
+          </aside>
+          <article className="article-body">
+            {sections.map((section, index) => <section key={`${section.label}-${index}`}><p className="section-kicker">{section.label}</p><p>{section.text}</p></section>)}
+            {takeaways.length > 0 && <section><p className="section-kicker">KEY TAKEAWAYS</p><ul>{takeaways.map((item) => <li key={item}>{item}</li>)}</ul></section>}
+            {post.countercase && <section className="countercase"><p className="section-kicker">COUNTERCASE</p><p>{post.countercase}</p></section>}
+            {implications.length > 0 && <section><p className="section-kicker">WHAT TO DO NEXT</p><ul>{implications.map((item) => <li key={item}>{item}</li>)}</ul></section>}
+            <section><p className="section-kicker">SOURCES</p>{sources.length ? <div className="source-list">{sources.map((source) => <a href={source.url} target="_blank" rel="noreferrer" key={source.url}>{source.publisher}: {source.title} <ArrowUpRight size={14} /></a>)}</div> : <p>No external source list is attached to this note.</p>}</section>
+          </article>
+        </section>
+      </main>
+    </Shell>
+  );
+}
+
+function TechPage() {
+  return (
+    <Shell active="tech">
+      <main>
+        <PageHero eyebrow="SAGA / TECH" title="Technology support without mystery pricing." lede="Direct help for software, accounts, devices, data recovery triage, security basics, migration, AI setup, and small-business operations. Scope boundaries are stated before work begins." />
+        <section className="section compact-top">
+          <div className="section-heading split-heading"><div><p className="section-kicker">Launch pricing</p><h2>Pay for the problem being solved.</h2></div><p>Rates are deliberately transparent. Larger or uncertain jobs are assessed before a final quote is issued.</p></div>
+          <div className="pricing-grid tech-grid">
+            {techServices.map((service) => <ServiceCard key={service.name} service={service} />)}
+          </div>
+          <div className="boundary-note">
+            <ShieldCheck size={22} />
+            <div><strong>Data recovery boundary</strong><p>Saga performs non-invasive assessment and may perform logical recovery where appropriate. We do not perform invasive clean-room or mechanical drive repair. Physical-failure cases are referred to a specialist lab.</p></div>
+          </div>
+          <div className="service-categories">
+            {['Device + software troubleshooting', 'Email + cloud setup', 'Account + workflow cleanup', 'Backups + migration', 'Network diagnostics', 'Basic security hardening', 'Data recovery triage', 'AI tool configuration', 'Small-business automation'].map((item) => <span key={item}>{item}</span>)}
+          </div>
+          <CTA title="Need technical help?" text="Submit a short project outline. Choose Diagnostic Sprint for a defined problem or describe the support request directly." />
+        </section>
+      </main>
+    </Shell>
+  );
+}
+
+function ServiceCard({ service }) {
+  return (
+    <article className="price-card">
+      <span className="pill">TECH</span>
+      <h3>{service.name}</h3>
+      <div className="price">{service.price}</div>
+      <div className="price-qualifier">{service.qualifier}</div>
+      <p>{service.summary}</p>
+      <ul>{service.includes.map((item) => <li key={item}><Check size={15} />{item}</li>)}</ul>
+      <a className="button button-secondary full" href={`/#start-project`}>Request service</a>
+    </article>
+  );
+}
+
+function VibesPage() {
+  return (
+    <Shell active="vibes">
+      <main>
+        <PageHero eyebrow="SAGA / VIBES" title="AI-assisted. Human-reviewed. Business-ready." lede="Saga Vibes is the digital build studio inside Saga Solutions: websites, landing pages, portals, intake systems, prototypes, and automation produced quickly without outsourcing judgment to the tools." />
+        <section className="section compact-top">
+          <div className="vibes-process">
+            {[
+              ['01', 'Intake', 'Business goal, audience, offer, assets, constraints, and deadline.'],
+              ['02', 'Strategy', 'Structure, messaging, conversion path, technical requirements, and risk.'],
+              ['03', 'AI-assisted build', 'Draft components, copy, code, and implementation work accelerated by a coordinated tool stack.'],
+              ['04', 'Human review', 'Links, forms, claims, mobile layout, security basics, accessibility, and release readiness checked manually.'],
+              ['05', 'Launch + handoff', 'Deployment, repository access, operating notes, and the next iteration plan.'],
+            ].map(([index, title, text]) => <article key={index}><span>{index}</span><h3>{title}</h3><p>{text}</p></article>)}
+          </div>
+          <PortfolioSection />
+          <div className="section-heading"><p className="section-kicker">Entry points</p><h2>Start small or commission the full build.</h2></div>
+          <div className="pricing-grid">{packages.map((item) => <PackageCard item={item} key={item.id} />)}</div>
+          <CTA title="Bring the idea. Leave with something inspectable." text="Every engagement is defined by a written scope, explicit deliverables, and a review point before release." />
+        </section>
+      </main>
+    </Shell>
+  );
+}
+
+function PackageCard({ item }) {
+  return (
+    <article className={cx('price-card', item.featured && 'featured')}>
+      {item.featured && <span className="pill">CORE ENTRY</span>}
+      <h3>{item.name}</h3>
+      <div className="price">{item.price}</div><div className="price-qualifier">{item.cadence}</div>
+      <p>{item.description}</p>
+      <ul>{item.includes.map((line) => <li key={line}><Check size={15} />{line}</li>)}</ul>
+      <a className="button button-secondary full" href={`/#start-project`}>Select</a>
+    </article>
+  );
+}
+
+function CodeIndex({ entries }) {
+  const [query, setQuery] = useState('');
+  const [kind, setKind] = useState('All');
+  const kinds = ['All', ...new Set(entries.map((item) => item.kind))];
+  const filtered = entries.filter((item) => {
+    const haystack = `${item.title} ${item.summary} ${item.category} ${(item.tags || []).join(' ')}`.toLowerCase();
+    return (kind === 'All' || item.kind === kind) && haystack.includes(query.toLowerCase());
+  });
+  return (
+    <Shell active="code">
+      <main>
+        <PageHero eyebrow="SAGA / CODE" title="A curated field library, not a project graveyard." lede="Every entry must state what it does, when to use it, why it matters, how it fails, what security assumptions it makes, and when it was last verified." />
+        <section className="section compact-top">
+          <div className="code-doctrine">
+            {['WHAT IT DOES', 'WHEN TO USE IT', 'WHY IT IS BETTER', 'FAILURE MODES', 'SECURITY NOTES', 'LAST VERIFIED'].map((item, index) => <div key={item}><span>0{index + 1}</span><strong>{item}</strong></div>)}
+          </div>
+          <div className="library-toolbar">
+            <div className="search-field"><Search size={18} /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search prompts, schemas, recipes, and tags" /></div>
+            <div className="filter-row">{kinds.map((item) => <button className={kind === item ? 'filter-active' : ''} key={item} onClick={() => setKind(item)}>{item}</button>)}</div>
+          </div>
+          <div className="code-grid">
+            {filtered.map((entry) => (
+              <InternalLink className="code-card" to={`/code/${entry.slug}`} key={entry.slug}>
+                <div className="code-meta"><span className="pill">{entry.kind}</span><span className={`quality quality-${entry.quality_status}`}>{entry.quality_status}</span></div>
+                <h2>{entry.title}</h2><p>{entry.summary}</p>
+                <div className="tag-row">{(entry.tags || []).map((tag) => <span key={tag}>{tag}</span>)}</div>
+                <div className="meta-text">{entry.language || 'text'} · {entry.difficulty} · verified {formatDate(entry.last_verified_at)}</div>
+              </InternalLink>
+            ))}
+          </div>
+          {!filtered.length && <EmptyState text="No CODE entry matches this filter yet." />}
+        </section>
+      </main>
+    </Shell>
+  );
+}
+
+function CodeDetail({ entry }) {
+  const [copied, setCopied] = useState(false);
+  if (!entry) return <NotFound />;
+  const copy = async () => {
+    await navigator.clipboard.writeText(entry.code_or_prompt);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1800);
+  };
+  return (
+    <Shell active="code">
+      <main className="code-detail-page">
+        <section className="article-hero">
+          <InternalLink to="/code" className="back-link">← SAGA CODE</InternalLink>
+          <div className="code-meta"><span className="pill">{entry.kind}</span><span className={`quality quality-${entry.quality_status}`}>{entry.quality_status}</span></div>
+          <h1>{entry.title}</h1><p className="article-dek">{entry.summary}</p>
+          <div className="article-byline">{entry.category} · {entry.language || 'text'} · {entry.difficulty} · verified {formatDate(entry.last_verified_at)}</div>
+        </section>
+        <section className="code-detail-layout">
+          <div className="code-main">
+            <div className="code-block-header"><span>{entry.language || 'text'}</span><button type="button" onClick={copy}><Clipboard size={15} />{copied ? 'Copied' : 'Copy'}</button></div>
+            <pre><code>{entry.code_or_prompt}</code></pre>
+          </div>
+          <aside className="code-notes">
+            <NoteList title="WHEN TO USE IT" items={entry.usage_notes} />
+            <NoteList title="FAILURE MODES" items={entry.failure_modes} />
+            <NoteList title="SECURITY NOTES" items={entry.security_notes} />
+            <NoteList title="PREREQUISITES" items={entry.prerequisites} />
+            <div><p className="section-kicker">TESTED ON</p><p>{entry.tested_on || 'Not specified'}</p></div>
+          </aside>
+        </section>
+      </main>
+    </Shell>
+  );
+}
+
+function NoteList({ title, items }) {
+  const safe = Array.isArray(items) ? items : [];
+  if (!safe.length) return null;
+  return <div><p className="section-kicker">{title}</p><ul>{safe.map((item) => <li key={item}>{item}</li>)}</ul></div>;
+}
+
+function PageHero({ eyebrow, title, lede }) {
+  return <section className="page-hero"><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p>{lede}</p></section>;
+}
+
+function CTA({ title, text }) {
+  return <div className="cta-block"><div><p className="section-kicker">START</p><h2>{title}</h2><p>{text}</p></div><a className="button button-primary" href="/#start-project">Commission a project <ArrowRight size={17} /></a></div>;
+}
+
+function EmptyState({ text }) {
+  return <div className="empty-state"><Database size={20} /><p>{text}</p></div>;
+}
+
+function CommissionSection() {
   const [selectedPackage, setSelectedPackage] = useState('blueprint');
   const [lead, setLead] = useState(initialLead);
   const [leadState, setLeadState] = useState({ status: 'idle', message: '' });
@@ -241,32 +575,11 @@ function App() {
   const [brief, setBrief] = useState(initialBrief);
   const [briefState, setBriefState] = useState({ status: 'idle', message: '' });
   const [paymentState, setPaymentState] = useState({ status: 'idle', message: '' });
-
   const params = useMemo(() => new URLSearchParams(window.location.search), []);
   const paymentSucceeded = params.get('payment') === 'success';
   const paymentCancelled = params.get('payment') === 'cancelled';
   const sessionId = params.get('session_id') || '';
   const paidPackage = params.get('package') || selectedPackage;
-
-  const matchedCapabilities = useMemo(() => {
-    const normalized = capabilityQuery.trim().toLowerCase();
-    if (!normalized) return capabilities.slice(0, 3);
-    const matches = capabilities
-      .map((capability) => ({
-        ...capability,
-        score: capability.keywords.reduce(
-          (total, keyword) => total + (normalized.includes(keyword) ? 2 : 0),
-          normalized
-            .split(/\s+/)
-            .reduce((total, word) => total + (capability.detail.toLowerCase().includes(word) ? 1 : 0), 0),
-        ),
-      }))
-      .sort((a, b) => b.score - a.score);
-    return matches.filter((item) => item.score > 0).slice(0, 3).length
-      ? matches.filter((item) => item.score > 0).slice(0, 3)
-      : capabilities.slice(0, 3);
-  }, [capabilityQuery]);
-
   const selectedPackageData = packages.find((item) => item.id === selectedPackage) || packages[1];
 
   useEffect(() => {
@@ -276,40 +589,18 @@ function App() {
       setPaymentState({ status: 'success', message: 'Payment was verified during this browser session.' });
       return;
     }
-
     setPaymentState({ status: 'loading', message: 'Verifying payment and notifying the project coordinator…' });
     postJSON('/api/payment-confirmation', { sessionId, packageId: paidPackage })
       .then((data) => {
         window.sessionStorage.setItem(storageKey, 'true');
-        setPaymentState({
-          status: 'success',
-          message: `Payment verified. Coordinator notification reference: ${data.reference}.`,
-        });
+        setPaymentState({ status: 'success', message: `Payment verified. Reference: ${data.reference}.` });
       })
-      .catch((error) => {
-        setPaymentState({
-          status: 'error',
-          message: error.message || 'Payment verification could not be completed automatically.',
-        });
-      });
+      .catch((error) => setPaymentState({ status: 'error', message: error.message || 'Payment verification could not be completed automatically.' }));
   }, [paymentSucceeded, sessionId, paidPackage]);
-
-  const updateLead = (event) => {
-    const { name, value } = event.target;
-    setLead((current) => ({ ...current, [name]: value }));
-  };
-
-  const updateBrief = (event) => {
-    const { name, value } = event.target;
-    setBrief((current) => ({ ...current, [name]: value }));
-  };
 
   const validateLead = () => {
     if (!lead.name.trim() || !lead.email.trim() || !lead.projectTitle.trim() || !lead.projectSummary.trim()) {
-      setLeadState({
-        status: 'error',
-        message: 'Name, email, project title, and a concise project summary are required.',
-      });
+      setLeadState({ status: 'error', message: 'Name, email, project title, and a concise project summary are required.' });
       return false;
     }
     return true;
@@ -318,560 +609,132 @@ function App() {
   const submitLead = async (event) => {
     event.preventDefault();
     if (!validateLead()) return;
-
     setLeadState({ status: 'loading', message: 'Sending your project outline…' });
     try {
-      const data = await postJSON('/api/contact', {
-        ...lead,
-        packageId: selectedPackage,
-        packageName: selectedPackageData.name,
-        source: 'Saga Solutions project intake',
-      });
-      setLeadState({
-        status: 'success',
-        message: `Project outline received. Reference ${data.reference || 'created'}.`,
-      });
+      const data = await postJSON('/api/contact', { ...lead, packageId: selectedPackage, packageName: selectedPackageData.name, source: 'Saga Solutions project intake' });
+      setLeadState({ status: 'success', message: `Project outline received. Reference ${data.reference || 'created'}.` });
     } catch (error) {
-      setLeadState({
-        status: 'error',
-        message:
-          error.code === 'CONTACT_NOT_CONFIGURED'
-            ? `The automated inbox is not configured yet. Email ${coordinator.email} directly with your project title.`
-            : error.message,
-      });
+      setLeadState({ status: 'error', message: error.code === 'CONTACT_NOT_CONFIGURED' ? `The automated inbox is not configured yet. Email ${coordinator.email} directly with your project title.` : error.message });
     }
   };
 
   const startCheckout = async () => {
-    if (!validateLead()) {
-      document.querySelector('#project-form')?.scrollIntoView({ behavior: 'smooth' });
-      return;
-    }
-
+    if (!validateLead()) return;
     setCheckoutState({ status: 'loading', message: 'Opening secure checkout…' });
     try {
-      const data = await postJSON('/api/create-checkout', {
-        packageId: selectedPackage,
-        customerEmail: lead.email,
-        customerName: lead.name,
-        projectTitle: lead.projectTitle,
-      });
+      const data = await postJSON('/api/create-checkout', { packageId: selectedPackage, customerEmail: lead.email, customerName: lead.name, projectTitle: lead.projectTitle });
       window.location.assign(data.url);
     } catch (error) {
-      setCheckoutState({
-        status: 'error',
-        message:
-          error.code === 'PAYMENTS_NOT_CONFIGURED'
-            ? 'Secure checkout is prepared but Stripe environment variables still need to be connected. Submit the project outline to request an invoice meanwhile.'
-            : error.message,
-      });
+      setCheckoutState({ status: 'error', message: error.code === 'PAYMENTS_NOT_CONFIGURED' ? 'Secure checkout is prepared but the Stripe environment variables still need to be connected. Submit the outline to request an invoice meanwhile.' : error.message });
     }
   };
 
   const submitBrief = async (event) => {
     event.preventDefault();
-    if (!paymentSucceeded || !sessionId) {
-      setBriefState({
-        status: 'error',
-        message: 'A verified checkout session is required before this commissioning brief can be submitted.',
-      });
-      return;
-    }
-
     const required = ['desiredOutcome', 'primaryUsers', 'requiredFeatures', 'successMeasures'];
-    if (required.some((field) => !brief[field].trim())) {
-      setBriefState({
-        status: 'error',
-        message: 'Complete the outcome, users, required features, and success measures fields.',
-      });
-      return;
-    }
-
+    if (!paymentSucceeded || !sessionId) return setBriefState({ status: 'error', message: 'A verified checkout session is required before this brief can be submitted.' });
+    if (required.some((field) => !brief[field].trim())) return setBriefState({ status: 'error', message: 'Complete the outcome, users, required features, and success measures fields.' });
     setBriefState({ status: 'loading', message: 'Submitting your commissioning brief…' });
     try {
-      const data = await postJSON('/api/submit-project', {
-        sessionId,
-        packageId: paidPackage,
-        lead,
-        brief,
-      });
-      setBriefState({
-        status: 'success',
-        message: `Commissioning brief received. Project reference: ${data.reference}. A summary has been sent to the project coordinator.`,
-      });
+      const data = await postJSON('/api/submit-project', { sessionId, packageId: paidPackage, lead, brief });
+      setBriefState({ status: 'success', message: `Commissioning brief received. Project reference: ${data.reference}.` });
     } catch (error) {
       setBriefState({ status: 'error', message: error.message });
     }
   };
 
   return (
-    <div className="site-shell">
-      <header className="site-header">
-        <a className="wordmark" href="#top" aria-label="Saga Solutions home">
-          <span className="wordmark-primary">SAGA</span>
-          <span className="wordmark-secondary">SOLUTIONS</span>
-        </a>
-
-        <button
-          className="menu-button"
-          type="button"
-          aria-label="Toggle navigation"
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((value) => !value)}
-        >
-          {menuOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
-
-        <nav className={classNames('main-nav', menuOpen && 'is-open')} aria-label="Primary navigation">
-          <a href="#work" onClick={() => setMenuOpen(false)}>Work</a>
-          <a href="#capabilities" onClick={() => setMenuOpen(false)}>Capabilities</a>
-          <a href="#process" onClick={() => setMenuOpen(false)}>Process</a>
-          <a href="#start-project" onClick={() => setMenuOpen(false)}>Start a project</a>
-          <a className="nav-cta" href={`mailto:${coordinator.email}`}>Contact</a>
-        </nav>
-      </header>
-
-      <main id="top">
-        <section className="hero-section">
-          <div className="hero-image" style={{ backgroundImage: `url("${heroImage}")` }} aria-hidden="true" />
-          <div className="hero-scrim" aria-hidden="true" />
-          <div className="hero-content">
-            <p className="eyebrow">Independent strategy, research, technology, and venture development</p>
-            <h1>
-              Difficult projects.
-              <span>Clear operating systems.</span>
-            </h1>
-            <p className="hero-lede">
-              Saga Solutions researches the problem, defines the offer, builds the system, and prepares the work
-              for launch. One coordinated practice for organizations and founders who do not need another vague
-              consultancy deck.
-            </p>
-            <div className="hero-actions">
-              <a className="button button-primary" href="#start-project">
-                Start a paid engagement <ArrowRight size={18} />
-              </a>
-              <a className="button button-secondary" href="#work">
-                Inspect the portfolio
-              </a>
-            </div>
-          </div>
-
-          <div className="hero-index">
-            <span>Oakland / Bay Area / Remote</span>
-            <span>Research · Systems · Product · Operations</span>
-            <span>Project coordination: {coordinator.name}</span>
-          </div>
-        </section>
-
-        <section className="proof-strip" aria-label="Saga Solutions operating principles">
-          <div><BadgeCheck size={17} /> Evidence before claims</div>
-          <div><Gauge size={17} /> Scope before execution</div>
-          <div><ReceiptText size={17} /> Written decisions and deliverables</div>
-          <div><ShieldCheck size={17} /> No invented results or hidden dependencies</div>
-        </section>
-
-        <section className="section" id="capabilities">
-          <div className="section-heading split-heading">
-            <div>
-              <p className="section-kicker">Capability architecture</p>
-              <h2>Broad enough to coordinate the whole problem. Specific enough to deliver.</h2>
-            </div>
-            <p>
-              The practical advantage is not “doing everything.” It is reducing handoff failure between research,
-              strategy, design, technology, communications, and operations.
-            </p>
-          </div>
-
-          <div className="capability-grid">
-            {capabilities.map(({ icon: Icon, title, detail }) => (
-              <article className="capability-card" key={title}>
-                <Icon size={22} aria-hidden="true" />
-                <h3>{title}</h3>
-                <p>{detail}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="matcher-section">
-          <div className="matcher-copy">
-            <p className="section-kicker">Scope finder</p>
-            <h2>Describe the assignment in plain language.</h2>
-            <p>
-              This is not an AI chatbot and it does not pretend to quote a final scope. It identifies the operating
-              disciplines most likely to be involved so the first conversation starts at a higher level.
-            </p>
-          </div>
-
-          <div className="matcher-panel">
-            <label htmlFor="capability-query">What are you trying to build, repair, investigate, or sell?</label>
-            <div className="search-field">
-              <Search size={20} aria-hidden="true" />
-              <input
-                id="capability-query"
-                value={capabilityQuery}
-                onChange={(event) => setCapabilityQuery(event.target.value)}
-                placeholder="Example: create a public records database and publish a paid research report"
-              />
-            </div>
-            <div className="match-results" aria-live="pollite">
-              {matchedCapabilities.map(({ icon: Icon, title, detail }) => (
-                <div className="match-result" key={title}>
-                  <Icon size={18} />
-                  <div>
-                    <strong>{title}</strong>
-                    <span>{detail}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <a className="text-link" href="#start-project">
-              Convert this into a project brief <ArrowRight size={16} />
-            </a>
-          </div>
-        </section>
-
-        <section className="section work-section" id="work">
-          <div className="section-heading">
-            <p className="section-kicker">Portfolio insight</p>
-            <h2>Projects that demonstrate the range without obscuring the method.</h2>
-          </div>
-
-          <div className="portfolio-grid">
-            {portfolio.map((project, index) => (
-              <a
-                className={classNames('portfolio-card', index === 0 && 'portfolio-card-featured')}
-                href={project.href}
-                target="_blank"
-                rel="noreferrer"
-                key={project.name}
-              >
-                <div className="portfolio-meta">
-                  <span>{project.category}</span>
-                  <span className="project-status">{project.status}</span>
-                </div>
-                <h3>{project.name}</h3>
-                <p>{project.description}</p>
-                <div className="tag-row">
-                  {project.tags.map((tag) => <span key={tag}>{tag}</span>)}
-                </div>
-                <div className="portfolio-link">
-                  Open project <ArrowUpRight size={17} />
-                </div>
-              </a>
-            ))}
-          </div>
-        </section>
-
-        <section className="process-section" id="process">
-          <div className="section-heading">
-            <p className="section-kicker">Delivery model</p>
-            <h2>A visible process from first question to working asset.</h2>
-          </div>
-
-          <ol className="process-list">
-            <li>
-              <span>01</span>
-              <div><h3>Diagnose</h3><p>Clarify the actual decision, user, constraint, risk, and commercial objective.</p></div>
-            </li>
-            <li>
-              <span>02</span>
-              <div><h3>Structure</h3><p>Produce a scope, evidence plan, system architecture, price logic, and acceptance criteria.</p></div>
-            </li>
-            <li>
-              <span>03</span>
-              <div><h3>Build</h3><p>Create the research, interface, database, content, workflow, or operational package.</p></div>
-            </li>
-            <li>
-              <span>04</span>
-              <div><h3>Verify</h3><p>Test links, claims, forms, routes, permissions, dependencies, and handoff documentation.</p></div>
-            </li>
-            <li>
-              <span>05</span>
-              <div><h3>Launch and compound</h3><p>Publish, measure, repair weak points, and convert the project into repeatable capacity.</p></div>
-            </li>
-          </ol>
-        </section>
-
-        <section className="section pricing-section" id="start-project">
-          <div className="section-heading split-heading">
-            <div>
-              <p className="section-kicker">Paid entry points</p>
-              <h2>Buy a defined first step instead of entering an indefinite sales process.</h2>
-            </div>
-            <p>
-              Launch pricing establishes a clean starting point. Materially larger scopes receive a written proposal
-              after the diagnostic or blueprint stage.
-            </p>
-          </div>
-
-          <div className="pricing-grid">
-            {packages.map((item) => (
-              <button
-                type="button"
-                className={classNames(
-                  'package-card',
-                  item.featured && 'featured',
-                  selectedPackage === item.id && 'selected',
-                )}
-                onClick={() => setSelectedPackage(item.id)}
-                key={item.id}
-              >
-                <div className="package-select">
-                  <span>{selectedPackage === item.id ? <Check size={15} /> : null}</span>
-                  {item.featured ? <em>Recommended starting point</em> : null}
-                </div>
-                <h3>{item.name}</h3>
-                <div className="package-price">{item.price} <small>{item.cadence}</small></div>
-                <p>{item.description}</p>
-                <ul>
-                  {item.includes.map((entry) => <li key={entry}><Check size={15} /> {entry}</li>)}
-                </ul>
-                <div className="best-for"><strong>Best for:</strong> {item.bestFor}</div>
-              </button>
-            ))}
-          </div>
-
-          <div className="project-console" id="project-form">
-            <div className="console-summary">
-              <p className="section-kicker">Selected engagement</p>
-              <h3>{selectedPackageData.name}</h3>
-              <div className="summary-price">{selectedPackageData.price}</div>
-              <p>{selectedPackageData.description}</p>
-              <div className="coordinator-card">
-                <span className="coordinator-mark">S</span>
-                <div>
-                  <strong>{coordinator.name}</strong>
-                  <small>{coordinator.role}</small>
-                  <a href={`mailto:${coordinator.email}`}><Mail size={15} /> {coordinator.email}</a>
-                  <a href={`tel:${coordinator.phone.replace(/[^\d+]/g, '')}`}><Phone size={15} /> {coordinator.phone}</a>
-                </div>
-              </div>
-              <p className="fine-print">
-                Card details are entered only on Stripe’s hosted checkout. Saga Solutions does not collect or store
-                card numbers in this form.
-              </p>
-            </div>
-
-            <form className="project-form" onSubmit={submitLead}>
-              <div className="form-heading">
-                <ClipboardList size={20} />
-                <div>
-                  <h3>Project outline</h3>
-                  <p>Provide enough context to connect the payment to a real assignment.</p>
-                </div>
-              </div>
-
-              <div className="form-grid">
-                <label>
-                  Name *
-                  <input name="name" value={lead.name} onChange={updateLead} autoComplete="name" />
-                </label>
-                <label>
-                  Email *
-                  <input name="email" type="email" value={lead.email} onChange={updateLead} autoComplete="email" />
-                </label>
-                <label>
-                  Phone
-                  <input name="phone" value={lead.phone} onChange={updateLead} autoComplete="tel" />
-                </label>
-                <label>
-                  Organization
-                  <input name="organization" value={lead.organization} onChange={updateLead} />
-                </label>
-                <label className="span-two">
-                  Project title *
-                  <input name="projectTitle" value={lead.projectTitle} onChange={updateLead} />
-                </label>
-                <label className="span-two">
-                  What needs to be accomplished? *
-                  <textarea name="projectSummary" value={lead.projectSummary} onChange={updateLead} rows="5" />
-                </label>
-                <label>
-                  Working budget
-                  <select name="budget" value={lead.budget} onChange={updateLead}>
-                    <option value="">Select</option>
-                    <option>Under $500</option>
-                    <option>$500–$1,500</option>
-                    <option>$1,500–$5,000</option>
-                    <option>$5,000–$15,000</option>
-                    <option>$15,000+</option>
-                  </select>
-                </label>
-                <label>
-                  Desired timing
-                  <select name="timeline" value={lead.timeline} onChange={updateLead}>
-                    <option value="">Select</option>
-                    <option>As soon as responsibly possible</option>
-                    <option>Within 30 days</option>
-                    <option>Within 60–90 days</option>
-                    <option>This quarter</option>
-                    <option>Exploratory</option>
-                  </select>
-                </label>
-              </div>
-
-              {leadState.message ? (
-                <div className={classNames('form-notice', leadState.status)}>{leadState.message}</div>
-              ) : null}
-              {checkoutState.message ? (
-                <div className={classNames('form-notice', checkoutState.status)}>{checkoutState.message}</div>
-              ) : null}
-              {paymentCancelled ? (
-                <div className="form-notice error">Checkout was cancelled. Your project information remains in the form.</div>
-              ) : null}
-
-              <div className="form-actions">
-                <button className="button button-secondary" type="submit" disabled={leadState.status === 'loading'}>
-                  <MessageSquareText size={18} />
-                  {leadState.status === 'loading' ? 'Sending…' : 'Send outline / request invoice'}
-                </button>
-                <button
-                  className="button button-primary"
-                  type="button"
-                  onClick={startCheckout}
-                  disabled={checkoutState.status === 'loading'}
-                >
-                  <CircleDollarSign size={18} />
-                  {checkoutState.status === 'loading' ? 'Opening checkout…' : `Pay ${selectedPackageData.price}`}
-                </button>
-              </div>
-            </form>
-          </div>
-        </section>
-
-        <section className={classNames('commission-section', paymentSucceeded && 'is-active')} id="project-brief">
-          <div className="commission-intro">
-            <div className="payment-status">
-              {paymentSucceeded ? <BadgeCheck size={22} /> : <Banknote size={22} />}
-              {paymentSucceeded ? 'Payment return detected' : 'Post-purchase commissioning brief'}
-            </div>
-            <h2>Payment initiates the engagement. This brief supplies the operating facts.</h2>
-            <p>
-              After a successful checkout, the client completes this second-stage survey. The verified payment,
-              project outline, and detailed brief are consolidated into a coordinator summary and project record.
-            </p>
-            {paymentState.message ? (
-              <div className={classNames('form-notice', paymentState.status)}>{paymentState.message}</div>
-            ) : null}
-          </div>
-
-          {paymentSucceeded ? (
-            <form className="brief-form" onSubmit={submitBrief}>
-              <div className="form-grid">
-                <label className="span-two">
-                  What must be measurably different when the engagement is complete? *
-                  <textarea name="desiredOutcome" value={brief.desiredOutcome} onChange={updateBrief} rows="4" />
-                </label>
-                <label className="span-two">
-                  Who are the primary users, customers, readers, partners, or decision-makers? *
-                  <textarea name="primaryUsers" value={brief.primaryUsers} onChange={updateBrief} rows="4" />
-                </label>
-                <label className="span-two">
-                  Required functions, deliverables, pages, research questions, or services *
-                  <textarea name="requiredFeatures" value={brief.requiredFeatures} onChange={updateBrief} rows="5" />
-                </label>
-                <label>
-                  Reference links
-                  <textarea name="referenceLinks" value={brief.referenceLinks} onChange={updateBrief} rows="4" />
-                </label>
-                <label>
-                  Existing assets and accounts
-                  <textarea name="existingAssets" value={brief.existingAssets} onChange={updateBrief} rows="4" />
-                </label>
-                <label>
-                  Required integrations
-                  <textarea name="integrations" value={brief.integrations} onChange={updateBrief} rows="4" />
-                </label>
-                <label>
-                  Constraints, exclusions, or sensitive issues
-                  <textarea name="constraints" value={brief.constraints} onChange={updateBrief} rows="4" />
-                </label>
-                <label className="span-two">
-                  How will success be judged? *
-                  <textarea name="successMeasures" value={brief.successMeasures} onChange={updateBrief} rows="4" />
-                </label>
-                <label>
-                  Final decision-makers
-                  <input name="decisionMakers" value={brief.decisionMakers} onChange={updateBrief} />
-                </label>
-                <label>
-                  Target launch or delivery date
-                  <input name="targetLaunch" type="date" value={brief.targetLaunch} onChange={updateBrief} />
-                </label>
-              </div>
-
-              {briefState.message ? (
-                <div className={classNames('form-notice', briefState.status)}>{briefState.message}</div>
-              ) : null}
-
-              <button className="button button-primary" type="submit" disabled={briefState.status === 'loading'}>
-                <Zap size={18} />
-                {briefState.status === 'loading' ? 'Submitting brief…' : 'Submit commissioning brief'}
-              </button>
-            </form>
-          ) : (
-            <div className="locked-brief">
-              <ShieldCheck size={28} />
-              <div>
-                <strong>The detailed survey unlocks after checkout.</strong>
-                <span>The return URL carries the Stripe session ID used to verify payment server-side.</span>
-              </div>
-              <a href="#start-project">Select an engagement <ArrowRight size={16} /></a>
-            </div>
-          )}
-        </section>
-
-        <section className="section operating-section">
-          <div className="section-heading split-heading">
-            <div>
-              <p className="section-kicker">Additional commercial infrastructure</p>
-              <h2>What belongs on this page beyond a portfolio and contact form.</h2>
-            </div>
-            <p>
-              A credible commercial site should reduce uncertainty, collect qualified demand, document transactions,
-              and make the next operational action unmistakable.
-            </p>
-          </div>
-
-          <div className="operating-grid">
-            <article><Network size={21} /><h3>Partner network</h3><p>A reviewed bench of specialists for legal, finance, engineering, production, design, field work, and subject-matter research.</p></article>
-            <article><Database size={21} /><h3>Client workspace</h3><p>Secure access to briefs, files, decisions, milestones, invoices, approvals, and launch documentation.</p></article>
-            <article><BookOpen size={21} /><h3>Methods library</h3><p>Public explanations of how research, AI-assisted development, privacy, source control, and quality assurance are handled.</p></article>
-            <article><Building2 size={21} /><h3>Procurement desk</h3><p>W-9, capability statement, insurance, vendor details, sample scopes, service classifications, and contracting readiness.</p></article>
-            <article><BriefcaseBusiness size={21} /><h3>Retainer desk</h3><p>Recurring research, content, operations, maintenance, and product-development packages for ongoing clients.</p></article>
-            <article><Bot size={21} /><h3>Automation readiness</h3><p>Automated intake summaries, lead routing, project records, payment verification, client updates, and reporting without concealing human accountability.</p></article>
-          </div>
-        </section>
-
-        <section className="contact-section">
-          <div>
-            <p className="section-kicker">Direct contact</p>
-            <h2>Bring the problem, the evidence, and the actual constraints.</h2>
-          </div>
-          <div className="contact-actions">
-            <a href={`mailto:${coordinator.email}`}><Mail size={19} /> {coordinator.email}</a>
-            <a href={`tel:${coordinator.phone.replace(/[^\d+]/g, '')}`}><Phone size={19} /> {coordinator.phone}</a>
-          </div>
-        </section>
-      </main>
-
-      <footer>
-        <div className="footer-brand">
-          <span>SAGA</span>
-          <small>SOLUTIONS</small>
+    <section className="section commission-section" id="start-project">
+      <div className="section-heading split-heading">
+        <div><p className="section-kicker">Commission</p><h2>Turn the problem into a written scope.</h2></div>
+        <p>Submitting the outline does not require payment. Checkout is available for defined entry packages when the payment environment is configured.</p>
+      </div>
+      {paymentCancelled && <StatusBox state={{ status: 'error', message: 'Checkout was cancelled. Your project outline can still be submitted without payment.' }} />}
+      {paymentState.status !== 'idle' && <StatusBox state={paymentState} />}
+      <div className="commission-grid">
+        <div className="package-selector">
+          {packages.map((item) => <button key={item.id} className={selectedPackage === item.id ? 'selected' : ''} onClick={() => setSelectedPackage(item.id)}><span>{item.name}</span><strong>{item.price}</strong><small>{item.cadence}</small></button>)}
         </div>
-        <p>Strategy · Research · Technology · Media · Operations</p>
-        <div className="footer-links">
-          <a href="#top">Top</a>
-          <a href="#work">Portfolio</a>
-          <a href="#start-project">Engage</a>
-          <a href={`mailto:${coordinator.email}`}>Email</a>
-        </div>
-        <small>© {new Date().getFullYear()} Saga Solutions. Payment processing and project intake require configured Stripe, Supabase, and email-service credentials.</small>
-      </footer>
-    </div>
+        <form id="project-form" className="project-form" onSubmit={submitLead}>
+          <div className="form-grid">
+            <Field label="Name *"><input name="name" value={lead.name} onChange={(e) => setLead((v) => ({ ...v, name: e.target.value }))} /></Field>
+            <Field label="Email *"><input name="email" type="email" value={lead.email} onChange={(e) => setLead((v) => ({ ...v, email: e.target.value }))} /></Field>
+            <Field label="Organization"><input value={lead.organization} onChange={(e) => setLead((v) => ({ ...v, organization: e.target.value }))} /></Field>
+            <Field label="Phone"><input value={lead.phone} onChange={(e) => setLead((v) => ({ ...v, phone: e.target.value }))} /></Field>
+          </div>
+          <Field label="Project title *"><input value={lead.projectTitle} onChange={(e) => setLead((v) => ({ ...v, projectTitle: e.target.value }))} /></Field>
+          <Field label="What needs to change? *"><textarea rows="5" value={lead.projectSummary} onChange={(e) => setLead((v) => ({ ...v, projectSummary: e.target.value }))} /></Field>
+          <div className="form-grid">
+            <Field label="Budget"><input value={lead.budget} onChange={(e) => setLead((v) => ({ ...v, budget: e.target.value }))} /></Field>
+            <Field label="Timing"><input value={lead.timeline} onChange={(e) => setLead((v) => ({ ...v, timeline: e.target.value }))} /></Field>
+          </div>
+          <div className="form-actions"><button className="button button-primary" type="submit">Submit outline</button><button className="button button-secondary" type="button" onClick={startCheckout}>Pay for {selectedPackageData.name}</button></div>
+          {leadState.status !== 'idle' && <StatusBox state={leadState} />}
+          {checkoutState.status !== 'idle' && <StatusBox state={checkoutState} />}
+        </form>
+      </div>
+      {paymentSucceeded && sessionId && (
+        <form id="project-brief" className="project-brief" onSubmit={submitBrief}>
+          <div className="section-heading"><p className="section-kicker">Paid commissioning brief</p><h2>Define the result before production starts.</h2></div>
+          <div className="brief-grid">
+            {[
+              ['desiredOutcome', 'Desired outcome *'], ['primaryUsers', 'Primary users *'], ['requiredFeatures', 'Required features *'], ['successMeasures', 'Success measures *'],
+              ['referenceLinks', 'Reference links'], ['existingAssets', 'Existing assets'], ['integrations', 'Integrations'], ['constraints', 'Constraints'], ['decisionMakers', 'Decision-makers'], ['targetLaunch', 'Target launch'],
+            ].map(([key, label]) => <Field label={label} key={key}><textarea rows="3" value={brief[key]} onChange={(e) => setBrief((v) => ({ ...v, [key]: e.target.value }))} /></Field>)}
+          </div>
+          <button className="button button-primary" type="submit">Submit commissioning brief</button>
+          {briefState.status !== 'idle' && <StatusBox state={briefState} />}
+        </form>
+      )}
+    </section>
   );
 }
 
-createRoot(document.getElementById('root')).render(<App />);
+function Field({ label, children }) {
+  return <label className="field"><span>{label}</span>{children}</label>;
+}
+
+function StatusBox({ state }) {
+  return <div className={cx('status-box', `status-${state.status}`)}>{state.message}</div>;
+}
+
+function NotFound() {
+  return <Shell><main><section className="page-hero"><p className="eyebrow">404</p><h1>This page is not in the current Saga index.</h1><InternalLink className="button button-primary" to="/">Return home</InternalLink></section></main></Shell>;
+}
+
+function App() {
+  const path = usePathname();
+  const [blogPosts, setBlogPosts] = useState(fallbackBlogPosts);
+  const [codeEntries, setCodeEntries] = useState(fallbackCodeEntries);
+
+  useEffect(() => {
+    fetchPublicTable('saga_blog_posts', 'select=*&status=eq.published&order=published_at.desc')
+      .then((rows) => rows?.length && setBlogPosts(rows))
+      .catch(() => {});
+    fetchPublicTable('saga_code_entries', 'select=*&visibility=eq.public&order=featured.desc,updated_at.desc')
+      .then((rows) => rows?.length && setCodeEntries(rows))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const titles = {
+      '/': 'Saga Solutions — BLOG · TECH · VIBES · CODE',
+      '/blog': 'SAGA BLOG — AI analysis and technical signals',
+      '/tech': 'SAGA TECH — Technology support and pricing',
+      '/vibes': 'SAGA VIBES — Digital product studio',
+      '/code': 'SAGA CODE — Curated prompts, schemas, and recipes',
+    };
+    document.title = titles[path] || 'Saga Solutions';
+  }, [path]);
+
+  if (path === '/') return <Home blogPosts={blogPosts} codeEntries={codeEntries} />;
+  if (path === '/blog') return <BlogIndex posts={blogPosts} />;
+  if (path.startsWith('/blog/')) return <BlogDetail post={blogPosts.find((item) => item.slug === decodeURIComponent(path.slice(6)))} />;
+  if (path === '/tech') return <TechPage />;
+  if (path === '/vibes') return <VibesPage />;
+  if (path === '/code') return <CodeIndex entries={codeEntries} />;
+  if (path.startsWith('/code/')) return <CodeDetail entry={codeEntries.find((item) => item.slug === decodeURIComponent(path.slice(6)))} />;
+  return <NotFound />;
+}
+
+createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);
