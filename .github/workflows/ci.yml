@@ -25,7 +25,7 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Check serverless JavaScript
+      - name: Check JavaScript syntax
         run: |
           node --check api/create-checkout.js
           node --check api/contact.js
@@ -33,6 +33,7 @@ jobs:
           node --check api/submit-project.js
           node --check api/editorial-draft.js
           node --check src/bridge.js
+          node --check src/editorial-cleanup.js
 
       - name: Build production bundle
         run: npm run build
