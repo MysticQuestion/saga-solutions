@@ -31,6 +31,7 @@ jobs:
           node --check api/contact.js
           node --check api/payment-confirmation.js
           node --check api/submit-project.js
+          node --check api/editorial-draft.js
           node --check src/bridge.js
 
       - name: Build production bundle
