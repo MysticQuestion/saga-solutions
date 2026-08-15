@@ -17,7 +17,6 @@ const replacements = new Map([
   ['Capability map', 'Services'],
   ['Describe the problem. We identify the disciplines involved.', 'What does the project require?'],
   ['This finder does not pretend to quote a final scope. It helps reveal what the assignment actually touches before money is spent.', 'Search across research, web development, automation, civic systems, data, brand, and operations to identify the relevant service areas.'],
-  ['Analysis before consensus.', 'Research, analysis, and practical intelligence.'],
   ['AI skills, agent systems, software shifts, security, technical economics, and consequential news — published only when the material survives a verification and usefulness test.', 'Long-form research, essays, technical analysis, AI developments, and concise observations on tools, markets, culture, technology, public systems, and business. The format follows the subject.'],
   ['SAGA SIGNAL SCORE', 'EDITORIAL ASSESSMENT'],
   ['Trend-setting requires a standard, not volume.', 'How we evaluate developing topics.'],
@@ -35,6 +34,11 @@ const replacements = new Map([
   ['This page is not in the current Saga index.', 'Page not found.'],
   ['Short notes on how this work actually goes.', 'Research, analysis, and practical intelligence.'],
   ['Operational writing rather than thought leadership. Published when there is something specific to say, which is not often.', 'Long-form research, essays, technical analysis, AI developments, and concise observations on tools, markets, culture, technology, public systems, and business. The format follows the subject.'],
+  ['Start small or commission the full build.', 'Defined starting scopes.'],
+  ['CORE ENTRY', 'STANDARD SCOPE'],
+  ['A structured plan for turning an idea into a credible, buildable, monetizable project.', 'Research, scope, feature planning, implementation sequence, and a practical revenue or sustainability model where relevant.'],
+  ['AI production speed', 'AI-assisted production'],
+  ['The Saga Vibes advantage', 'Working method'],
 ]);
 
 const cadenceCopy = 'This is a working notebook, not a content programme. There is no newsletter, no posting schedule, and no plan to manufacture one.';
