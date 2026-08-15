@@ -17,7 +17,6 @@ const replacements = new Map([
   ['Capability map', 'Services'],
   ['Describe the problem. We identify the disciplines involved.', 'What does the project require?'],
   ['This finder does not pretend to quote a final scope. It helps reveal what the assignment actually touches before money is spent.', 'Search across research, web development, automation, civic systems, data, brand, and operations to identify the relevant service areas.'],
-  ['Analysis before consensus.', 'Research, analysis, and practical intelligence.'],
   ['AI skills, agent systems, software shifts, security, technical economics, and consequential news — published only when the material survives a verification and usefulness test.', 'Long-form research, essays, technical analysis, AI developments, and concise observations on tools, markets, culture, technology, public systems, and business. The format follows the subject.'],
   ['SAGA SIGNAL SCORE', 'EDITORIAL ASSESSMENT'],
   ['Trend-setting requires a standard, not volume.', 'How we evaluate developing topics.'],
@@ -35,6 +34,11 @@ const replacements = new Map([
   ['This page is not in the current Saga index.', 'Page not found.'],
   ['Short notes on how this work actually goes.', 'Research, analysis, and practical intelligence.'],
   ['Operational writing rather than thought leadership. Published when there is something specific to say, which is not often.', 'Long-form research, essays, technical analysis, AI developments, and concise observations on tools, markets, culture, technology, public systems, and business. The format follows the subject.'],
+  ['Start small or commission the full build.', 'Defined starting scopes.'],
+  ['CORE ENTRY', 'STANDARD SCOPE'],
+  ['A structured plan for turning an idea into a credible, buildable, monetizable project.', 'Research, scope, feature planning, implementation sequence, and a practical revenue or sustainability model where relevant.'],
+  ['AI production speed', 'AI-assisted production'],
+  ['The Saga Vibes advantage', 'Working method'],
 ]);
 
 const cadenceCopy = 'This is a working notebook, not a content programme. There is no newsletter, no posting schedule, and no plan to manufacture one.';
@@ -62,6 +66,54 @@ function removeCadenceNotice(root) {
   }
 }
 
+function ensureStartupLab() {
+  if (document.getElementById('startup-lab')) return;
+  const commission = document.getElementById('start-project');
+  if (!commission?.parentNode) return;
+
+  const section = document.createElement('section');
+  section.className = 'section startup-lab-section';
+  section.id = 'startup-lab';
+  section.setAttribute('aria-labelledby', 'startup-lab-title');
+  section.innerHTML = `
+    <div class="section-heading split-heading startup-lab-heading">
+      <div>
+        <p class="section-kicker">SAGA STARTUP LAB</p>
+        <h2 id="startup-lab-title">Structure for ideas that are not ready for an agency or accelerator.</h2>
+      </div>
+      <p>For early-stage founders, independent professionals, local businesses, community projects, and creators who need the underlying project organized before they spend heavily on development or professional services.</p>
+    </div>
+    <div class="startup-lab-grid">
+      <article>
+        <span>01</span>
+        <h3>Concept + scope</h3>
+        <p>Problem definition, users, feature inventory, operating assumptions, business model, technical requirements, and a written build brief.</p>
+      </article>
+      <article>
+        <span>02</span>
+        <h3>Website + working materials</h3>
+        <p>Website or launch surface, intake forms, project documents, diagrams, templates, analytics setup, and a practical handoff package.</p>
+      </article>
+      <article>
+        <span>03</span>
+        <h3>IP readiness</h3>
+        <p>Invention inventory, development chronology, technical diagrams, prior-art research worksheet, public-disclosure log, and materials organized for review by a registered patent practitioner when appropriate.</p>
+      </article>
+      <article>
+        <span>04</span>
+        <h3>Operations + launch</h3>
+        <p>Client or customer intake, basic CRM structure, estimates and scope templates, launch copy, content planning, and the first operating workflow.</p>
+      </article>
+    </div>
+    <div class="startup-lab-note">
+      <strong>Scope boundary</strong>
+      <p>Saga Solutions can organize technical and business documentation and help research public patent records. Patentability opinions, claim drafting, prosecution, and legal representation should be handled by a registered patent attorney or patent agent.</p>
+      <a href="#start-project" class="text-link">Discuss a project →</a>
+    </div>
+  `;
+  commission.parentNode.insertBefore(section, commission);
+}
+
 function cleanNode(root = document.body) {
   if (!root) return;
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
@@ -83,6 +135,7 @@ function cleanNode(root = document.body) {
 
 function start() {
   cleanNode();
+  ensureStartupLab();
   const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
       for (const node of mutation.addedNodes) {
@@ -96,6 +149,7 @@ function start() {
         }
       }
     }
+    ensureStartupLab();
   });
   observer.observe(document.body, { childList: true, subtree: true });
 }
