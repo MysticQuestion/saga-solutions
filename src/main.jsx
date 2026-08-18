@@ -1,740 +1,614 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   ArrowRight,
   ArrowUpRight,
-  BadgeCheck,
-  BookOpen,
-  Check,
-  Clipboard,
-  Code2,
-  Database,
-  Gauge,
-  Laptop,
-  Mail,
+  CheckCircle2,
+  ExternalLink,
   Menu,
-  Search,
-  ShieldCheck,
-  Sparkles,
-  Wrench,
+  MoveUpRight,
   X,
-  Zap,
 } from 'lucide-react';
-import { heroImage } from './assets.js';
 import {
-  capabilities,
-  coordinator,
-  fallbackBlogPosts,
-  fallbackCodeEntries,
-  lanes,
-  packages,
-  portfolio,
-  techServices,
-} from './content.js';
+  company,
+  intelligenceItems,
+  lexicon,
+  projects,
+  resourceGroups,
+  systems,
+} from './site-data.js';
 import './styles.css';
-
-const initialLead = {
-  name: '',
-  email: '',
-  phone: '',
-  organization: '',
-  projectTitle: '',
-  projectSummary: '',
-  budget: '',
-  timeline: '',
-};
-
-const initialBrief = {
-  desiredOutcome: '',
-  primaryUsers: '',
-  requiredFeatures: '',
-  referenceLinks: '',
-  existingAssets: '',
-  integrations: '',
-  successMeasures: '',
-  constraints: '',
-  decisionMakers: '',
-  targetLaunch: '',
-};
-
-const signalDimensions = [
-  ['novelty', 'Novelty'],
-  ['evidence_quality', 'Evidence'],
-  ['operational_consequence', 'Consequence'],
-  ['durable_value', 'Durable value'],
-];
 
 function cx(...values) {
   return values.filter(Boolean).join(' ');
 }
 
-function formatDate(value) {
-  if (!value) return 'Not yet verified';
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric' }).format(date);
-}
-
-async function postJSON(url, body) {
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    const error = new Error(data.error || 'The request could not be completed.');
-    error.code = data.code;
-    throw error;
-  }
-  return data;
-}
-
-async function fetchPublicTable(table, query) {
-  const url = import.meta.env.VITE_SUPABASE_URL;
-  const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !key) throw new Error('Public content database is not configured for this deployment.');
-  const response = await fetch(`${url}/rest/v1/${table}?${query}`, {
-    headers: { apikey: key, Accept: 'application/json' },
-  });
-  if (!response.ok) throw new Error(`Content request failed with ${response.status}.`);
-  return response.json();
-}
-
 function usePathname() {
   const [path, setPath] = useState(() => window.location.pathname || '/');
+
   useEffect(() => {
     const sync = () => setPath(window.location.pathname || '/');
     window.addEventListener('popstate', sync);
     return () => window.removeEventListener('popstate', sync);
   }, []);
+
   return path;
 }
 
 function InternalLink({ to, children, className, onClick, ...props }) {
   const navigate = (event) => {
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) return;
+
     event.preventDefault();
     window.history.pushState({}, '', to);
     window.dispatchEvent(new PopStateEvent('popstate'));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
     onClick?.(event);
   };
+
   return <a href={to} className={className} onClick={navigate} {...props}>{children}</a>;
 }
 
-function Shell({ children, active }) {
-  const [menuOpen, setMenuOpen] = useState(false);
+function Header() {
+  const [open, setOpen] = useState(false);
+
   return (
-    <div className="site-shell">
-      <header className="site-header">
-        <InternalLink className="wordmark" to="/" aria-label="Saga Solutions home" onClick={() => setMenuOpen(false)}>
-          <span className="wordmark-primary">SAGA</span>
-          <span className="wordmark-secondary">SOLUTIONS</span>
+    <header className="site-header">
+      <div className="header-inner">
+        <InternalLink to="/" className="wordmark" onClick={() => setOpen(false)} aria-label="Saga Systems home">
+          <span>SAGA</span>
+          <strong>SYSTEMS</strong>
         </InternalLink>
-        <button className="menu-button" type="button" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen((v) => !v)}>
-          {menuOpen ? <X size={21} /> : <Menu size={21} />}
+
+        <button
+          className="menu-button"
+          type="button"
+          aria-label="Toggle navigation"
+          aria-expanded={open}
+          onClick={() => setOpen((value) => !value)}
+        >
+          {open ? <X size={20} /> : <Menu size={20} />}
         </button>
-        <nav className={cx('main-nav', menuOpen && 'is-open')} aria-label="Primary navigation">
-          {lanes.map((lane) => (
-            <InternalLink key={lane.key} to={lane.href} className={active === lane.key ? 'is-active' : ''} onClick={() => setMenuOpen(false)}>
-              {lane.label}
-            </InternalLink>
-          ))}
-          <a href="/#start-project" onClick={() => setMenuOpen(false)}>Commission</a>
-          <a className="nav-cta" href={`mailto:${coordinator.email}`}>Contact</a>
+
+        <nav className={cx('main-nav', open && 'is-open')} aria-label="Primary navigation">
+          <a href="/#systems" onClick={() => setOpen(false)}>Systems</a>
+          <InternalLink to="/work" onClick={() => setOpen(false)}>Work</InternalLink>
+          <a href="/#resources" onClick={() => setOpen(false)}>Resources</a>
+          <a href="/#intelligence" onClick={() => setOpen(false)}>Intelligence</a>
+          <a href="/#studio" onClick={() => setOpen(false)}>Studio</a>
+          <a href="/#about" onClick={() => setOpen(false)}>About</a>
+          <a className="nav-action" href={`mailto:${company.email}`}>Start a project</a>
         </nav>
-      </header>
-      {children}
-      <Footer />
-    </div>
+      </div>
+    </header>
   );
 }
 
 function Footer() {
   return (
     <footer className="site-footer">
-      <div>
-        <strong>Saga Solutions</strong>
-        <p>Research, technology, code, and digital production converted into practical systems.</p>
+      <div className="footer-grid">
+        <div className="footer-company">
+          <strong>Saga Systems</strong>
+          <p>{company.description}</p>
+          <a href={`mailto:${company.email}`}>{company.email}</a>
+        </div>
+
+        <div className="lexicon-card" aria-label="Saga Lexicon word of the day">
+          <div className="lexicon-meta"><span>LEXICON / {lexicon.date}</span><span>WORD OF THE DAY</span></div>
+          <div className="lexicon-wordline">
+            <strong>{lexicon.word}</strong>
+            <span>{lexicon.pronunciation}</span>
+          </div>
+          <p>{lexicon.definition}</p>
+          <em>{lexicon.example}</em>
+        </div>
       </div>
-      <div className="footer-links">
-        {lanes.map((lane) => <InternalLink key={lane.key} to={lane.href}>{lane.label}</InternalLink>)}
-        <a href={`mailto:${coordinator.email}`}>{coordinator.email}</a>
+
+      <div className="footer-bottom">
+        <span>© {new Date().getFullYear()} Saga Systems</span>
+        <span>{company.location}</span>
+        <span>{company.domain}</span>
       </div>
     </footer>
   );
 }
 
-function LaneSwitchboard() {
-  const icons = { blog: BookOpen, tech: Wrench, vibes: Sparkles, code: Code2 };
+function ProjectVisual({ project, compact = false }) {
+  const style = {
+    '--project-accent': project.accent,
+    '--project-surface': project.surface,
+    '--project-ink': project.ink,
+  };
+
   return (
-    <section className="lane-grid" aria-label="Saga Solutions divisions">
-      {lanes.map((lane, index) => {
-        const Icon = icons[lane.key];
-        return (
-          <InternalLink className={`lane-card lane-${lane.key}`} to={lane.href} key={lane.key}>
-            <div className="lane-card-top"><span>0{index + 1}</span><Icon size={21} /></div>
-            <p className="lane-label">SAGA / {lane.label}</p>
-            <h2>{lane.title}</h2>
-            <p>{lane.description}</p>
-            <span className="lane-action">{lane.action} <ArrowRight size={16} /></span>
-          </InternalLink>
-        );
-      })}
-    </section>
-  );
-}
-
-function Home({ blogPosts, codeEntries }) {
-  const featuredBlog = blogPosts.find((item) => item.featured) || blogPosts[0];
-  const featuredCode = codeEntries.filter((item) => item.featured).slice(0, 3);
-  return (
-    <Shell>
-      <main id="top">
-        <section className="hero-section">
-          <div className="hero-image" style={{ backgroundImage: `url("${heroImage}")` }} aria-hidden="true" />
-          <div className="hero-scrim" aria-hidden="true" />
-          <div className="hero-content">
-            <p className="eyebrow">Oakland / Bay Area / Remote</p>
-            <h1>Saga Solutions turns <span>research, technology, code, and digital production</span> into practical systems.</h1>
-            <p className="hero-lede">
-              Four public lanes. One operating practice. Read the analysis, solve the technical problem, commission a digital build, or take a tested pattern directly into your own work.
-            </p>
-            <div className="hero-actions">
-              <a className="button button-primary" href="#start-project">Start a project <ArrowRight size={18} /></a>
-              <InternalLink className="button button-secondary" to="/blog">Read SAGA BLOG</InternalLink>
-            </div>
-          </div>
-          <div className="hero-index">
-            <span>BLOG · TECH · VIBES · CODE</span>
-            <span>Evidence before claims</span>
-            <span>Human review before release</span>
-          </div>
-        </section>
-
-        <LaneSwitchboard />
-
-        <section className="proof-strip">
-          <div><BadgeCheck size={17} /> Source discipline</div>
-          <div><Gauge size={17} /> Visible scope and pricing</div>
-          <div><ShieldCheck size={17} /> Security boundaries named</div>
-          <div><Zap size={17} /> AI used as leverage, not authority</div>
-        </section>
-
-        {(featuredBlog || featuredCode.length > 0) && (
-          <section className="section signal-preview">
-            <div className="section-heading split-heading">
-              <div>
-                <p className="section-kicker">Current signal</p>
-                <h2>Useful enough to act on. Specific enough to test.</h2>
-              </div>
-              <p>Editorial work and technical patterns are linked intentionally: analysis should lead to implementation, and implementation should generate better questions.</p>
-            </div>
-            <div className="preview-grid">
-              {featuredBlog && (
-                <InternalLink className="feature-card" to={`/blog/${featuredBlog.slug}`}>
-                  <span className="pill">BLOG / {featuredBlog.category}</span>
-                  <h3>{featuredBlog.title}</h3>
-                  <p>{featuredBlog.dek}</p>
-                  <span className="text-link">Read analysis <ArrowRight size={15} /></span>
-                </InternalLink>
-              )}
-              <div className="mini-stack">
-                {featuredCode.map((entry) => (
-                  <InternalLink className="mini-card" to={`/code/${entry.slug}`} key={entry.slug}>
-                    <span className="pill">CODE / {entry.kind}</span>
-                    <strong>{entry.title}</strong>
-                    <p>{entry.summary}</p>
-                  </InternalLink>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        <PortfolioSection />
-        <CapabilitiesSection />
-        <CommissionSection />
-      </main>
-    </Shell>
-  );
-}
-
-function PortfolioSection() {
-  return (
-    <section className="section" id="work">
-      <div className="section-heading split-heading">
-        <div><p className="section-kicker">Selected work</p><h2>Public properties, client work, and active builds.</h2></div>
-        <p>Status labels stay visible. Development work is not presented as finished work.</p>
+    <div className={cx('project-visual', `visual-${project.visual}`, compact && 'is-compact')} style={style}>
+      <div className="visual-browser-bar">
+        <span /><span /><span />
+        <small>{project.name}</small>
       </div>
-      <div className="portfolio-grid">
-        {portfolio.map((item) => (
-          <a key={item.name} className="portfolio-card" href={item.href} target="_blank" rel="noreferrer">
-            <div className="portfolio-meta"><span>{item.category}</span><span>{item.status}</span></div>
-            <h3>{item.name}</h3>
-            <p>{item.description}</p>
-            <div className="tag-row">{item.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
-            <ArrowUpRight className="card-arrow" size={18} />
-          </a>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function CapabilitiesSection() {
-  const [query, setQuery] = useState('');
-  const results = useMemo(() => {
-    const terms = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
-    if (!terms.length) return capabilities.slice(0, 3);
-    return capabilities
-      .map((item) => ({ ...item, score: terms.reduce((score, term) => score + (item.title.toLowerCase().includes(term) || item.detail.toLowerCase().includes(term) || item.keywords.some((k) => k.includes(term)) ? 1 : 0), 0) }))
-      .filter((item) => item.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 3);
-  }, [query]);
-  return (
-    <section className="section muted-section" id="capabilities">
-      <div className="section-heading split-heading">
-        <div><p className="section-kicker">Capability map</p><h2>Describe the problem. We identify the disciplines involved.</h2></div>
-        <p>This finder does not pretend to quote a final scope. It helps reveal what the assignment actually touches before money is spent.</p>
-      </div>
-      <div className="scope-finder">
-        <label htmlFor="scope-search">What are you trying to build, repair, investigate, automate, or sell?</label>
-        <div className="search-field"><Search size={19} /><input id="scope-search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Example: publish a source-backed research database and automate updates" /></div>
-        <div className="scope-results">
-          {results.length ? results.map((item) => <article key={item.title}><h3>{item.title}</h3><p>{item.detail}</p></article>) : <article><h3>Cross-disciplinary scope</h3><p>No exact match yet. Submit the project outline and the scope will be reviewed manually.</p></article>}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function BlogIndex({ posts }) {
-  const [query, setQuery] = useState('');
-  const [category, setCategory] = useState('All');
-  const categories = ['All', ...new Set(posts.map((item) => item.category))];
-  const filtered = posts.filter((item) => {
-    const matchesCategory = category === 'All' || item.category === category;
-    const haystack = `${item.title} ${item.dek} ${(item.tags || []).join(' ')}`.toLowerCase();
-    return matchesCategory && haystack.includes(query.toLowerCase());
-  });
-  return (
-    <Shell active="blog">
-      <main>
-        <PageHero eyebrow="SAGA / BLOG" title="Analysis before consensus." lede="AI skills, agent systems, software shifts, security, technical economics, and consequential news — published only when the material survives a verification and usefulness test." />
-        <section className="section compact-top">
-          <SignalScoreExplainer />
-          <div className="library-toolbar">
-            <div className="search-field"><Search size={18} /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search analysis, tags, and topics" /></div>
-            <div className="filter-row">{categories.map((item) => <button className={category === item ? 'filter-active' : ''} key={item} onClick={() => setCategory(item)}>{item}</button>)}</div>
-          </div>
-          <div className="article-list">
-            {filtered.map((post) => (
-              <InternalLink className="article-row" to={`/blog/${post.slug}`} key={post.slug}>
-                <div><span className="pill">{post.category}</span><span className="meta-text">{formatDate(post.published_at)} · {post.reading_minutes} min</span></div>
-                <h2>{post.title}</h2>
-                <p>{post.dek}</p>
-                <div className="tag-row">{(post.tags || []).map((tag) => <span key={tag}>{tag}</span>)}</div>
-              </InternalLink>
-            ))}
-          </div>
-          {!filtered.length && <EmptyState text="No published analysis matches this filter yet." />}
-        </section>
-      </main>
-    </Shell>
-  );
-}
-
-function SignalScoreExplainer() {
-  return (
-    <div className="editorial-standard">
-      <div>
-        <p className="section-kicker">SAGA SIGNAL SCORE</p>
-        <h2>Trend-setting requires a standard, not volume.</h2>
-        <p>Each scored post is judged on novelty, evidence quality, operational consequence, and durable value. Material claims should be labeled internally as verified fact, inference, forecast, or unresolved.</p>
-      </div>
-      <div className="score-grid">
-        {signalDimensions.map(([, label], index) => <div key={label}><span>0{index + 1}</span><strong>{label}</strong></div>)}
+      <div className="visual-stage">
+        {project.visual === 'breach' && <BreachVisual />}
+        {project.visual === 'domino' && <DominoVisual />}
+        {project.visual === 'streets' && <StreetsVisual />}
+        {project.visual === 'evidence' && <EvidenceVisual />}
+        {project.visual === 'aethos' && <AethosVisual />}
+        {project.visual === 'sage' && <SageVisual />}
+        {project.visual === 'vibes' && <VibesVisual />}
       </div>
     </div>
   );
 }
 
-function BlogDetail({ post }) {
-  if (!post) return <NotFound />;
-  const score = post.editorial_score || {};
-  const sections = Array.isArray(post.body) ? post.body : [];
-  const takeaways = Array.isArray(post.key_takeaways) ? post.key_takeaways : [];
-  const implications = Array.isArray(post.operational_implications) ? post.operational_implications : [];
-  const sources = Array.isArray(post.sources) ? post.sources : [];
-  useEffect(() => {
-    document.title = `${post.title} | Saga Solutions`;
-  }, [post.title]);
+function BreachVisual() {
   return (
-    <Shell active="blog">
-      <main className="article-page">
-        <section className="article-hero">
-          <InternalLink to="/blog" className="back-link">← SAGA BLOG</InternalLink>
-          <span className="pill">{post.hero_label || post.category}</span>
-          <h1>{post.title}</h1>
-          <p className="article-dek">{post.dek}</p>
-          <div className="article-byline">{post.author_name} · {formatDate(post.published_at)} · {post.reading_minutes} min</div>
-        </section>
-        <section className="article-layout">
-          <aside className="score-panel">
-            <p className="section-kicker">SAGA SIGNAL SCORE</p>
-            {signalDimensions.map(([key, label]) => <div className="score-line" key={key}><span>{label}</span><strong>{score[key] ?? '—'}/10</strong></div>)}
-            <p className="verify-note">Last verified: {formatDate(post.last_verified_at)}</p>
-          </aside>
-          <article className="article-body">
-            {sections.map((section, index) => <section key={`${section.label}-${index}`}><p className="section-kicker">{section.label}</p><p>{section.text}</p></section>)}
-            {takeaways.length > 0 && <section><p className="section-kicker">KEY TAKEAWAYS</p><ul>{takeaways.map((item) => <li key={item}>{item}</li>)}</ul></section>}
-            {post.countercase && <section className="countercase"><p className="section-kicker">COUNTERCASE</p><p>{post.countercase}</p></section>}
-            {implications.length > 0 && <section><p className="section-kicker">WHAT TO DO NEXT</p><ul>{implications.map((item) => <li key={item}>{item}</li>)}</ul></section>}
-            <section><p className="section-kicker">SOURCES</p>{sources.length ? <div className="source-list">{sources.map((source) => <a href={source.url} target="_blank" rel="noreferrer" key={source.url}>{source.publisher}: {source.title} <ArrowUpRight size={14} /></a>)}</div> : <p>No external source list is attached to this note.</p>}</section>
-          </article>
-        </section>
-      </main>
-    </Shell>
+    <div className="breach-scene">
+      <div className="breach-noise" />
+      <div className="breach-counter">00:08:17</div>
+      <div className="breach-title">
+        <small>ENTRY SEQUENCE</small>
+        <strong>NEURAL<br />BREACH</strong>
+        <span>signal acquired / interface pending</span>
+      </div>
+      <div className="breach-timeline"><i /><i /><i /><i /><i /></div>
+    </div>
   );
 }
 
-function TechPage() {
+function DominoVisual() {
+  const dominoes = [[3, 4], [6, 1], [2, 5], [0, 6], [4, 4]];
   return (
-    <Shell active="tech">
-      <main>
-        <PageHero eyebrow="SAGA / TECH" title="Technology support without mystery pricing." lede="Direct help for software, accounts, devices, data recovery triage, security basics, migration, AI setup, and small-business operations. Scope boundaries are stated before work begins." />
-        <section className="section compact-top">
-          <div className="section-heading split-heading"><div><p className="section-kicker">Launch pricing</p><h2>Pay for the problem being solved.</h2></div><p>Rates are deliberately transparent. Larger or uncertain jobs are assessed before a final quote is issued.</p></div>
-          <div className="pricing-grid tech-grid">
-            {techServices.map((service) => <ServiceCard key={service.name} service={service} />)}
+    <div className="domino-scene">
+      <div className="domino-heading"><small>ARK OF BONES</small><span>loading the table</span></div>
+      <div className="domino-row">
+        {dominoes.map(([top, bottom], index) => (
+          <div className="domino" key={`${top}-${bottom}-${index}`} style={{ '--delay': `${index * 90}ms` }}>
+            <span>{top}</span><b /><span>{bottom}</span>
           </div>
-          <div className="boundary-note">
-            <ShieldCheck size={22} />
-            <div><strong>Data recovery boundary</strong><p>Saga performs non-invasive assessment and may perform logical recovery where appropriate. We do not perform invasive clean-room or mechanical drive repair. Physical-failure cases are referred to a specialist lab.</p></div>
-          </div>
-          <div className="service-categories">
-            {['Device + software troubleshooting', 'Email + cloud setup', 'Account + workflow cleanup', 'Backups + migration', 'Network diagnostics', 'Basic security hardening', 'Data recovery triage', 'AI tool configuration', 'Small-business automation'].map((item) => <span key={item}>{item}</span>)}
-          </div>
-          <CTA title="Need technical help?" text="Submit a short project outline. Choose Diagnostic Sprint for a defined problem or describe the support request directly." />
-        </section>
-      </main>
-    </Shell>
+        ))}
+      </div>
+      <div className="domino-progress"><span /></div>
+    </div>
   );
 }
 
-function ServiceCard({ service }) {
+function StreetsVisual() {
   return (
-    <article className="price-card">
-      <span className="pill">TECH</span>
-      <h3>{service.name}</h3>
-      <div className="price">{service.price}</div>
-      <div className="price-qualifier">{service.qualifier}</div>
-      <p>{service.summary}</p>
-      <ul>{service.includes.map((item) => <li key={item}><Check size={15} />{item}</li>)}</ul>
-      <a className="button button-secondary full" href={`/#start-project`}>Request service</a>
+    <div className="streets-scene">
+      <div className="map-panel">
+        <div className="map-grid" />
+        <div className="street-line one" />
+        <div className="street-line two" />
+        <div className="street-line three" />
+        <i className="map-pin p1" /><i className="map-pin p2" /><i className="map-pin p3" /><i className="map-pin p4" />
+        <div className="map-label">WEST OAKLAND / CORRIDOR 03</div>
+      </div>
+      <div className="recurrence-panel">
+        <small>RECURRENCE</small>
+        <strong>12.4 days</strong>
+        <p>median return interval</p>
+        <div className="recurrence-bars"><i /><i /><i /><i /><i /><i /></div>
+        <div className="verification-chip">human verified</div>
+      </div>
+    </div>
+  );
+}
+
+function EvidenceVisual() {
+  const rows = [
+    ['OAK-PR-042', 'Public record', 'Verified'],
+    ['ALA-HMIS-18', 'Dataset', 'Updated'],
+    ['SF-LEG-311', 'Legislation', 'Source linked'],
+    ['CC-MTG-229', 'Meeting record', 'Reviewed'],
+  ];
+  return (
+    <div className="evidence-scene">
+      <div className="evidence-header"><span>BAY EVIDENCE</span><small>source registry / live index</small></div>
+      <div className="county-tabs"><span>ALAMEDA</span><span>SF</span><span>CONTRA COSTA</span><span>+6</span></div>
+      <div className="evidence-table">
+        {rows.map((row) => (
+          <div className="evidence-row" key={row[0]}>
+            <code>{row[0]}</code><span>{row[1]}</span><b>{row[2]}</b>
+          </div>
+        ))}
+      </div>
+      <div className="evidence-foot"><span>PROVENANCE ATTACHED</span><span>CORRECTIONS LEDGER ACTIVE</span></div>
+    </div>
+  );
+}
+
+function AethosVisual() {
+  return (
+    <div className="aethos-scene">
+      <svg viewBox="0 0 360 360" role="img" aria-label="Abstract natal chart interface study">
+        <circle cx="180" cy="180" r="150" fill="none" stroke="currentColor" strokeWidth="1" opacity=".55" />
+        <circle cx="180" cy="180" r="112" fill="none" stroke="currentColor" strokeWidth="1" opacity=".32" />
+        <circle cx="180" cy="180" r="68" fill="none" stroke="currentColor" strokeWidth="1" opacity=".22" />
+        {[0, 30, 60, 90, 120, 150].map((angle) => (
+          <line key={angle} x1="180" y1="30" x2="180" y2="330" transform={`rotate(${angle} 180 180)`} stroke="currentColor" strokeWidth="1" opacity=".26" />
+        ))}
+        <path d="M78 118 L270 210 L112 274 L242 78 L78 118" fill="none" stroke="var(--project-accent)" strokeWidth="2" opacity=".95" />
+        <path d="M92 238 L278 130 L180 312 L92 238" fill="none" stroke="currentColor" strokeWidth="1.5" opacity=".55" />
+        <circle cx="78" cy="118" r="5" fill="var(--project-accent)" />
+        <circle cx="270" cy="210" r="5" fill="var(--project-accent)" />
+        <circle cx="112" cy="274" r="5" fill="var(--project-accent)" />
+        <circle cx="242" cy="78" r="5" fill="var(--project-accent)" />
+      </svg>
+      <div className="aethos-copy"><small>AETHOS / NATAL MODEL</small><strong>Know Thyself.</strong><span>sources → conditions → synthesis → report</span></div>
+    </div>
+  );
+}
+
+function SageVisual() {
+  return (
+    <div className="sage-scene">
+      <div className="sage-bookline"><span>MYSTIC SAGE</span><small>ADVANCED WORKSHOP SYSTEM</small></div>
+      <div className="module-stack">
+        <div><span>05</span><strong>Traditional Planets</strong><small>Core components</small></div>
+        <div><span>10</span><strong>Essential Dignities</strong><small>Condition analysis</small></div>
+        <div><span>18</span><strong>Reception</strong><small>Relational logic</small></div>
+        <div><span>24</span><strong>Partnership</strong><small>Applied synthesis</small></div>
+      </div>
+      <div className="sage-note">lecture / method / exercises / sources / participant record</div>
+    </div>
+  );
+}
+
+function VibesVisual() {
+  return (
+    <div className="vibes-scene">
+      <div className="prompt-panel">
+        <small>PROJECT PROMPT</small>
+        <p>Build a public research interface with source provenance, a restrained editorial system, and an operating dashboard.</p>
+        <div className="prompt-footer"><span>Audience defined</span><span>Constraints attached</span></div>
+      </div>
+      <div className="agent-panel">
+        <small>PRODUCTION ROLES</small>
+        {['Architecture', 'Design', 'Editorial', 'Accessibility', 'Deployment'].map((item, index) => (
+          <div key={item}><i>{String(index + 1).padStart(2, '0')}</i><span>{item}</span><b>ready</b></div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function StatusPill({ project }) {
+  return <span className="status-pill"><i style={{ background: project.accent }} />{project.status}</span>;
+}
+
+function ProjectShowcase({ project, index, compact = false }) {
+  const style = { '--project-accent': project.accent };
+
+  if (compact) {
+    return (
+      <InternalLink className="compact-project" to={`/work/${project.slug}`} style={style}>
+        <ProjectVisual project={project} compact />
+        <div className="compact-project-copy">
+          <div className="project-meta"><span>0{index + 1}</span><StatusPill project={project} /></div>
+          <h3>{project.name}</h3>
+          <p>{project.category}</p>
+          <span className="case-link">Open case study <ArrowRight size={15} /></span>
+        </div>
+      </InternalLink>
+    );
+  }
+
+  return (
+    <article className={cx('project-showcase', index % 2 === 1 && 'is-reversed')} style={style}>
+      <InternalLink className="project-media-link" to={`/work/${project.slug}`} aria-label={`Open ${project.name} case study`}>
+        <ProjectVisual project={project} />
+      </InternalLink>
+
+      <div className="project-copy">
+        <div className="project-meta">
+          <span>0{index + 1} / {project.category}</span>
+          <StatusPill project={project} />
+        </div>
+        <h2>{project.name}</h2>
+        <p className="project-summary">{project.summary}</p>
+
+        <div className="proof-list">
+          {project.proof.slice(0, 3).map((item) => (
+            <div key={item.title}>
+              <CheckCircle2 size={17} />
+              <p><strong>{item.title}</strong>{item.text}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="demonstrates">
+          <small>WHAT THIS DEMONSTRATES</small>
+          <div>{project.demonstrates.map((item) => <span key={item}>{item}</span>)}</div>
+        </div>
+
+        <div className="project-actions">
+          <InternalLink to={`/work/${project.slug}`} className="text-action">Full case study <ArrowRight size={16} /></InternalLink>
+          {project.href && <a href={project.href} target="_blank" rel="noreferrer" className="text-action secondary">View live <ArrowUpRight size={15} /></a>}
+        </div>
+      </div>
     </article>
   );
 }
 
-function VibesPage() {
+function Home() {
   return (
-    <Shell active="vibes">
+    <>
+      <Header />
       <main>
-        <PageHero eyebrow="SAGA / VIBES" title="AI-assisted. Human-reviewed. Business-ready." lede="Saga Vibes is the digital build studio inside Saga Solutions: websites, landing pages, portals, intake systems, prototypes, and automation produced quickly without outsourcing judgment to the tools." />
-        <section className="section compact-top">
-          <div className="vibes-process">
-            {[
-              ['01', 'Intake', 'Business goal, audience, offer, assets, constraints, and deadline.'],
-              ['02', 'Strategy', 'Structure, messaging, conversion path, technical requirements, and risk.'],
-              ['03', 'AI-assisted build', 'Draft components, copy, code, and implementation work accelerated by a coordinated tool stack.'],
-              ['04', 'Human review', 'Links, forms, claims, mobile layout, security basics, accessibility, and release readiness checked manually.'],
-              ['05', 'Launch + handoff', 'Deployment, repository access, operating notes, and the next iteration plan.'],
-            ].map(([index, title, text]) => <article key={index}><span>{index}</span><h3>{title}</h3><p>{text}</p></article>)}
+        <section className="home-hero">
+          <div className="hero-grid" aria-hidden="true" />
+          <div className="hero-orbit hero-orbit-one" aria-hidden="true" />
+          <div className="hero-orbit hero-orbit-two" aria-hidden="true" />
+
+          <div className="hero-inner">
+            <div className="hero-copy">
+              <p className="eyebrow">Independent systems company / Oakland</p>
+              <h1>Saga Systems</h1>
+              <p className="hero-lede">{company.description}</p>
+              <div className="hero-actions">
+                <InternalLink to="/work" className="button primary">View selected work <ArrowRight size={17} /></InternalLink>
+                <a href={`mailto:${company.email}`} className="button secondary">Start a project</a>
+              </div>
+            </div>
+
+            <div className="hero-system-card">
+              <div className="system-card-top"><span>SAGA / OPERATING MODEL</span><span>2026</span></div>
+              <div className="system-card-core">FRAME <i /> INVESTIGATE <i /> ARCHITECT <i /> BUILD <i /> VERIFY <i /> OPERATE</div>
+              <div className="system-card-foot">
+                <span>research infrastructure</span>
+                <span>digital systems</span>
+                <span>creative technology</span>
+                <span>applied intelligence</span>
+              </div>
+            </div>
           </div>
-          <PortfolioSection />
-          <div className="section-heading"><p className="section-kicker">Entry points</p><h2>Start small or commission the full build.</h2></div>
-          <div className="pricing-grid">{packages.map((item) => <PackageCard item={item} key={item.id} />)}</div>
-          <CTA title="Bring the idea. Leave with something inspectable." text="Every engagement is defined by a written scope, explicit deliverables, and a review point before release." />
+
+          <div className="hero-bottomline"><span>{company.domain}</span><span>Institutional shell. Distinct systems.</span></div>
         </section>
-      </main>
-    </Shell>
-  );
-}
 
-function PackageCard({ item }) {
-  return (
-    <article className={cx('price-card', item.featured && 'featured')}>
-      {item.featured && <span className="pill">CORE ENTRY</span>}
-      <h3>{item.name}</h3>
-      <div className="price">{item.price}</div><div className="price-qualifier">{item.cadence}</div>
-      <p>{item.description}</p>
-      <ul>{item.includes.map((line) => <li key={line}><Check size={15} />{line}</li>)}</ul>
-      <a className="button button-secondary full" href={`/#start-project`}>Select</a>
-    </article>
-  );
-}
-
-function CodeIndex({ entries }) {
-  const [query, setQuery] = useState('');
-  const [kind, setKind] = useState('All');
-  const kinds = ['All', ...new Set(entries.map((item) => item.kind))];
-  const filtered = entries.filter((item) => {
-    const haystack = `${item.title} ${item.summary} ${item.category} ${(item.tags || []).join(' ')}`.toLowerCase();
-    return (kind === 'All' || item.kind === kind) && haystack.includes(query.toLowerCase());
-  });
-  return (
-    <Shell active="code">
-      <main>
-        <PageHero eyebrow="SAGA / CODE" title="A curated field library, not a project graveyard." lede="Every entry must state what it does, when to use it, why it matters, how it fails, what security assumptions it makes, and when it was last verified." />
-        <section className="section compact-top">
-          <div className="code-doctrine">
-            {['WHAT IT DOES', 'WHEN TO USE IT', 'WHY IT IS BETTER', 'FAILURE MODES', 'SECURITY NOTES', 'LAST VERIFIED'].map((item, index) => <div key={item}><span>0{index + 1}</span><strong>{item}</strong></div>)}
-          </div>
-          <div className="library-toolbar">
-            <div className="search-field"><Search size={18} /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search prompts, schemas, recipes, and tags" /></div>
-            <div className="filter-row">{kinds.map((item) => <button className={kind === item ? 'filter-active' : ''} key={item} onClick={() => setKind(item)}>{item}</button>)}</div>
-          </div>
-          <div className="code-grid">
-            {filtered.map((entry) => (
-              <InternalLink className="code-card" to={`/code/${entry.slug}`} key={entry.slug}>
-                <div className="code-meta"><span className="pill">{entry.kind}</span><span className={`quality quality-${entry.quality_status}`}>{entry.quality_status}</span></div>
-                <h2>{entry.title}</h2><p>{entry.summary}</p>
-                <div className="tag-row">{(entry.tags || []).map((tag) => <span key={tag}>{tag}</span>)}</div>
-                <div className="meta-text">{entry.language || 'text'} · {entry.difficulty} · verified {formatDate(entry.last_verified_at)}</div>
-              </InternalLink>
+        <section className="section systems-section" id="systems">
+          <SectionHeading
+            kicker="Systems"
+            title="Six construction environments. One operating practice."
+            body="The categories are deliberately broad enough to support a research platform, a client portal, an AI workflow, a publishing system, or an experimental interface without pretending those things are the same product."
+          />
+          <div className="systems-grid">
+            {systems.map((item) => (
+              <article key={item.id}>
+                <span>{item.index}</span>
+                <h3>{item.title}</h3>
+                <p>{item.detail}</p>
+              </article>
             ))}
           </div>
-          {!filtered.length && <EmptyState text="No CODE entry matches this filter yet." />}
+        </section>
+
+        <section className="section selected-work-section">
+          <SectionHeading
+            kicker="Selected work"
+            title="Different problems should produce different interfaces."
+            body="Saga retains a restrained institutional identity. The work is allowed to look, move, and behave according to the system it serves."
+            action={<InternalLink to="/work" className="heading-action">All work <ArrowRight size={16} /></InternalLink>}
+          />
+          <div className="compact-work-grid">
+            {projects.slice(0, 4).map((project, index) => <ProjectShowcase key={project.slug} project={project} index={index} compact />)}
+          </div>
+        </section>
+
+        <section className="section resources-section" id="resources">
+          <SectionHeading
+            kicker="Resources"
+            title="Useful material, released when there is something worth using."
+            body="Reserved categories do not become navigation destinations until the underlying material exists."
+          />
+          <div className="resource-grid">
+            {resourceGroups.map((group) => (
+              <article key={group.label}>
+                <div><span>{group.status}</span><MoveUpRight size={17} /></div>
+                <h3>{group.label}</h3>
+                <p>{group.description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="section intelligence-section" id="intelligence">
+          <SectionHeading
+            kicker="Saga Intelligence"
+            title="Notes from systems being built, tested, and maintained."
+            body="Research and operational observations are published as records of practice, not as a feed that needs to be filled every day."
+          />
+          <div className="intelligence-list">
+            {intelligenceItems.map((item, index) => (
+              <article key={item.title}>
+                <span>0{index + 1}</span>
+                <div><small>{item.type}</small><h3>{item.title}</h3><p>{item.summary}</p></div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="section studio-section" id="studio">
+          <div className="studio-shell">
+            <div>
+              <p className="section-kicker">Saga Vibes Studio</p>
+              <h2>Prompt-driven production should still leave a system you can inspect and edit.</h2>
+              <p>The Studio is being designed around explicit project state, production roles, visual revision, repository handoff, and deployment—not one-shot page generation.</p>
+              <InternalLink to="/work/saga-vibes" className="button studio-button">View the Studio architecture <ArrowRight size={16} /></InternalLink>
+            </div>
+            <ProjectVisual project={projects.find((project) => project.slug === 'saga-vibes')} compact />
+          </div>
+        </section>
+
+        <section className="section about-section" id="about">
+          <SectionHeading
+            kicker="About"
+            title="Saga Systems is organized around systems, not personalities."
+            body="The company develops and maintains digital products, research infrastructure, applied AI workflows, automation, creative technology, and client systems. Public work is labeled by development state. Methods and constraints should remain visible where they materially affect the result."
+          />
+          <div className="about-principles">
+            <div><span>01</span><strong>Evidence before certainty.</strong><p>Research outputs should retain sources, uncertainty, corrections, and the boundary between fact and inference.</p></div>
+            <div><span>02</span><strong>Human review before release.</strong><p>Automation and AI can accelerate production without becoming the unexamined authority for the final result.</p></div>
+            <div><span>03</span><strong>State the boundary.</strong><p>Prototype, pilot, research, and production are different conditions. The interface should say which one applies.</p></div>
+          </div>
+        </section>
+
+        <section className="contact-band">
+          <div><p className="section-kicker">Start a project</p><h2>Bring the problem, the existing material, and the constraint.</h2></div>
+          <a href={`mailto:${company.email}`} className="contact-link">{company.email} <ArrowUpRight size={20} /></a>
         </section>
       </main>
-    </Shell>
+      <Footer />
+    </>
   );
 }
 
-function CodeDetail({ entry }) {
-  const [copied, setCopied] = useState(false);
-  if (!entry) return <NotFound />;
-  const copy = async () => {
-    await navigator.clipboard.writeText(entry.code_or_prompt);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1800);
-  };
+function WorkIndex() {
   return (
-    <Shell active="code">
-      <main className="code-detail-page">
-        <section className="article-hero">
-          <InternalLink to="/code" className="back-link">← SAGA CODE</InternalLink>
-          <div className="code-meta"><span className="pill">{entry.kind}</span><span className={`quality quality-${entry.quality_status}`}>{entry.quality_status}</span></div>
-          <h1>{entry.title}</h1><p className="article-dek">{entry.summary}</p>
-          <div className="article-byline">{entry.category} · {entry.language || 'text'} · {entry.difficulty} · verified {formatDate(entry.last_verified_at)}</div>
-        </section>
-        <section className="code-detail-layout">
-          <div className="code-main">
-            <div className="code-block-header"><span>{entry.language || 'text'}</span><button type="button" onClick={copy}><Clipboard size={15} />{copied ? 'Copied' : 'Copy'}</button></div>
-            <pre><code>{entry.code_or_prompt}</code></pre>
+    <>
+      <Header />
+      <main>
+        <section className="page-hero work-hero">
+          <div>
+            <p className="eyebrow">Work / Selected systems</p>
+            <h1>Systems in practice.</h1>
+            <p>Visual and technical evidence from production systems, pilots, prototypes, and maintained research environments.</p>
           </div>
-          <aside className="code-notes">
-            <NoteList title="WHEN TO USE IT" items={entry.usage_notes} />
-            <NoteList title="FAILURE MODES" items={entry.failure_modes} />
-            <NoteList title="SECURITY NOTES" items={entry.security_notes} />
-            <NoteList title="PREREQUISITES" items={entry.prerequisites} />
-            <div><p className="section-kicker">TESTED ON</p><p>{entry.tested_on || 'Not specified'}</p></div>
+          <aside>
+            <strong>{projects.length}</strong>
+            <span>selected systems</span>
+            <small>Each project keeps its own visual language.</small>
           </aside>
         </section>
+
+        <section className="work-list">
+          {projects.map((project, index) => <ProjectShowcase key={project.slug} project={project} index={index} />)}
+        </section>
       </main>
-    </Shell>
+      <Footer />
+    </>
   );
 }
 
-function NoteList({ title, items }) {
-  const safe = Array.isArray(items) ? items : [];
-  if (!safe.length) return null;
-  return <div><p className="section-kicker">{title}</p><ul>{safe.map((item) => <li key={item}>{item}</li>)}</ul></div>;
-}
+function ProjectDetail({ project }) {
+  if (!project) return <NotFound />;
 
-function PageHero({ eyebrow, title, lede }) {
-  return <section className="page-hero"><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p>{lede}</p></section>;
-}
-
-function CTA({ title, text }) {
-  return <div className="cta-block"><div><p className="section-kicker">START</p><h2>{title}</h2><p>{text}</p></div><a className="button button-primary" href="/#start-project">Commission a project <ArrowRight size={17} /></a></div>;
-}
-
-function EmptyState({ text }) {
-  return <div className="empty-state"><Database size={20} /><p>{text}</p></div>;
-}
-
-function CommissionSection() {
-  const [selectedPackage, setSelectedPackage] = useState('blueprint');
-  const [lead, setLead] = useState(initialLead);
-  const [leadState, setLeadState] = useState({ status: 'idle', message: '' });
-  const [checkoutState, setCheckoutState] = useState({ status: 'idle', message: '' });
-  const [brief, setBrief] = useState(initialBrief);
-  const [briefState, setBriefState] = useState({ status: 'idle', message: '' });
-  const [paymentState, setPaymentState] = useState({ status: 'idle', message: '' });
-  const params = useMemo(() => new URLSearchParams(window.location.search), []);
-  const paymentSucceeded = params.get('payment') === 'success';
-  const paymentCancelled = params.get('payment') === 'cancelled';
-  const sessionId = params.get('session_id') || '';
-  const paidPackage = params.get('package') || selectedPackage;
-  const selectedPackageData = packages.find((item) => item.id === selectedPackage) || packages[1];
-
-  useEffect(() => {
-    if (!paymentSucceeded || !sessionId) return;
-    const storageKey = `saga-payment-confirmed:${sessionId}`;
-    if (window.sessionStorage.getItem(storageKey)) {
-      setPaymentState({ status: 'success', message: 'Payment was verified during this browser session.' });
-      return;
-    }
-    setPaymentState({ status: 'loading', message: 'Verifying payment and notifying the project coordinator…' });
-    postJSON('/api/payment-confirmation', { sessionId, packageId: paidPackage })
-      .then((data) => {
-        window.sessionStorage.setItem(storageKey, 'true');
-        setPaymentState({ status: 'success', message: `Payment verified. Reference: ${data.reference}.` });
-      })
-      .catch((error) => setPaymentState({ status: 'error', message: error.message || 'Payment verification could not be completed automatically.' }));
-  }, [paymentSucceeded, sessionId, paidPackage]);
-
-  const validateLead = () => {
-    if (!lead.name.trim() || !lead.email.trim() || !lead.projectTitle.trim() || !lead.projectSummary.trim()) {
-      setLeadState({ status: 'error', message: 'Name, email, project title, and a concise project summary are required.' });
-      return false;
-    }
-    return true;
-  };
-
-  const submitLead = async (event) => {
-    event.preventDefault();
-    if (!validateLead()) return;
-    setLeadState({ status: 'loading', message: 'Sending your project outline…' });
-    try {
-      const data = await postJSON('/api/contact', { ...lead, packageId: selectedPackage, packageName: selectedPackageData.name, source: 'Saga Solutions project intake' });
-      setLeadState({ status: 'success', message: `Project outline received. Reference ${data.reference || 'created'}.` });
-    } catch (error) {
-      setLeadState({ status: 'error', message: error.code === 'CONTACT_NOT_CONFIGURED' ? `The automated inbox is not configured yet. Email ${coordinator.email} directly with your project title.` : error.message });
-    }
-  };
-
-  const startCheckout = async () => {
-    if (!validateLead()) return;
-    setCheckoutState({ status: 'loading', message: 'Opening secure checkout…' });
-    try {
-      const data = await postJSON('/api/create-checkout', { packageId: selectedPackage, customerEmail: lead.email, customerName: lead.name, projectTitle: lead.projectTitle });
-      window.location.assign(data.url);
-    } catch (error) {
-      setCheckoutState({ status: 'error', message: error.code === 'PAYMENTS_NOT_CONFIGURED' ? 'Secure checkout is prepared but the Stripe environment variables still need to be connected. Submit the outline to request an invoice meanwhile.' : error.message });
-    }
-  };
-
-  const submitBrief = async (event) => {
-    event.preventDefault();
-    const required = ['desiredOutcome', 'primaryUsers', 'requiredFeatures', 'successMeasures'];
-    if (!paymentSucceeded || !sessionId) return setBriefState({ status: 'error', message: 'A verified checkout session is required before this brief can be submitted.' });
-    if (required.some((field) => !brief[field].trim())) return setBriefState({ status: 'error', message: 'Complete the outcome, users, required features, and success measures fields.' });
-    setBriefState({ status: 'loading', message: 'Submitting your commissioning brief…' });
-    try {
-      const data = await postJSON('/api/submit-project', { sessionId, packageId: paidPackage, lead, brief });
-      setBriefState({ status: 'success', message: `Commissioning brief received. Project reference: ${data.reference}.` });
-    } catch (error) {
-      setBriefState({ status: 'error', message: error.message });
-    }
-  };
-
+  const style = { '--project-accent': project.accent };
   return (
-    <section className="section commission-section" id="start-project">
-      <div className="section-heading split-heading">
-        <div><p className="section-kicker">Commission</p><h2>Turn the problem into a written scope.</h2></div>
-        <p>Submitting the outline does not require payment. Checkout is available for defined entry packages when the payment environment is configured.</p>
-      </div>
-      {paymentCancelled && <StatusBox state={{ status: 'error', message: 'Checkout was cancelled. Your project outline can still be submitted without payment.' }} />}
-      {paymentState.status !== 'idle' && <StatusBox state={paymentState} />}
-      <div className="commission-grid">
-        <div className="package-selector">
-          {packages.map((item) => <button key={item.id} className={selectedPackage === item.id ? 'selected' : ''} onClick={() => setSelectedPackage(item.id)}><span>{item.name}</span><strong>{item.price}</strong><small>{item.cadence}</small></button>)}
-        </div>
-        <form id="project-form" className="project-form" onSubmit={submitLead}>
-          <div className="form-grid">
-            <Field label="Name *"><input name="name" value={lead.name} onChange={(e) => setLead((v) => ({ ...v, name: e.target.value }))} /></Field>
-            <Field label="Email *"><input name="email" type="email" value={lead.email} onChange={(e) => setLead((v) => ({ ...v, email: e.target.value }))} /></Field>
-            <Field label="Organization"><input value={lead.organization} onChange={(e) => setLead((v) => ({ ...v, organization: e.target.value }))} /></Field>
-            <Field label="Phone"><input value={lead.phone} onChange={(e) => setLead((v) => ({ ...v, phone: e.target.value }))} /></Field>
+    <>
+      <Header />
+      <main className="project-page" style={style}>
+        <section className="project-detail-hero">
+          <div className="project-detail-heading">
+            <InternalLink to="/work" className="back-link">← Work</InternalLink>
+            <div className="project-detail-meta"><span>{project.category}</span><StatusPill project={project} /></div>
+            <h1>{project.name}</h1>
+            <p>{project.summary}</p>
+            <div className="project-actions">
+              {project.href && <a href={project.href} target="_blank" rel="noreferrer" className="button primary">Visit live project <ExternalLink size={15} /></a>}
+              <a href={`mailto:${company.email}?subject=${encodeURIComponent(`Saga Systems / ${project.name}`)}`} className="button secondary">Discuss a related system</a>
+            </div>
           </div>
-          <Field label="Project title *"><input value={lead.projectTitle} onChange={(e) => setLead((v) => ({ ...v, projectTitle: e.target.value }))} /></Field>
-          <Field label="What needs to change? *"><textarea rows="5" value={lead.projectSummary} onChange={(e) => setLead((v) => ({ ...v, projectSummary: e.target.value }))} /></Field>
-          <div className="form-grid">
-            <Field label="Budget"><input value={lead.budget} onChange={(e) => setLead((v) => ({ ...v, budget: e.target.value }))} /></Field>
-            <Field label="Timing"><input value={lead.timeline} onChange={(e) => setLead((v) => ({ ...v, timeline: e.target.value }))} /></Field>
+          <ProjectVisual project={project} />
+        </section>
+
+        <section className="detail-section feature-tour">
+          <div className="detail-kicker"><span>01</span><p>Visual feature tour</p></div>
+          <div className="feature-tour-grid">
+            {project.proof.map((item, index) => (
+              <article key={item.title}>
+                <small>0{index + 1}</small>
+                <h2>{item.title}</h2>
+                <p>{item.text}</p>
+              </article>
+            ))}
           </div>
-          <div className="form-actions"><button className="button button-primary" type="submit">Submit outline</button><button className="button button-secondary" type="button" onClick={startCheckout}>Pay for {selectedPackageData.name}</button></div>
-          {leadState.status !== 'idle' && <StatusBox state={leadState} />}
-          {checkoutState.status !== 'idle' && <StatusBox state={checkoutState} />}
-        </form>
-      </div>
-      {paymentSucceeded && sessionId && (
-        <form id="project-brief" className="project-brief" onSubmit={submitBrief}>
-          <div className="section-heading"><p className="section-kicker">Paid commissioning brief</p><h2>Define the result before production starts.</h2></div>
-          <div className="brief-grid">
-            {[
-              ['desiredOutcome', 'Desired outcome *'], ['primaryUsers', 'Primary users *'], ['requiredFeatures', 'Required features *'], ['successMeasures', 'Success measures *'],
-              ['referenceLinks', 'Reference links'], ['existingAssets', 'Existing assets'], ['integrations', 'Integrations'], ['constraints', 'Constraints'], ['decisionMakers', 'Decision-makers'], ['targetLaunch', 'Target launch'],
-            ].map(([key, label]) => <Field label={label} key={key}><textarea rows="3" value={brief[key]} onChange={(e) => setBrief((v) => ({ ...v, [key]: e.target.value }))} /></Field>)}
+        </section>
+
+        <section className="detail-section split-detail">
+          <div className="detail-kicker"><span>02</span><p>What this demonstrates</p></div>
+          <div className="demonstration-grid">
+            {project.demonstrates.map((item) => <div key={item}><i /><strong>{item}</strong></div>)}
           </div>
-          <button className="button button-primary" type="submit">Submit commissioning brief</button>
-          {briefState.status !== 'idle' && <StatusBox state={briefState} />}
-        </form>
-      )}
-    </section>
+        </section>
+
+        <section className="detail-section split-detail technical-detail">
+          <div className="detail-kicker"><span>03</span><p>System architecture</p></div>
+          <div>
+            <h2>Built as a system, not a surface.</h2>
+            <p className="detail-intro">The public interface is one layer. The operating model underneath defines what the system records, how state changes, how review happens, and where future components can attach.</p>
+            <ol className="architecture-list">
+              {project.architecture.map((item, index) => <li key={item}><span>{String(index + 1).padStart(2, '0')}</span><strong>{item}</strong></li>)}
+            </ol>
+          </div>
+        </section>
+
+        <section className="next-project-band">
+          <div><small>RELATED WORK</small><strong>Continue through the portfolio.</strong></div>
+          <InternalLink to={`/work/${getNextProject(project.slug).slug}`} className="next-project-link">
+            {getNextProject(project.slug).name} <ArrowRight size={18} />
+          </InternalLink>
+        </section>
+      </main>
+      <Footer />
+    </>
   );
 }
 
-function Field({ label, children }) {
-  return <label className="field"><span>{label}</span>{children}</label>;
+function getNextProject(slug) {
+  const index = projects.findIndex((project) => project.slug === slug);
+  return projects[(index + 1) % projects.length];
 }
 
-function StatusBox({ state }) {
-  return <div className={cx('status-box', `status-${state.status}`)}>{state.message}</div>;
+function SectionHeading({ kicker, title, body, action }) {
+  return (
+    <div className="section-heading">
+      <div>
+        <p className="section-kicker">{kicker}</p>
+        <h2>{title}</h2>
+      </div>
+      <div className="section-heading-side">
+        <p>{body}</p>
+        {action}
+      </div>
+    </div>
+  );
 }
 
 function NotFound() {
-  return <Shell><main><section className="page-hero"><p className="eyebrow">404</p><h1>This page is not in the current Saga index.</h1><InternalLink className="button button-primary" to="/">Return home</InternalLink></section></main></Shell>;
+  return (
+    <>
+      <Header />
+      <main className="not-found">
+        <p className="eyebrow">404 / No system at this address</p>
+        <h1>This route does not contain a public system.</h1>
+        <p>Reserved destinations are intentionally not exposed as empty pages.</p>
+        <InternalLink to="/" className="button primary">Return home <ArrowRight size={16} /></InternalLink>
+      </main>
+      <Footer />
+    </>
+  );
 }
 
 function App() {
   const path = usePathname();
-  const [blogPosts, setBlogPosts] = useState(fallbackBlogPosts);
-  const [codeEntries, setCodeEntries] = useState(fallbackCodeEntries);
 
-  useEffect(() => {
-    fetchPublicTable('saga_blog_posts', 'select=*&status=eq.published&order=published_at.desc')
-      .then((rows) => rows?.length && setBlogPosts(rows))
-      .catch(() => {});
-    fetchPublicTable('saga_code_entries', 'select=*&visibility=eq.public&order=featured.desc,updated_at.desc')
-      .then((rows) => rows?.length && setCodeEntries(rows))
-      .catch(() => {});
-  }, []);
+  if (path === '/' || path === '') return <Home />;
+  if (path === '/work' || path === '/work/') return <WorkIndex />;
 
-  useEffect(() => {
-    const titles = {
-      '/': 'Saga Solutions — BLOG · TECH · VIBES · CODE',
-      '/blog': 'SAGA BLOG — AI analysis and technical signals',
-      '/tech': 'SAGA TECH — Technology support and pricing',
-      '/vibes': 'SAGA VIBES — Digital product studio',
-      '/code': 'SAGA CODE — Curated prompts, schemas, and recipes',
-    };
-    document.title = titles[path] || 'Saga Solutions';
-  }, [path]);
+  if (path.startsWith('/work/')) {
+    const slug = path.replace('/work/', '').replace(/\/$/, '');
+    return <ProjectDetail project={projects.find((item) => item.slug === slug)} />;
+  }
 
-  if (path === '/') return <Home blogPosts={blogPosts} codeEntries={codeEntries} />;
-  if (path === '/blog') return <BlogIndex posts={blogPosts} />;
-  if (path.startsWith('/blog/')) return <BlogDetail post={blogPosts.find((item) => item.slug === decodeURIComponent(path.slice(6)))} />;
-  if (path === '/tech') return <TechPage />;
-  if (path === '/vibes') return <VibesPage />;
-  if (path === '/code') return <CodeIndex entries={codeEntries} />;
-  if (path.startsWith('/code/')) return <CodeDetail entry={codeEntries.find((item) => item.slug === decodeURIComponent(path.slice(6)))} />;
   return <NotFound />;
 }
 
-createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);
+createRoot(document.getElementById('root')).render(<App />);
