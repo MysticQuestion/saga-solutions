@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f3f1ec" />
+    <meta name="robots" content="noindex,follow" />
+    <meta name="description" content="Saga Systems fixed-scope engagement checkout and commissioning brief." />
+    <title>Start a Project | Saga Systems</title>
+    <link rel="stylesheet" href="/checkout.css" />
+  </head>
+  <body>
+    <header class="checkout-header">
+      <a class="checkout-wordmark" href="/"><span>SAGA</span><strong>SYSTEMS</strong></a>
+      <nav><a href="/work">Work</a><a href="mailto:info@sagasystems.net">Contact</a></nav>
+    </header>
+
+    <main>
+      <section class="checkout-hero">
+        <p class="eyebrow">Start / Fixed-scope engagements</p>
+        <h1>Choose the smallest useful starting point.</h1>
+        <p>These engagements have fixed prices and defined outputs. Work that depends on an unresolved scope, ongoing partnership, or substantial implementation begins with an inquiry instead of forced checkout.</p>
+      </section>
+
+      <section id="checkout-state" class="checkout-shell">
+        <div id="notice" class="notice" hidden></div>
+
+        <div id="purchase-view">
+          <div class="engagement-grid" aria-label="Fixed-price engagements">
+            <button class="engagement-card" data-package="diagnostic" type="button">
+              <span>01 / DIAGNOSTIC</span>
+              <h2>System Diagnostic</h2>
+              <strong>$150</strong>
+              <p>Focused review of one website, workflow, system, or operating problem.</p>
+              <ul><li>Working review</li><li>Written findings</li><li>Prioritized next actions</li></ul>
+            </button>
+
+            <button class="engagement-card" data-package="blueprint" type="button">
+              <span>02 / ARCHITECTURE</span>
+              <h2>Build Blueprint</h2>
+              <strong>$450</strong>
+              <p>Structured architecture and implementation plan for a defined digital system.</p>
+              <ul><li>Problem framing</li><li>Feature + route architecture</li><li>Implementation roadmap</li></ul>
+            </button>
+
+            <button class="engagement-card" data-package="prototype" type="button">
+              <span>03 / BUILD</span>
+              <h2>Prototype Sprint</h2>
+              <strong>$1,250</strong>
+              <p>A working first version of a defined site, portal, dashboard, campaign surface, or digital service.</p>
+              <ul><li>Working interface</li><li>Repository preparation</li><li>Deployment preparation</li></ul>
+            </button>
+          </div>
+
+          <form id="checkout-form" class="intake-card">
+            <div class="form-heading">
+              <p class="eyebrow">Checkout record</p>
+              <h2 id="selected-title">Select an engagement above.</h2>
+              <p>Stripe handles payment. Saga Systems records the project title now and collects the full commissioning brief after payment is verified.</p>
+            </div>
+            <input id="package-id" type="hidden" />
+            <label>Name<input name="customerName" autocomplete="name" required /></label>
+            <label>Email<input name="customerEmail" type="email" autocomplete="email" required /></label>
+            <label>Project title<input name="projectTitle" required maxlength="200" placeholder="A concise working title" /></label>
+            <button id="checkout-button" class="primary-action" type="submit" disabled>Continue to secure checkout <span>→</span></button>
+            <small>No custom engagement is created or charged from this form.</small>
+          </form>
+        </div>
+
+        <div id="brief-view" hidden>
+          <div class="brief-heading">
+            <p class="eyebrow">Payment verified / commissioning record</p>
+            <h2>Finish the brief while the project context is fresh.</h2>
+            <p>This record becomes the operating handoff for the engagement. Required fields define outcome, users, functions, and success.</p>
+          </div>
+
+          <form id="brief-form" class="brief-form">
+            <div class="field-grid">
+              <label>Organization <input name="organization" autocomplete="organization" /></label>
+              <label>Phone <input name="phone" autocomplete="tel" /></label>
+              <label>Budget context <input name="budget" placeholder="Optional; beyond this engagement" /></label>
+              <label>Timeline context <input name="timeline" placeholder="Optional" /></label>
+            </div>
+            <label>Initial project summary <textarea name="projectSummary" rows="4" placeholder="What exists now, and what is changing?"></textarea></label>
+            <label>Required outcome <textarea name="desiredOutcome" rows="5" required></textarea></label>
+            <label>Primary users and stakeholders <textarea name="primaryUsers" rows="5" required></textarea></label>
+            <label>Required functions and deliverables <textarea name="requiredFeatures" rows="6" required></textarea></label>
+            <label>Success measures <textarea name="successMeasures" rows="5" required></textarea></label>
+            <div class="field-grid two">
+              <label>Reference links <textarea name="referenceLinks" rows="4"></textarea></label>
+              <label>Existing assets <textarea name="existingAssets" rows="4"></textarea></label>
+              <label>Integrations <textarea name="integrations" rows="4"></textarea></label>
+              <label>Constraints / governance <textarea name="constraints" rows="4"></textarea></label>
+            </div>
+            <div class="field-grid">
+              <label>Decision-makers <input name="decisionMakers" /></label>
+              <label>Target launch <input name="targetLaunch" type="date" /></label>
+            </div>
+            <button id="brief-button" class="primary-action" type="submit">Submit commissioning brief <span>→</span></button>
+          </form>
+        </div>
+
+        <div id="complete-view" class="complete-view" hidden>
+          <p class="eyebrow">Recorded</p>
+          <h2>Commissioning brief received.</h2>
+          <p>Your reference is <strong id="project-reference"></strong>. A confirmation has been sent to the email associated with checkout.</p>
+          <a class="primary-action inline" href="/work">Return to selected work <span>→</span></a>
+        </div>
+      </section>
+
+      <section class="custom-band">
+        <div><p class="eyebrow">Custom system</p><h2>Need an unresolved scope, multi-stage build, or ongoing operating relationship?</h2></div>
+        <a href="mailto:info@sagasystems.net?subject=Saga%20Systems%20/%20Custom%20Project">Describe the project <span>↗</span></a>
+      </section>
+    </main>
+
+    <footer><span>© 2026 Saga Systems</span><a href="mailto:info@sagasystems.net">info@sagasystems.net</a><span>Oakland, California</span></footer>
+    <script type="module" src="/checkout.js"></script>
+  </body>
+</html>

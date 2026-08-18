@@ -1,4 +1,4 @@
-name: Saga Solutions CI
+name: Saga Systems CI
 
 on:
   pull_request:
@@ -34,6 +34,9 @@ jobs:
           node --check api/editorial-draft.js
           node --check src/bridge.js
           node --check src/editorial-cleanup.js
+          node --check src/commerce-bridge.js
+          node --check src/portfolio-evidence.js
+          node --check public/checkout.js
 
       - name: Build production bundle
         run: npm run build

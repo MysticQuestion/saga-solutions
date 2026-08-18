@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 
-const COORDINATOR_EMAIL = process.env.PROJECT_COORDINATOR_EMAIL || 'ericmichael.wil@gmail.com';
+const OPERATIONS_EMAIL = process.env.PROJECT_OPERATIONS_EMAIL || 'info@sagasystems.net';
+const PUBLIC_CONTACT_EMAIL = process.env.PUBLIC_CONTACT_EMAIL || 'info@sagasystems.net';
 
 function send(res, status, body) {
   res.status(status).json(body);
@@ -25,9 +26,7 @@ function htmlLines(value) {
 
 async function verifyCheckout(sessionId) {
   const key = process.env.STRIPE_SECRET_KEY;
-  if (!key) {
-    throw new Error('Stripe verification is not configured.');
-  }
+  if (!key) throw new Error('Stripe verification is not configured.');
 
   const response = await fetch(
     `https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(sessionId)}?expand[]=customer_details`,
@@ -48,9 +47,7 @@ async function verifyCheckout(sessionId) {
 async function insertSupabase(record) {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) {
-    throw new Error('Project record storage is not configured.');
-  }
+  if (!url || !key) throw new Error('Project record storage is not configured.');
 
   const response = await fetch(`${url}/rest/v1/project_intakes`, {
     method: 'POST',
@@ -64,16 +61,14 @@ async function insertSupabase(record) {
   });
 
   if (!response.ok) {
-    throw new Error(`Supabase insert failed: ${await response.text()}`);
+    throw new Error(`Project record insert failed: ${await response.text()}`);
   }
 }
 
 async function sendEmail({ to, subject, html, replyTo }) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.SAGA_FROM_EMAIL;
-  if (!apiKey || !from) {
-    throw new Error('Project email delivery is not configured.');
-  }
+  if (!apiKey || !from) throw new Error('Project email delivery is not configured.');
 
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
@@ -102,9 +97,7 @@ export default async function handler(req, res) {
   }
 
   const { sessionId, packageId, lead = {}, brief = {} } = req.body || {};
-  if (!sessionId) {
-    return send(res, 400, { error: 'A checkout session is required.' });
-  }
+  if (!sessionId) return send(res, 400, { error: 'A checkout session is required.' });
 
   const requiredBrief = ['desiredOutcome', 'primaryUsers', 'requiredFeatures', 'successMeasures'];
   if (requiredBrief.some((field) => !safe(brief[field]))) {
@@ -113,7 +106,7 @@ export default async function handler(req, res) {
 
   try {
     const session = await verifyCheckout(sessionId);
-    const reference = `SAGA-PAID-${new Date().toISOString().slice(0, 10).replaceAll('-', '')}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`;
+    const reference = `SAGA-${new Date().toISOString().slice(0, 10).replaceAll('-', '')}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`;
     const customerEmail =
       safe(session.customer_details?.email, 320) || safe(session.customer_email, 320) || safe(lead.email, 320);
     const customerName = safe(session.customer_details?.name, 250) || safe(lead.name, 250);
@@ -156,10 +149,10 @@ export default async function handler(req, res) {
     });
 
     const summary = `
-      <h1>Paid Saga Solutions commissioning brief</h1>
+      <h1>Saga Systems / paid commissioning brief</h1>
       <p><strong>Reference:</strong> ${escapeHtml(reference)}</p>
       <p><strong>Payment:</strong> ${escapeHtml(amountDisplay)} — ${escapeHtml(record.payment_status)}</p>
-      <p><strong>Package:</strong> ${escapeHtml(record.package_name || record.package_id)}</p>
+      <p><strong>Engagement:</strong> ${escapeHtml(record.package_name || record.package_id)}</p>
       <p><strong>Client:</strong> ${escapeHtml(record.customer_name)} &lt;${escapeHtml(record.customer_email)}&gt;</p>
       <p><strong>Phone:</strong> ${escapeHtml(record.customer_phone || 'Not supplied')}</p>
       <p><strong>Organization:</strong> ${escapeHtml(record.organization || 'Not supplied')}</p>
@@ -186,8 +179,8 @@ export default async function handler(req, res) {
     `;
 
     await sendEmail({
-      to: COORDINATOR_EMAIL,
-      subject: `[${reference}] PAID commissioning brief — ${record.project_title || record.package_name}`,
+      to: OPERATIONS_EMAIL,
+      subject: `[${reference}] Paid commissioning brief — ${record.project_title || record.package_name}`,
       html: summary,
       replyTo: customerEmail,
     });
@@ -195,16 +188,16 @@ export default async function handler(req, res) {
     if (customerEmail) {
       await sendEmail({
         to: customerEmail,
-        subject: `Saga Solutions commissioning brief confirmed — ${reference}`,
+        subject: `Saga Systems commissioning brief confirmed — ${reference}`,
         html: `
           <p>Hello ${escapeHtml(customerName || 'there')},</p>
           <p>Your payment and commissioning brief have been verified and recorded under reference <strong>${escapeHtml(reference)}</strong>.</p>
-          <p>The project coordinator has received the consolidated summary. The next communication will confirm scope, scheduling, dependencies, and the first decision required from you.</p>
-          <p>Eric-Michael Wilson II<br>
-          Project Coordinator, Saga Solutions<br>
-          ${escapeHtml(COORDINATOR_EMAIL)}<br>
-          +1 (510) 882-3649</p>
+          <p>Saga Systems has received the consolidated project record. The next communication will confirm scope, scheduling, dependencies, and the first decision required from you.</p>
+          <p>Saga Systems<br>
+          Project Operations<br>
+          ${escapeHtml(PUBLIC_CONTACT_EMAIL)}</p>
         `,
+        replyTo: PUBLIC_CONTACT_EMAIL,
       });
     }
 
