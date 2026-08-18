@@ -1,51 +1,58 @@
-/* Evidence-first homepage refinement derived from the August public-build audit. */
+/* Evidence-first homepage refinement derived from the August public-build audit and mobile screenshot review. */
 
 .home-hero {
   min-height: auto !important;
-  padding-bottom: 46px !important;
+  padding-bottom: 34px !important;
 }
 
 .hero-copy h1.saga-hero-wordmark {
   width: min(100%, 580px) !important;
-  margin-bottom: 24px !important;
+  margin-bottom: 22px !important;
 }
 
 .hero-copy .hero-lede {
   max-width: 760px;
-  color: rgba(245, 242, 235, .84) !important;
+  color: rgba(245, 242, 235, .86) !important;
 }
 
+/* Keep engagement clarity near the top without turning the hero into a second dashboard. */
 .hero-engagements {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1px;
-  margin: 30px 0 0;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.08);
+  grid-template-columns: auto repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 0;
+  margin: 26px 0 0;
+  border-top: 1px solid rgba(255,255,255,.13);
+  border-bottom: 1px solid rgba(255,255,255,.13);
 }
 
-.hero-engagements > div {
-  min-height: 118px;
-  padding: 18px 20px;
-  background: rgba(8,9,11,.88);
+.hero-engagements > small,
+.hero-engagements > span {
+  display: flex;
+  align-items: center;
+  min-height: 54px;
+  padding: 10px 14px;
 }
 
-.hero-engagements strong,
-.hero-engagements span {
-  display: block;
+.hero-engagements > small {
+  padding-left: 0;
+  padding-right: 18px;
+  color: rgba(245,242,235,.48);
+  font: 500 .58rem/1.2 'DM Mono', monospace;
+  letter-spacing: .13em;
+  text-transform: uppercase;
 }
 
-.hero-engagements strong {
-  margin-bottom: 9px;
-  color: #f5f2eb;
-  font-size: .88rem;
-  letter-spacing: .02em;
+.hero-engagements > span {
+  border-left: 1px solid rgba(255,255,255,.1);
+  color: rgba(245,242,235,.82);
+  font-size: .76rem;
+  line-height: 1.35;
 }
 
-.hero-engagements span {
-  color: rgba(245,242,235,.62);
-  font-size: .78rem;
-  line-height: 1.55;
+/* The operating model remains inspectable, but visually lighter and shorter. */
+.hero-system-card {
+  min-height: 340px !important;
 }
 
 .hero-system-card.is-inspectable .system-card-core {
@@ -67,11 +74,11 @@
   appearance: none;
   border: 0;
   border-right: 1px solid rgba(255,255,255,.08);
-  padding: 14px 10px;
+  padding: 12px 9px;
   background: transparent;
-  color: rgba(245,242,235,.48);
+  color: rgba(245,242,235,.54);
   font: inherit;
-  font-size: .67rem;
+  font-size: .62rem;
   letter-spacing: .08em;
   text-transform: uppercase;
   cursor: pointer;
@@ -82,7 +89,7 @@
 }
 
 .operating-model-nav button.is-active {
-  background: rgba(202,20,29,.16);
+  background: rgba(202,20,29,.14);
   color: #f5f2eb;
   box-shadow: inset 0 -2px 0 #ca141d;
 }
@@ -93,8 +100,8 @@
 }
 
 .operating-model-detail {
-  min-height: 180px;
-  padding: 26px 28px 30px;
+  min-height: 126px;
+  padding: 19px 22px 22px;
 }
 
 .operating-model-detail small,
@@ -103,30 +110,30 @@
 }
 
 .operating-model-detail small {
-  margin-bottom: 22px;
+  margin-bottom: 10px;
   color: #ca141d;
-  font-size: .62rem;
+  font-size: .58rem;
   letter-spacing: .14em;
 }
 
 .operating-model-detail strong {
-  margin-bottom: 10px;
+  margin-bottom: 7px;
   color: #f5f2eb;
-  font-size: clamp(1.45rem, 2.6vw, 2.3rem);
+  font-size: clamp(1.25rem, 2vw, 1.8rem);
   font-weight: 500;
 }
 
 .operating-model-detail p {
-  max-width: 620px;
+  max-width: 680px;
   margin: 0;
-  color: rgba(245,242,235,.68);
-  font-size: .9rem;
-  line-height: 1.7;
+  color: rgba(245,242,235,.7);
+  font-size: .82rem;
+  line-height: 1.55;
 }
 
 /* Proof comes before taxonomy. */
 .selected-work-section {
-  padding-top: 92px !important;
+  padding-top: 82px !important;
 }
 
 .selected-work-section .section-heading h2 {
@@ -134,10 +141,25 @@
 }
 
 .selected-work-section .section-heading-side > p,
-.selected-work-section .saga-preview-intro p,
-.selected-work-section .compact-project-copy > p,
-.selected-work-section .compact-proof-note p {
+.selected-work-section .saga-preview-intro p {
   color: rgba(23,23,23,.72) !important;
+}
+
+/* The first project is intentionally dark. The remaining homepage cases are document-light and need real contrast. */
+.compact-project:not(:first-child) .compact-project-copy,
+.compact-project:not(:first-child) .compact-project-copy h3,
+.compact-project:not(:first-child) .project-meta,
+.compact-project:not(:first-child) .status-pill {
+  color: #171717 !important;
+}
+
+.compact-project:not(:first-child) .compact-project-copy > p,
+.compact-project:not(:first-child) .compact-proof-note p {
+  color: #5f5e5a !important;
+}
+
+.compact-project:not(:first-child) .compact-proof-note {
+  border-color: rgba(23,23,23,.12) !important;
 }
 
 .systems-section {
@@ -157,11 +179,85 @@
 
 .systems-section .systems-grid article {
   border-color: rgba(23,23,23,.12) !important;
-  background: rgba(255,255,255,.32) !important;
+  background: rgba(255,255,255,.34) !important;
 }
 
 .systems-section .systems-grid article > span {
   color: #b2171e !important;
+}
+
+/* Resources and About are document surfaces. Do not use ghost text on cream. */
+.resources-section,
+.about-section {
+  color: #171717 !important;
+}
+
+.resources-section .section-heading h2,
+.resources-section .resource-grid h3,
+.about-section .section-heading h2,
+.about-section .about-principles strong {
+  color: #171717 !important;
+}
+
+.resources-section .section-heading-side > p,
+.resources-section .resource-grid p,
+.about-section .section-heading-side > p,
+.about-section .about-principles p {
+  color: #62615d !important;
+}
+
+.resources-section .resource-grid article,
+.about-section .about-principles > div {
+  background: rgba(255,255,255,.36) !important;
+  border-color: rgba(23,23,23,.12) !important;
+}
+
+.resources-section .resource-grid article > div,
+.about-section .about-principles > div > span {
+  color: #a4151c !important;
+}
+
+/* Vibes is a pointer to the studio record, not a second homepage embedded inside the homepage. */
+.studio-section {
+  padding-top: 72px !important;
+  padding-bottom: 72px !important;
+  background: #0b1114 !important;
+}
+
+.studio-shell {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: end !important;
+  gap: clamp(28px, 6vw, 88px) !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.studio-shell > div:first-child {
+  max-width: 760px;
+}
+
+.studio-shell h2 {
+  margin-bottom: 14px !important;
+  font-size: clamp(38px, 5vw, 62px) !important;
+  color: #f1f1ef !important;
+}
+
+.studio-shell p {
+  max-width: 700px;
+  color: #a7adb0 !important;
+  line-height: 1.6;
+}
+
+.studio-shell .project-visual {
+  display: none !important;
+}
+
+.studio-shell .studio-button {
+  margin-top: 8px !important;
+  white-space: nowrap;
 }
 
 /* Keep dark surfaces legible instead of relying on ultra-faint secondary type. */
@@ -169,55 +265,155 @@
 .hero-bottomline,
 .system-card-top,
 .system-card-foot {
-  color: rgba(245,242,235,.58) !important;
+  color: rgba(245,242,235,.62) !important;
 }
 
-@media (max-width: 900px) {
-  .hero-engagements {
-    grid-template-columns: 1fr;
+/* Collapse the full desktop nav sooner. The screenshot viewport was visibly too crowded. */
+@media (max-width: 1080px) {
+  .header-inner {
+    position: relative;
   }
 
-  .hero-engagements > div {
-    min-height: auto;
+  .menu-button {
+    display: inline-flex !important;
+    color: #171717 !important;
+  }
+
+  .main-nav {
+    display: none !important;
+    position: absolute !important;
+    top: 100%;
+    left: -15px;
+    right: -15px;
+    z-index: 80;
+    padding: 12px 15px 18px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    background: rgba(251,250,247,.99) !important;
+    border-bottom: 1px solid rgba(23,23,23,.14) !important;
+    box-shadow: 0 18px 36px rgba(0,0,0,.12);
+  }
+
+  .main-nav.is-open {
+    display: flex !important;
+  }
+
+  .main-nav > a {
+    padding: 13px 8px !important;
+    color: #393937 !important;
+    border-bottom: 1px solid rgba(23,23,23,.08);
+    font-size: .8rem;
+  }
+
+  .main-nav .nav-action {
+    margin-top: 10px;
+    color: #f5f2eb !important;
+    background: #171717 !important;
+    text-align: center;
+  }
+
+  .hero-engagements {
+    grid-template-columns: auto repeat(2, 1fr);
+  }
+
+  .hero-engagements > small {
+    grid-row: 1 / span 2;
   }
 }
 
 @media (max-width: 760px) {
   .home-hero {
-    padding-bottom: 30px !important;
+    padding-bottom: 24px !important;
+  }
+
+  .hero-inner {
+    padding-top: 64px !important;
+    padding-bottom: 44px !important;
+    gap: 34px !important;
   }
 
   .hero-copy h1.saga-hero-wordmark {
     width: min(100%, 470px) !important;
-    margin-bottom: 20px !important;
+    margin-bottom: 18px !important;
   }
 
   .hero-engagements {
-    margin-top: 24px;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 20px;
   }
 
-  .hero-engagements > div {
-    padding: 15px 16px;
+  .hero-engagements > small {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    min-height: 34px;
+    padding: 8px 0 5px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+
+  .hero-engagements > span {
+    min-height: 44px;
+    padding: 10px 9px;
+    font-size: .7rem;
+  }
+
+  .hero-engagements > span:nth-of-type(odd) {
+    border-left: 0;
+  }
+
+  .hero-system-card {
+    min-height: 282px !important;
   }
 
   .operating-model-nav {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .operating-model-nav button,
+  .operating-model-nav button:nth-child(2n),
+  .operating-model-nav button:nth-child(3n) {
+    border-right: 1px solid rgba(255,255,255,.08);
+    padding: 10px 5px;
+    font-size: .55rem;
   }
 
   .operating-model-nav button:nth-child(3n) {
-    border-right: 1px solid rgba(255,255,255,.08);
-  }
-
-  .operating-model-nav button:nth-child(2n) {
     border-right: 0;
   }
 
   .operating-model-detail {
-    min-height: 164px;
-    padding: 22px 20px 24px;
+    min-height: 112px;
+    padding: 16px 16px 18px;
+  }
+
+  .operating-model-detail p {
+    font-size: .75rem;
+    line-height: 1.45;
+  }
+
+  .system-card-foot {
+    display: none !important;
   }
 
   .selected-work-section {
-    padding-top: 72px !important;
+    padding-top: 64px !important;
+  }
+
+  .studio-section {
+    padding-top: 58px !important;
+    padding-bottom: 58px !important;
+  }
+
+  .studio-shell {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+
+  .studio-shell h2 {
+    font-size: clamp(34px, 10vw, 48px) !important;
+  }
+
+  .studio-shell .studio-button {
+    justify-self: start;
   }
 }
