@@ -4,6 +4,11 @@ const evidence = {
     live: 'https://neuralbreachbysaga.lovable.app',
     label: 'Published interface capture',
     note: 'The published Neural Breach build uses a full-screen opening transmission before the archive interface becomes available.',
+    facts: [
+      'The opening media layer is a full-screen autoplay video configured muted and playsInline rather than a static hero treatment.',
+      'Completion triggers an explicit exit state: the layer fades visually before it is removed from the interaction flow.',
+      'A scanline layer, transmission-status treatment, and Skip Intro control are part of the entry state rather than decorative assets added after the fact.',
+    ],
   },
   'Ark of Bones': {
     image: 'https://screenshot2.lovable.dev/a7ea6945-c7d8-4e66-b520-4d0203f345a8/id-preview-10e1336e--120a0249-bb33-403e-bf0b-34ee753673b6.lovable.app-1782035296189.png',
@@ -16,22 +21,42 @@ const evidence = {
     live: 'https://oaklandstreets.live/',
     label: 'Published interface capture',
     note: 'The maintained STREETS build presents field reporting, verification, corridor intelligence, and exportable civic evidence as one operating system.',
+    facts: [
+      'The maintained build combines geo-verified reporting, verification state, heat-map and corridor analysis, and routing rather than treating reporting as a single form submission.',
+      'Recent build work includes location-confirmation candidates plus audit exports in CSV and JSON for evidence portability.',
+      'The system separates environmental-condition documentation from person-level surveillance and keeps human verification in the operating loop.',
+    ],
   },
   'Bay Evidence': {
     image: 'https://screenshot2.lovable.dev/9606be5a-c6f3-4436-b06d-e77b6ae92443/id-preview-ec371479--5afa63b7-dc49-40e9-a8e5-f2b67d1da1e9.lovable.app-1787061680171.png',
     live: 'https://bayevidence.com/',
     label: 'Maintained research interface',
     note: 'The Bay Evidence system organizes verified records, source classes, jurisdiction filters, evidence tiers, methodology, and research collections through an editorial research interface.',
+    facts: [
+      'Search and filtering are organized around source metadata such as jurisdiction, year, evidence tier, source class, topic, medium, publisher, and access status.',
+      'The evidence model keeps methodology, link-verification state, institutional position, and corrections visible instead of reducing research to article cards.',
+      'The interface is designed for nine-county comparison while retaining enough metadata to inspect an individual source record.',
+    ],
   },
   Aethos: {
     image: 'https://screenshot2.lovable.dev/a58a2c68-9c43-48ac-8537-2ec01e4ac744/id-preview-5de14e9d--18d35eb2-99ac-4798-829f-294fb1deb83e.lovable.app-1782406733732.png',
     label: 'Prototype interface capture',
     note: 'The Aethos prototype separates Insight View from Engine View, preserving calculation state, confidence, disagreement, and reconciliation instead of presenting interpretation as unexplained output.',
+    facts: [
+      'The Dual-Layer Dashboard explicitly toggles between Insight View and Engine View rather than hiding calculation logic behind the generated interpretation.',
+      'Engine View exposes contributing vectors and machine-readable reconciliation values including net alignment and contradiction index.',
+      'Agreement, tension, and contradiction are retained as distinct states, allowing the interface to show disagreement instead of averaging it away.',
+    ],
   },
   'Mystic Sage': {
     image: 'https://screenshot2.lovable.dev/b45cbd59-65f6-4688-802a-88a952f9b950/id-preview-f11e1168--57ea58e5-e244-4284-9af6-cad3a9b0b5b3.lovable.app-1785294861221.png',
     label: 'Published knowledge system',
     note: 'Mystic Sage combines long-form study pages, workshop modules, downloadable workbooks, symbolic tools, archived publishing, and Aethos components inside one maintained knowledge environment.',
+    facts: [
+      'The production repository includes dedicated long-form study and workshop components rather than forcing instructional material into generic blog templates.',
+      'Downloadable workbooks, assessments, rituals, observation logs, and study companions are maintained as first-class publishing artifacts.',
+      'Aethos components, a chart-engine service, archive migration tooling, and production-hardening documentation coexist in the same platform architecture.',
+    ],
   },
 };
 
@@ -121,9 +146,37 @@ function addEvidenceStandard() {
   target.append(standard);
 }
 
+function addBuildFacts(container, item) {
+  if (!item?.facts?.length || container.querySelector('.implementation-evidence')) return;
+
+  const anchor = container.querySelector('.demonstrates') || container.querySelector('.proof-list');
+  if (!anchor) return;
+
+  const block = document.createElement('section');
+  block.className = 'implementation-evidence';
+  const label = document.createElement('small');
+  label.textContent = 'IMPLEMENTATION EVIDENCE';
+  const list = document.createElement('ul');
+
+  item.facts.forEach((fact) => {
+    const li = document.createElement('li');
+    li.textContent = fact;
+    list.append(li);
+  });
+
+  block.append(label, list);
+  anchor.insertAdjacentElement('afterend', block);
+}
+
 function wireEvidence() {
   document.querySelectorAll('.project-visual').forEach(enhanceVisual);
   addEvidenceStandard();
+
+  document.querySelectorAll('.project-showcase, .project-detail-heading').forEach((container) => {
+    const title = container.querySelector('h1, h2, h3')?.textContent?.trim();
+    const item = evidence[title];
+    if (item) addBuildFacts(container.closest('.project-showcase') || container, item);
+  });
 
   document.querySelectorAll('.project-showcase, .compact-project, .project-detail-hero').forEach((container) => {
     const title = container.querySelector('h1, h2, h3')?.textContent?.trim();
