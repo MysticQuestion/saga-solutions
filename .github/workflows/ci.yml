@@ -1,4 +1,4 @@
-name: Saga Solutions CI
+name: Saga Systems CI
 
 on:
   pull_request:
