@@ -58,6 +58,15 @@ const evidence = {
       'Aethos components, a chart-engine service, archive migration tooling, and production-hardening documentation coexist in the same platform architecture.',
     ],
   },
+  'Saga Vibes Studio': {
+    label: 'Source-backed foundation',
+    note: 'The current Studio foundation is represented by system logic until a new Saga Systems-branded deployment is available for capture.',
+    facts: [
+      'The working web client submits a project brief, seven scored routing signals, and an optional prototype-only constraint to a dedicated routing API.',
+      'The policy response is structured as rapid, hybrid, or enterprise and returns an enterprise pressure score, reason codes, a recommended execution lane, and human-approval state.',
+      'The repository already contains a Master Project File JSON Schema plus software architecture and integration-strategy documentation for the orchestration layer.',
+    ],
+  },
 };
 
 function makeButton(label, mode, active) {
@@ -76,7 +85,7 @@ function enhanceVisual(visual) {
   const name = visual.querySelector('.visual-browser-bar small')?.textContent?.trim();
   const item = evidence[name];
   const stage = visual.querySelector('.visual-stage');
-  if (!item || !stage) return;
+  if (!item?.image || !stage) return;
 
   visual.dataset.evidenceReady = 'true';
   visual.classList.add('has-interface-evidence');
