@@ -1,5 +1,5 @@
 (() => {
-  const asset = '/saga-wordmark-dark.svg';
+  const asset = '/saga-wordmark-exact.webp';
 
   function installWordmark() {
     document.querySelectorAll('a.wordmark').forEach((link) => {
