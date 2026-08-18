@@ -168,14 +168,36 @@ function addBuildFacts(container, item) {
   anchor.insertAdjacentElement('afterend', block);
 }
 
+function addCompactEvidence(container, item) {
+  if (!item || container.querySelector('.compact-proof-note')) return;
+  const copy = container.querySelector('.compact-project-copy');
+  const category = copy?.querySelector(':scope > p');
+  if (!copy || !category) return;
+
+  const proof = document.createElement('div');
+  proof.className = 'compact-proof-note';
+  const label = document.createElement('small');
+  label.textContent = item.label;
+  const text = document.createElement('p');
+  text.textContent = item.facts?.[0] || item.note;
+  proof.append(label, text);
+  category.insertAdjacentElement('afterend', proof);
+}
+
 function wireEvidence() {
   document.querySelectorAll('.project-visual').forEach(enhanceVisual);
   addEvidenceStandard();
 
-  document.querySelectorAll('.project-showcase, .project-detail-heading').forEach((container) => {
-    const title = container.querySelector('h1, h2, h3')?.textContent?.trim();
+  document.querySelectorAll('.project-showcase').forEach((container) => {
+    const title = container.querySelector('h2')?.textContent?.trim();
     const item = evidence[title];
-    if (item) addBuildFacts(container.closest('.project-showcase') || container, item);
+    if (item) addBuildFacts(container, item);
+  });
+
+  document.querySelectorAll('.compact-project').forEach((container) => {
+    const title = container.querySelector('h3')?.textContent?.trim();
+    const item = evidence[title];
+    if (item) addCompactEvidence(container, item);
   });
 
   document.querySelectorAll('.project-showcase, .compact-project, .project-detail-hero').forEach((container) => {
