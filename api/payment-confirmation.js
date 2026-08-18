@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 
-const COORDINATOR_EMAIL = process.env.PROJECT_COORDINATOR_EMAIL || 'ericmichael.wil@gmail.com';
+const OPERATIONS_EMAIL = process.env.PROJECT_OPERATIONS_EMAIL || 'info@sagasystems.net';
 
 function send(res, status, body) {
   res.status(status).json(body);
@@ -57,9 +57,7 @@ async function recordPayment(record) {
     },
   );
 
-  if (!response.ok) {
-    throw new Error(`Payment record failed: ${await response.text()}`);
-  }
+  if (!response.ok) throw new Error(`Payment record failed: ${await response.text()}`);
 }
 
 async function sendEmail({ to, subject, html, replyTo }) {
@@ -82,9 +80,7 @@ async function sendEmail({ to, subject, html, replyTo }) {
     }),
   });
 
-  if (!response.ok) {
-    throw new Error(`Email delivery failed: ${await response.text()}`);
-  }
+  if (!response.ok) throw new Error(`Email delivery failed: ${await response.text()}`);
 }
 
 export default async function handler(req, res) {
@@ -125,17 +121,17 @@ export default async function handler(req, res) {
     });
 
     await sendEmail({
-      to: COORDINATOR_EMAIL,
+      to: OPERATIONS_EMAIL,
       replyTo: email,
-      subject: `[${reference}] Saga Solutions payment received`,
+      subject: `[${reference}] Saga Systems payment received`,
       html: `
-        <h1>Payment received</h1>
+        <h1>Saga Systems / payment received</h1>
         <p><strong>Reference:</strong> ${escapeHtml(reference)}</p>
         <p><strong>Amount:</strong> ${escapeHtml(amountDisplay)}</p>
-        <p><strong>Package:</strong> ${escapeHtml(packageName || packageId || 'Not identified')}</p>
+        <p><strong>Engagement:</strong> ${escapeHtml(packageName || packageId || 'Not identified')}</p>
         <p><strong>Client:</strong> ${escapeHtml(name || 'Not supplied')} &lt;${escapeHtml(email || 'Not supplied')}&gt;</p>
         <p><strong>Project:</strong> ${escapeHtml(projectTitle || 'Not supplied')}</p>
-        <p>The client has been directed to the post-purchase commissioning brief. A second email will follow when the detailed survey is submitted.</p>
+        <p>The client has been directed to the commissioning brief. A separate project record is created when that brief is submitted.</p>
       `,
     });
 
