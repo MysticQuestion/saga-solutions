@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 
-const COORDINATOR_EMAIL = process.env.PROJECT_COORDINATOR_EMAIL || 'ericmichael.wil@gmail.com';
+const OPERATIONS_EMAIL = process.env.PROJECT_OPERATIONS_EMAIL || 'info@sagasystems.net';
+const PUBLIC_CONTACT_EMAIL = process.env.PUBLIC_CONTACT_EMAIL || 'info@sagasystems.net';
 
 function send(res, status, body) {
   res.status(status).json(body);
@@ -39,9 +40,7 @@ async function insertSupabase(table, record) {
     body: JSON.stringify(record),
   });
 
-  if (!response.ok) {
-    throw new Error(`Supabase insert failed: ${await response.text()}`);
-  }
+  if (!response.ok) throw new Error(`Project record insert failed: ${await response.text()}`);
   return { configured: true };
 }
 
@@ -65,9 +64,7 @@ async function sendEmail({ to, subject, html, replyTo }) {
     }),
   });
 
-  if (!response.ok) {
-    throw new Error(`Email delivery failed: ${await response.text()}`);
-  }
+  if (!response.ok) throw new Error(`Email delivery failed: ${await response.text()}`);
   return { configured: true };
 }
 
@@ -102,8 +99,8 @@ export default async function handler(req, res) {
     status: 'new',
   };
 
-  const coordinatorHtml = `
-    <h1>New Saga Solutions project outline</h1>
+  const operationsHtml = `
+    <h1>Saga Systems / new project outline</h1>
     <p><strong>Reference:</strong> ${escapeHtml(reference)}</p>
     <p><strong>Client:</strong> ${escapeHtml(record.name)} &lt;${escapeHtml(record.email)}&gt;</p>
     <p><strong>Phone:</strong> ${escapeHtml(record.phone || 'Not supplied')}</p>
@@ -118,9 +115,9 @@ export default async function handler(req, res) {
   try {
     const storage = await insertSupabase('project_leads', record);
     const email = await sendEmail({
-      to: COORDINATOR_EMAIL,
-      subject: `[${reference}] New Saga Solutions project outline`,
-      html: coordinatorHtml,
+      to: OPERATIONS_EMAIL,
+      subject: `[${reference}] New Saga Systems project outline`,
+      html: operationsHtml,
       replyTo: record.email,
     });
 
@@ -133,15 +130,16 @@ export default async function handler(req, res) {
 
     await sendEmail({
       to: record.email,
-      subject: `Saga Solutions received your project outline — ${reference}`,
+      subject: `Saga Systems received your project outline — ${reference}`,
       html: `
         <p>Hello ${escapeHtml(record.name)},</p>
         <p>Your project outline for <strong>${escapeHtml(record.project_title)}</strong> has been received under reference <strong>${escapeHtml(reference)}</strong>.</p>
-        <p>The selected entry point is <strong>${escapeHtml(record.package_name || 'to be confirmed')}</strong>. A paid checkout or written invoice will establish the engagement.</p>
-        <p>Project coordinator: Eric-Michael Wilson II<br>
-        ${escapeHtml(COORDINATOR_EMAIL)}<br>
-        +1 (510) 882-3649</p>
+        <p>The selected entry point is <strong>${escapeHtml(record.package_name || 'to be confirmed')}</strong>. A paid checkout or written scope will establish the engagement.</p>
+        <p>Saga Systems<br>
+        Project Operations<br>
+        ${escapeHtml(PUBLIC_CONTACT_EMAIL)}</p>
       `,
+      replyTo: PUBLIC_CONTACT_EMAIL,
     });
 
     return send(res, 200, {
