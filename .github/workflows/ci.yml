@@ -34,6 +34,8 @@ jobs:
           node --check api/editorial-draft.js
           node --check src/bridge.js
           node --check src/editorial-cleanup.js
+          node --check src/commerce-bridge.js
+          node --check public/checkout.js
 
       - name: Build production bundle
         run: npm run build
