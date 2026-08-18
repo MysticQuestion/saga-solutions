@@ -51,31 +51,56 @@
     return caption;
   }
 
-  function createCapture(name, item) {
+  function ensureLoading(capture) {
+    let loading = capture.querySelector('.saga-preview-loading');
+    if (!loading) {
+      loading = document.createElement('div');
+      loading.className = 'saga-preview-loading';
+      loading.innerHTML = '<span>Loading project capture</span><i></i>';
+      capture.prepend(loading);
+    }
+    return loading;
+  }
+
+  function armImage(image, capture, loading, url) {
+    capture.classList.remove('is-loaded', 'has-error');
+
+    const markLoaded = () => {
+      if (!image.naturalWidth) return;
+      capture.classList.add('is-loaded');
+      capture.classList.remove('has-error');
+      loading?.remove();
+    };
+
+    const markError = () => {
+      capture.classList.add('has-error');
+      capture.classList.remove('is-loaded');
+      const state = ensureLoading(capture);
+      state.innerHTML = '<span>Capture unavailable — use the live project link</span>';
+    };
+
+    image.addEventListener('load', markLoaded, { once: true });
+    image.addEventListener('error', markError, { once: true });
+    image.src = url;
+
+    if (image.complete && image.naturalWidth > 0) markLoaded();
+  }
+
+  function createCapture(name, item, priority = false) {
     const figure = document.createElement('figure');
     figure.className = 'portfolio-capture saga-real-preview';
-
-    const image = document.createElement('img');
-    image.alt = `${name} website interface preview`;
-    image.decoding = 'async';
-    image.loading = 'lazy';
-    image.src = `/api/project-preview?key=${encodeURIComponent(item.key)}`;
 
     const loading = document.createElement('div');
     loading.className = 'saga-preview-loading';
     loading.innerHTML = '<span>Loading project capture</span><i></i>';
 
-    image.addEventListener('load', () => {
-      figure.classList.add('is-loaded');
-      loading.remove();
-    }, { once: true });
-
-    image.addEventListener('error', () => {
-      figure.classList.add('has-error');
-      loading.innerHTML = '<span>Capture unavailable — use the live project link</span>';
-    }, { once: true });
+    const image = document.createElement('img');
+    image.alt = `${name} website interface preview`;
+    image.decoding = 'async';
+    image.loading = priority ? 'eager' : 'lazy';
 
     figure.append(loading, image, makeCaption(item));
+    armImage(image, figure, loading, `/api/project-preview?key=${encodeURIComponent(item.key)}`);
     return figure;
   }
 
@@ -140,27 +165,39 @@
     });
   }
 
+  function tagProjectShell(visual, item) {
+    visual.dataset.project = item.key;
+    const shells = [
+      visual.closest('.project-showcase'),
+      visual.closest('.compact-project'),
+      visual.closest('.project-detail-hero'),
+      visual.closest('.studio-shell'),
+    ];
+    shells.filter(Boolean).forEach((shell) => shell.dataset.project = item.key);
+  }
+
   function enhanceVisual(visual, priority = false) {
     const name = getProjectName(visual);
     const item = PROJECTS[name];
     const stage = visual.querySelector('.visual-stage');
     if (!item || !stage) return;
 
+    tagProjectShell(visual, item);
     visual.classList.add('has-interface-evidence', 'has-saga-real-preview');
 
     let capture = stage.querySelector('.portfolio-capture');
     if (!capture) {
-      capture = createCapture(name, item);
+      capture = createCapture(name, item, priority);
       stage.prepend(capture);
     } else {
       capture.classList.add('saga-real-preview');
       const image = capture.querySelector('img');
       if (image) {
-        image.src = `/api/project-preview?key=${encodeURIComponent(item.key)}`;
         image.alt = `${name} website interface preview`;
         image.decoding = 'async';
         image.loading = priority ? 'eager' : 'lazy';
-        image.addEventListener('load', () => capture.classList.add('is-loaded'), { once: true });
+        const loading = ensureLoading(capture);
+        armImage(image, capture, loading, `/api/project-preview?key=${encodeURIComponent(item.key)}`);
       }
 
       const caption = capture.querySelector('figcaption');
@@ -172,9 +209,6 @@
       }
     }
 
-    const image = capture.querySelector('img');
-    if (image && priority) image.loading = 'eager';
-
     buildSwitcher(visual, stage);
     forceCaptureMode(visual, stage);
     visual.dataset.sagaRealPreview = 'true';
@@ -183,7 +217,6 @@
   function installPreviewIntro() {
     const section = document.querySelector('.selected-work-section');
     if (!section || section.querySelector('.saga-preview-intro')) return;
-
     const grid = section.querySelector('.compact-work-grid');
     if (!grid) return;
 
