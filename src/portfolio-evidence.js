@@ -105,8 +105,25 @@ function enhanceVisual(visual) {
   });
 }
 
+function addEvidenceStandard() {
+  const workHero = document.querySelector('.work-hero');
+  if (!workHero || workHero.querySelector('.portfolio-proof-standard')) return;
+
+  const target = workHero.querySelector('aside') || workHero;
+  const standard = document.createElement('div');
+  standard.className = 'portfolio-proof-standard';
+  standard.innerHTML = `
+    <small>EVIDENCE STANDARD</small>
+    <div><strong>Interface</strong><span>Capture from a maintained, published, or explicitly labeled prototype build.</span></div>
+    <div><strong>System logic</strong><span>Explanatory reconstruction used to show architecture, interaction, or data behavior that a screenshot cannot show by itself.</span></div>
+    <p>Development state remains visible throughout the portfolio.</p>
+  `;
+  target.append(standard);
+}
+
 function wireEvidence() {
   document.querySelectorAll('.project-visual').forEach(enhanceVisual);
+  addEvidenceStandard();
 
   document.querySelectorAll('.project-showcase, .compact-project, .project-detail-hero').forEach((container) => {
     const title = container.querySelector('h1, h2, h3')?.textContent?.trim();
