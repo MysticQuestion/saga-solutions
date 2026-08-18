@@ -1,0 +1,48 @@
+/* Saga Systems canonical wordmark treatment, matched to the approved flyer. */
+.wordmark[data-saga-wordmark="true"] {
+  display: inline-flex;
+  align-items: center;
+  background: #111112;
+  padding: 7px 10px 6px;
+  border: 1px solid rgba(23, 23, 23, 0.16);
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.wordmark[data-saga-wordmark="true"] .saga-wordmark-image {
+  display: block;
+  width: 148px;
+  height: auto;
+  max-width: none;
+}
+
+.hero-copy h1.saga-hero-wordmark {
+  width: min(100%, 760px);
+  max-width: none;
+  margin: 0 0 38px;
+  font-size: 0;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.saga-hero-wordmark .saga-wordmark-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
+}
+
+@media (max-width: 760px) {
+  .wordmark[data-saga-wordmark="true"] {
+    padding: 6px 8px 5px;
+  }
+
+  .wordmark[data-saga-wordmark="true"] .saga-wordmark-image {
+    width: 124px;
+  }
+
+  .hero-copy h1.saga-hero-wordmark {
+    width: min(100%, 610px);
+    margin-bottom: 30px;
+  }
+}
