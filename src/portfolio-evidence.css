@@ -117,6 +117,48 @@
   font-size: 8px;
 }
 
+.portfolio-proof-standard {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,.2);
+  display: grid;
+  gap: 11px;
+  text-align: left;
+}
+
+.portfolio-proof-standard > small {
+  color: rgba(255,255,255,.5);
+  font: 500 9px 'DM Mono', monospace;
+  letter-spacing: .14em;
+}
+
+.portfolio-proof-standard > div {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 10px;
+  align-items: start;
+}
+
+.portfolio-proof-standard strong {
+  color: #f2eee4;
+  font: 500 10px 'DM Mono', monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.portfolio-proof-standard span,
+.portfolio-proof-standard p {
+  margin: 0;
+  color: rgba(255,255,255,.62);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.portfolio-proof-standard p {
+  padding-top: 2px;
+  color: rgba(255,255,255,.43);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .portfolio-capture,
   .evidence-logic-mode > :not(.portfolio-capture) {
@@ -133,5 +175,10 @@
   .evidence-switch {
     top: 39px;
     right: 7px;
+  }
+
+  .portfolio-proof-standard > div {
+    grid-template-columns: 1fr;
+    gap: 4px;
   }
 }
