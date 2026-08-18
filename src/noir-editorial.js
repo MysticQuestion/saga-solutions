@@ -69,6 +69,15 @@ function replaceText(root = document) {
   });
 }
 
+function setLogicFallback(visual) {
+  const stage = visual.querySelector('.visual-stage');
+  stage?.classList.remove('evidence-capture-mode');
+  stage?.classList.add('evidence-logic-mode');
+  visual.querySelector('.portfolio-capture')?.setAttribute('hidden', '');
+  visual.querySelectorAll('.evidence-mode').forEach((button) => button.setAttribute('hidden', ''));
+  visual.dataset.assetSource = 'logic-only';
+}
+
 function stabilizeEvidence(root = document) {
   root.querySelectorAll?.('.project-visual.has-interface-evidence').forEach((visual) => {
     const name = visual.querySelector('.visual-browser-bar small')?.textContent?.trim();
@@ -77,6 +86,10 @@ function stabilizeEvidence(root = document) {
     const label = visual.querySelector('.portfolio-capture figcaption span');
 
     if (item && image) {
+      if (image.dataset.stableBound !== 'true') {
+        image.dataset.stableBound = 'true';
+        image.addEventListener('error', () => setLogicFallback(visual), { once: true });
+      }
       if (image.src !== item.image) image.src = item.image;
       image.referrerPolicy = 'no-referrer';
       image.loading = 'lazy';
@@ -86,14 +99,7 @@ function stabilizeEvidence(root = document) {
     }
 
     // Aethos currently has no durable public capture. Prefer the built logic view over a broken image.
-    if (name === 'Aethos') {
-      const stage = visual.querySelector('.visual-stage');
-      stage?.classList.remove('evidence-capture-mode');
-      stage?.classList.add('evidence-logic-mode');
-      visual.querySelector('.portfolio-capture')?.setAttribute('hidden', '');
-      visual.querySelectorAll('.evidence-mode').forEach((button) => button.setAttribute('hidden', ''));
-      visual.dataset.assetSource = 'logic-only';
-    }
+    if (name === 'Aethos') setLogicFallback(visual);
   });
 }
 
