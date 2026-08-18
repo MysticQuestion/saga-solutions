@@ -15,23 +15,26 @@
   }
 
   function installEngagements(heroCopy) {
-    if (!heroCopy || heroCopy.querySelector('.hero-engagements')) return;
+    if (!heroCopy) return;
     const lede = heroCopy.querySelector('.hero-lede');
     if (!lede) return;
 
+    heroCopy.querySelector('.hero-engagements')?.remove();
+
     const wrap = document.createElement('div');
     wrap.className = 'hero-engagements';
-    wrap.setAttribute('aria-label', 'Common Saga Systems engagement types');
-    [
-      ['Private AI systems', 'Local or controlled AI workflows, retrieval, agents, and document intelligence.'],
-      ['Research platforms', 'Evidence repositories, source provenance, publishing systems, and maintained knowledge infrastructure.'],
-      ['Civic + data systems', 'Field intelligence, public records, maps, verification workflows, and accountable reporting.'],
-      ['Operational automation', 'APIs, CRM flows, intake, notifications, scheduled intelligence, and internal operating tools.'],
-    ].forEach(([title, detail]) => {
-      const item = document.createElement('div');
-      item.innerHTML = `<strong>${title}</strong><span>${detail}</span>`;
+    wrap.setAttribute('aria-label', 'Common Saga Systems work');
+
+    const label = document.createElement('small');
+    label.textContent = 'Common work';
+    wrap.append(label);
+
+    ['Private AI systems', 'Research platforms', 'Civic + data systems', 'Operational automation'].forEach((title) => {
+      const item = document.createElement('span');
+      item.textContent = title;
       wrap.append(item);
     });
+
     lede.insertAdjacentElement('afterend', wrap);
   }
 
@@ -106,6 +109,26 @@
     }
   }
 
+  function simplifyStudio() {
+    const section = document.querySelector('.studio-section');
+    if (!section) return;
+
+    const shell = section.querySelector('.studio-shell');
+    if (!shell) return;
+
+    const kicker = shell.querySelector('.section-kicker');
+    const title = shell.querySelector('h2');
+    const body = shell.querySelector('p');
+    const button = shell.querySelector('.studio-button');
+
+    if (kicker) kicker.textContent = 'Studio / Saga Vibes';
+    if (title) title.textContent = 'Saga Vibes Studio';
+    if (body) body.textContent = 'Project routing, production roles, repository handoff, and deployment controls. The full studio architecture lives in its system record.';
+    if (button) replaceFirstTextNode(button, 'Open studio system record');
+
+    shell.querySelector('.project-visual')?.setAttribute('aria-hidden', 'true');
+  }
+
   function wireHome() {
     if (window.location.pathname !== '/' && window.location.pathname !== '') return;
 
@@ -129,9 +152,10 @@
 
     installOperatingModel(hero.querySelector('.hero-system-card'));
     refineHeadings();
+    simplifyStudio();
 
     const bottomline = hero.querySelector('.hero-bottomline span:last-child');
-    if (bottomline) bottomline.textContent = 'Public build / working systems / 2026';
+    if (bottomline) bottomline.textContent = 'Working systems / 2026';
   }
 
   let queued = false;
