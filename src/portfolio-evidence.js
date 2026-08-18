@@ -23,6 +23,16 @@ const evidence = {
     label: 'Maintained research interface',
     note: 'The Bay Evidence system organizes verified records, source classes, jurisdiction filters, evidence tiers, methodology, and research collections through an editorial research interface.',
   },
+  Aethos: {
+    image: 'https://screenshot2.lovable.dev/a58a2c68-9c43-48ac-8537-2ec01e4ac744/id-preview-5de14e9d--18d35eb2-99ac-4798-829f-294fb1deb83e.lovable.app-1782406733732.png',
+    label: 'Prototype interface capture',
+    note: 'The Aethos prototype separates Insight View from Engine View, preserving calculation state, confidence, disagreement, and reconciliation instead of presenting interpretation as unexplained output.',
+  },
+  'Mystic Sage': {
+    image: 'https://screenshot2.lovable.dev/b45cbd59-65f6-4688-802a-88a952f9b950/id-preview-f11e1168--57ea58e5-e244-4284-9af6-cad3a9b0b5b3.lovable.app-1785294861221.png',
+    label: 'Published knowledge system',
+    note: 'Mystic Sage combines long-form study pages, workshop modules, downloadable workbooks, symbolic tools, archived publishing, and Aethos components inside one maintained knowledge environment.',
+  },
 };
 
 function makeButton(label, mode, active) {
@@ -101,7 +111,7 @@ function wireEvidence() {
   document.querySelectorAll('.project-showcase, .compact-project, .project-detail-hero').forEach((container) => {
     const title = container.querySelector('h1, h2, h3')?.textContent?.trim();
     const item = evidence[title];
-    if (!item) return;
+    if (!item?.live) return;
 
     container.querySelectorAll('.text-action.secondary, .project-actions a').forEach((link) => {
       if (/view live|visit live project/i.test(link.textContent || '')) link.href = item.live;
