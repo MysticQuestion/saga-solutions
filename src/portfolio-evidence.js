@@ -17,6 +17,12 @@ const evidence = {
     label: 'Published interface capture',
     note: 'The maintained STREETS build presents field reporting, verification, corridor intelligence, and exportable civic evidence as one operating system.',
   },
+  'Bay Evidence': {
+    image: 'https://screenshot2.lovable.dev/9606be5a-c6f3-4436-b06d-e77b6ae92443/id-preview-ec371479--5afa63b7-dc49-40e9-a8e5-f2b67d1da1e9.lovable.app-1787061680171.png',
+    live: 'https://bayevidence.com/',
+    label: 'Maintained research interface',
+    note: 'The Bay Evidence system organizes verified records, source classes, jurisdiction filters, evidence tiers, methodology, and research collections through an editorial research interface.',
+  },
 };
 
 function makeButton(label, mode, active) {
