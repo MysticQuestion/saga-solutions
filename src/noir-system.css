@@ -1,0 +1,420 @@
+/* Saga Systems institutional shell — derived from the earlier noir wallpaper language.
+   Project-specific visual systems retain their own palettes inside portfolio frames. */
+
+:root {
+  --paper: #090a0c;
+  --paper-bright: #0d0f12;
+  --paper-deep: #15171b;
+  --ink: #f1f1ef;
+  --ink-soft: #c6c7c8;
+  --muted: #8d9094;
+  --line: rgba(255,255,255,.12);
+  --line-soft: rgba(255,255,255,.07);
+  --night: #07080a;
+  --night-2: #0e1013;
+  --red: #b41520;
+  --red-bright: #e02a33;
+}
+
+html,
+body {
+  background: #090a0c;
+  color: #ececea;
+}
+
+body,
+button,
+input,
+textarea {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+.site-header {
+  background: rgba(7,8,10,.9);
+  color: #f4f4f2;
+  border-bottom-color: rgba(255,255,255,.1);
+  box-shadow: 0 10px 42px rgba(0,0,0,.28);
+}
+
+.header-inner {
+  min-height: 70px;
+}
+
+.wordmark {
+  gap: 12px;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+}
+
+.wordmark span { font-weight: 300; }
+.wordmark strong {
+  color: #d82931;
+  font-weight: 500;
+  letter-spacing: .32em;
+}
+
+.main-nav { font-size: 11px; letter-spacing: .07em; }
+.main-nav > a { color: #a9aaac; }
+.main-nav > a:hover { color: #fff; }
+.main-nav .nav-action {
+  background: transparent;
+  color: #efefed;
+  border-color: rgba(255,255,255,.3);
+  letter-spacing: .06em;
+}
+.main-nav .nav-action:hover {
+  background: #b41520;
+  border-color: #b41520;
+}
+
+.home-hero {
+  min-height: 820px;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 50% 54%, rgba(255,255,255,.06), transparent 4%, transparent 27%),
+    radial-gradient(circle at 50% 52%, transparent 0 20%, rgba(255,255,255,.055) 20.2%, transparent 20.8%),
+    linear-gradient(180deg, #050609 0%, #090b0e 52%, #101216 100%);
+}
+
+.home-hero::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  opacity: .8;
+  background:
+    linear-gradient(90deg, transparent calc(50% - .5px), rgba(255,255,255,.16) 50%, transparent calc(50% + .5px)),
+    linear-gradient(180deg, transparent 69%, rgba(213,34,43,.24) 69.1%, transparent 69.25%),
+    repeating-linear-gradient(90deg, transparent 0 139px, rgba(255,255,255,.026) 140px),
+    repeating-linear-gradient(0deg, transparent 0 139px, rgba(255,255,255,.02) 140px);
+  mask-image: linear-gradient(to bottom, #000 0 75%, transparent 100%);
+}
+
+.home-hero::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  bottom: -210px;
+  width: min(1080px, 96vw);
+  height: 520px;
+  transform: translateX(-50%);
+  background:
+    linear-gradient(125deg, transparent 0 33%, #111318 33.2% 50%, transparent 50.2%),
+    linear-gradient(235deg, transparent 0 33%, #0c0e12 33.2% 50%, transparent 50.2%),
+    linear-gradient(180deg, transparent 0 38%, rgba(219,35,45,.2) 38.2%, transparent 39%);
+  filter: drop-shadow(0 -20px 50px rgba(0,0,0,.65));
+  opacity: .88;
+  clip-path: polygon(0 100%, 19% 25%, 43% 52%, 50% 0, 57% 52%, 81% 25%, 100% 100%);
+}
+
+.hero-grid { opacity: .18; background-size: 92px 92px; }
+.hero-orbit { border-color: rgba(255,255,255,.08); }
+.hero-orbit-two { border-color: rgba(191,26,35,.35); }
+
+.hero-inner {
+  min-height: 735px;
+  padding-top: 118px;
+  position: relative;
+  z-index: 3;
+}
+
+.hero-copy {
+  max-width: 850px;
+}
+
+.hero-copy .eyebrow {
+  color: #a7a9ad;
+  letter-spacing: .24em;
+  font-size: 10px;
+}
+
+.hero-copy h1 {
+  margin-bottom: 30px;
+  color: #f5f5f2;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  font-size: clamp(54px, 8vw, 120px);
+  line-height: .92;
+  text-shadow: 0 0 40px rgba(255,255,255,.05);
+}
+
+.hero-lede {
+  max-width: 700px;
+  color: #aeb0b3;
+  font-size: clamp(16px, 1.7vw, 22px);
+  line-height: 1.65;
+  letter-spacing: .01em;
+}
+
+.hero-actions .button {
+  text-transform: uppercase;
+  letter-spacing: .11em;
+  font-size: 10px;
+}
+
+.hero-system-card {
+  border-color: rgba(255,255,255,.14);
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.035), rgba(255,255,255,.008)),
+    #0a0c0f;
+  box-shadow: 0 30px 90px rgba(0,0,0,.36), inset 0 1px rgba(255,255,255,.04);
+}
+
+.hero-system-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent 49.8%, rgba(219,36,45,.26) 50%, transparent 50.2%);
+  opacity: .7;
+}
+
+.system-card-core {
+  color: #efefec;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: clamp(14px, 1.8vw, 23px);
+  letter-spacing: .12em;
+}
+.system-card-core i { background: #d6252e; }
+
+.hero-bottomline {
+  color: #777b80;
+  border-top-color: rgba(255,255,255,.09);
+  letter-spacing: .15em;
+}
+
+/* Institutional sections alternate between graphite and document surfaces. */
+.section {
+  width: min(calc(100% - 48px), var(--max));
+}
+.section + .section { border-top-color: rgba(255,255,255,.09); }
+
+.systems-section,
+.resources-section,
+.about-section {
+  position: relative;
+  color: #ececea;
+}
+
+.systems-section::before,
+.about-section::before {
+  content: '';
+  position: absolute;
+  inset: 0 calc((100vw - 100%) / -2);
+  z-index: -1;
+  background:
+    linear-gradient(90deg, transparent 49.95%, rgba(255,255,255,.03) 50%, transparent 50.05%),
+    #090a0c;
+}
+
+.section-kicker {
+  color: #d32831;
+  letter-spacing: .2em;
+  font-size: 9px;
+}
+
+.section-heading h2,
+.studio-shell h2,
+.contact-band h2,
+.technical-detail h2,
+.page-hero h1,
+.project-detail-heading h1 {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-weight: 300;
+  letter-spacing: -.03em;
+}
+
+.section-heading-side > p,
+.systems-grid p,
+.resource-grid p,
+.intelligence-list p,
+.project-summary,
+.detail-intro {
+  color: #96999d;
+}
+
+.systems-grid {
+  border-color: rgba(255,255,255,.11);
+}
+.systems-grid article {
+  background: linear-gradient(160deg, rgba(255,255,255,.027), rgba(255,255,255,.005));
+  border-color: rgba(255,255,255,.1);
+}
+.systems-grid article > span { color: #d32831; }
+
+.selected-work-section {
+  background:
+    linear-gradient(180deg, #0d0f12 0%, #101216 100%);
+  color: #efefed;
+}
+
+.compact-project,
+.project-showcase {
+  border-color: rgba(255,255,255,.12);
+  background: #111318;
+  color: #ededeb;
+  box-shadow: 0 20px 60px rgba(0,0,0,.18);
+}
+.compact-project:hover {
+  box-shadow: 0 26px 70px rgba(0,0,0,.34);
+}
+.compact-project-copy > p { color: #888c91; }
+
+/* Keep the research/intelligence section visually distinct like a paper dossier. */
+.intelligence-section {
+  width: 100%;
+  max-width: none;
+  padding-left: max(24px, calc((100vw - var(--max)) / 2));
+  padding-right: max(24px, calc((100vw - var(--max)) / 2));
+  background: #e9e7e1;
+  color: #17181a;
+}
+.intelligence-section .section-heading-side > p,
+.intelligence-section .intelligence-list p { color: #626264; }
+.intelligence-section .intelligence-list article { border-color: rgba(20,20,20,.14); }
+.intelligence-section .section-kicker { color: #a4151c; }
+
+.resource-grid article {
+  background: #0f1114;
+  border-color: rgba(255,255,255,.1);
+}
+
+.studio-section {
+  width: 100%;
+  max-width: none;
+  padding-left: max(24px, calc((100vw - var(--max)) / 2));
+  padding-right: max(24px, calc((100vw - var(--max)) / 2));
+  background:
+    radial-gradient(circle at 75% 35%, rgba(0,136,168,.13), transparent 34%),
+    #080a0d;
+}
+.studio-shell {
+  border-color: rgba(255,255,255,.12);
+  background: rgba(255,255,255,.018);
+}
+
+.about-principles > div {
+  border-color: rgba(255,255,255,.1);
+  background: rgba(255,255,255,.018);
+}
+.about-principles p { color: #92959a; }
+
+.contact-band {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(185,22,31,.15), transparent 35%),
+    #050608;
+  color: #f1f1ef;
+  border-top-color: rgba(255,255,255,.1);
+}
+.contact-band::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(transparent, rgba(220,39,48,.55), transparent);
+}
+.contact-link { color: #fff; }
+
+.site-footer {
+  background: #050608;
+  color: #d9d9d6;
+  border-top-color: rgba(255,255,255,.1);
+}
+.footer-company p,
+.footer-bottom { color: #777b80; }
+.lexicon-card { border-color: rgba(255,255,255,.12); background: #0b0d10; }
+.lexicon-card p,
+.lexicon-card em { color: #a0a3a7; }
+
+/* Work index and case studies: dark institutional frame; project surfaces stay project-specific. */
+.page-hero,
+.project-detail-hero,
+.detail-section,
+.next-project-band,
+.not-found {
+  background: #090a0c;
+  color: #ececea;
+}
+.page-hero,
+.project-detail-hero,
+.detail-section,
+.next-project-band {
+  border-color: rgba(255,255,255,.1);
+}
+.page-hero > div > p,
+.project-detail-heading > p,
+.feature-tour-grid p { color: #989ba0; }
+
+.work-list {
+  background: #08090b;
+}
+.project-showcase {
+  border-top-color: rgba(255,255,255,.12);
+}
+.proof-list > div,
+.demonstrates,
+.feature-tour-grid article,
+.demonstration-grid > div,
+.architecture-list li {
+  border-color: rgba(255,255,255,.1);
+}
+.proof-list p,
+.feature-tour-grid p,
+.detail-intro { color: #96999d; }
+.demonstrates span { border-color: rgba(255,255,255,.14); color: #b7b9bc; }
+
+.visual-browser-bar {
+  background: #08090b;
+  color: #8f9296;
+  border-bottom-color: rgba(255,255,255,.11);
+}
+
+/* Preserve project color inside visuals; keep interface evidence crisp. */
+.portfolio-capture img {
+  background: #090a0c;
+}
+
+.evidence-switch {
+  border-color: rgba(255,255,255,.2);
+  background: rgba(5,6,8,.88);
+}
+.evidence-mode.is-active {
+  background: #ededeb;
+  color: #111214;
+}
+
+/* Prevent font-loading metric shifts from changing line breaks between local and Vercel. */
+h1, h2, h3, h4, p, a, button, span, strong, small {
+  font-kerning: normal;
+}
+
+@media (max-width: 900px) {
+  .site-header { backdrop-filter: blur(18px); }
+  .main-nav.is-open {
+    background: rgba(6,7,9,.98);
+    border-color: rgba(255,255,255,.1);
+  }
+  .hero-copy h1 { letter-spacing: .07em; }
+}
+
+@media (max-width: 620px) {
+  .home-hero { min-height: 720px; }
+  .hero-inner { padding-top: 88px; }
+  .hero-copy h1 {
+    font-size: clamp(45px, 15vw, 72px);
+    letter-spacing: .055em;
+  }
+  .wordmark { letter-spacing: .16em; }
+  .wordmark strong { letter-spacing: .2em; }
+  .section { width: min(calc(100% - 28px), var(--max)); }
+}
