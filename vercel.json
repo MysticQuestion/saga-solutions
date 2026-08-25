@@ -15,6 +15,9 @@
     { "source": "/tech", "destination": "/tech/index.html" },
     { "source": "/tech/", "destination": "/tech/index.html" },
     { "source": "/tech/:slug", "destination": "/tech/index.html" },
+    { "source": "/prompts", "destination": "/prompts/index.html" },
+    { "source": "/prompts/", "destination": "/prompts/index.html" },
+    { "source": "/prompts/:slug", "destination": "/prompts/index.html" },
     { "source": "/vibes", "destination": "/" },
     { "source": "/code", "destination": "/" },
     { "source": "/code/:slug", "destination": "/" }

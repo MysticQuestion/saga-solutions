@@ -32,6 +32,7 @@ jobs:
           node --check api/payment-confirmation.js
           node --check api/submit-project.js
           node --check api/editorial-draft.js
+          node --check api/prompts.js
           node --check scripts/saga-tech-agent.mjs
           node --check scripts/saga-tech-publish-sync.mjs
           node --check src/bridge.js
@@ -40,7 +41,9 @@ jobs:
           node --check src/portfolio-evidence.js
           node --check public/checkout.js
           node --check public/tech/tech.js
+          node --check public/prompts/prompts.js
           node --check public/tech-link.js
+          node -e "JSON.parse(require('fs').readFileSync('public/prompts/index.json', 'utf8'))"
 
       - name: Build production bundle
         run: npm run build
