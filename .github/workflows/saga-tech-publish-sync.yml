@@ -1,0 +1,48 @@
+name: Saga Tech Publication Sync
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/tech/articles/**'
+
+permissions:
+  contents: read
+
+jobs:
+  sync-notion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Find newly published Saga Tech articles
+        id: changed
+        shell: bash
+        run: |
+          BEFORE="${{ github.event.before }}"
+          AFTER="${{ github.sha }}"
+          if [[ "$BEFORE" =~ ^0+$ ]]; then
+            FILES=$(git show --pretty='' --name-only "$AFTER" -- 'public/tech/articles/*.json')
+          else
+            FILES=$(git diff --name-only "$BEFORE" "$AFTER" -- 'public/tech/articles/*.json')
+          fi
+          SLUGS=$(printf '%s\n' "$FILES" | grep -v 'public/tech/articles/index.json' | sed -n 's#public/tech/articles/\(.*\)\.json#\1#p' | paste -sd, -)
+          echo "slugs=$SLUGS" >> "$GITHUB_OUTPUT"
+
+      - name: Mark merged records published in Notion
+        if: steps.changed.outputs.slugs != ''
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          SAGA_TECH_NOTION_DATA_SOURCE_ID: 5876076e-af56-448e-a8cf-9bafb91bca16
+          SAGA_TECH_PUBLISHED_SLUGS: ${{ steps.changed.outputs.slugs }}
+        run: node scripts/saga-tech-publish-sync.mjs
