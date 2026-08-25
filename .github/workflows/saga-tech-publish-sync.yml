@@ -32,11 +32,20 @@ jobs:
           BEFORE="${{ github.event.before }}"
           AFTER="${{ github.sha }}"
           if [[ "$BEFORE" =~ ^0+$ ]]; then
-            FILES=$(git show --pretty='' --name-only "$AFTER" -- 'public/tech/articles/*.json')
+            FILES=$(git show --pretty='' --name-only --diff-filter=AM "$AFTER" -- 'public/tech/articles/*.json')
           else
-            FILES=$(git diff --name-only "$BEFORE" "$AFTER" -- 'public/tech/articles/*.json')
+            FILES=$(git diff --diff-filter=AM --name-only "$BEFORE" "$AFTER" -- 'public/tech/articles/*.json')
           fi
-          SLUGS=$(printf '%s\n' "$FILES" | grep -v 'public/tech/articles/index.json' | sed -n 's#public/tech/articles/\(.*\)\.json#\1#p' | paste -sd, -)
+
+          SLUGS=""
+          while IFS= read -r FILE; do
+            [[ -z "$FILE" || "$FILE" == "public/tech/articles/index.json" ]] && continue
+            SLUG="${FILE#public/tech/articles/}"
+            SLUG="${SLUG%.json}"
+            [[ -n "$SLUGS" ]] && SLUGS+=","
+            SLUGS+="$SLUG"
+          done <<< "$FILES"
+
           echo "slugs=$SLUGS" >> "$GITHUB_OUTPUT"
 
       - name: Mark merged records published in Notion
