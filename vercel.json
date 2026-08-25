@@ -12,7 +12,9 @@
     { "source": "/work/:slug", "destination": "/" },
     { "source": "/blog", "destination": "/" },
     { "source": "/blog/:slug", "destination": "/" },
-    { "source": "/tech", "destination": "/" },
+    { "source": "/tech", "destination": "/tech/index.html" },
+    { "source": "/tech/", "destination": "/tech/index.html" },
+    { "source": "/tech/:slug", "destination": "/tech/index.html" },
     { "source": "/vibes", "destination": "/" },
     { "source": "/code", "destination": "/" },
     { "source": "/code/:slug", "destination": "/" }
