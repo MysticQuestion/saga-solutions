@@ -35,6 +35,7 @@ jobs:
           node --check api/prompts.js
           node --check scripts/saga-tech-agent.mjs
           node --check scripts/saga-tech-publish-sync.mjs
+          node --check scripts/saga-prompt-sync.mjs
           node --check src/bridge.js
           node --check src/editorial-cleanup.js
           node --check src/commerce-bridge.js
