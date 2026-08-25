@@ -32,11 +32,15 @@ jobs:
           node --check api/payment-confirmation.js
           node --check api/submit-project.js
           node --check api/editorial-draft.js
+          node --check scripts/saga-tech-agent.mjs
+          node --check scripts/saga-tech-publish-sync.mjs
           node --check src/bridge.js
           node --check src/editorial-cleanup.js
           node --check src/commerce-bridge.js
           node --check src/portfolio-evidence.js
           node --check public/checkout.js
+          node --check public/tech/tech.js
+          node --check public/tech-link.js
 
       - name: Build production bundle
         run: npm run build

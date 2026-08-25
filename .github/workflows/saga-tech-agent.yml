@@ -1,0 +1,105 @@
+name: Saga Tech Intelligence Agent
+
+on:
+  schedule:
+    - cron: '30 13 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: saga-tech-intelligence-agent
+  cancel-in-progress: false
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Check out Saga Systems
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Create editorial branch
+        id: branch
+        shell: bash
+        run: |
+          BRANCH="agent/saga-tech-$(date -u +'%Y%m%d-%H%M%S')"
+          git checkout -b "$BRANCH"
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+
+      - name: Research, illustrate, and register candidate
+        id: agent
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          SAGA_TECH_NOTION_DATA_SOURCE_ID: 5876076e-af56-448e-a8cf-9bafb91bca16
+          SAGA_TECH_MODEL: gpt-5.6-terra
+          SAGA_TECH_IMAGE_MODEL: gpt-image-2
+          SAGA_TECH_BRANCH: ${{ steps.branch.outputs.branch }}
+        run: node scripts/saga-tech-agent.mjs
+
+      - name: Validate generated files and production build
+        run: |
+          node --check scripts/saga-tech-agent.mjs
+          node --check public/tech/tech.js
+          npm install --no-audit --no-fund
+          npm run build
+
+      - name: Commit candidate package
+        env:
+          ARTICLE_TITLE: ${{ steps.agent.outputs.title }}
+        shell: bash
+        run: |
+          git config user.name "Saga Tech Agent"
+          git config user.email "saga-tech-agent@users.noreply.github.com"
+          git add public/tech/articles public/tech/images
+          git commit -m "Saga Tech: ${ARTICLE_TITLE}"
+          git push origin "${{ steps.branch.outputs.branch }}"
+
+      - name: Open editorial review pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTICLE_TITLE: ${{ steps.agent.outputs.title }}
+          ARTICLE_SLUG: ${{ steps.agent.outputs.slug }}
+          ARTICLE_CATEGORY: ${{ steps.agent.outputs.category }}
+          NOTION_URL: ${{ steps.agent.outputs.notion_url }}
+        shell: bash
+        run: |
+          cat > /tmp/saga-tech-pr.md <<EOF
+          ## Saga Tech automated research candidate
+
+          **Article:** ${ARTICLE_TITLE}
+          **Field:** ${ARTICLE_CATEGORY}
+          **Public route after merge:** https://sagasystems.net/tech/${ARTICLE_SLUG}
+          **Notion editorial record:** ${NOTION_URL}
+
+          This pull request was produced by the Saga Tech intelligence agent. It includes the structured article, source ledger, claim classifications, historical lineage, forward forecasts, and generated editorial hero image.
+
+          ### Editorial gate
+          - [ ] Open and verify every material primary source
+          - [ ] Check that secondary sources independently support the context attributed to them
+          - [ ] Verify event dates separately from publication dates
+          - [ ] Review the historical causal chain for missing or overstated links
+          - [ ] Confirm forecasts are clearly distinguishable from verified facts
+          - [ ] Review countercase and technical constraints
+          - [ ] Inspect generated image for technical plausibility and misleading visual claims
+          - [ ] Approve title, dek, and final article language
+
+          Merging this PR is the publication action.
+          EOF
+
+          gh pr create \
+            --base main \
+            --head "${{ steps.branch.outputs.branch }}" \
+            --title "Saga Tech: ${ARTICLE_TITLE}" \
+            --body-file /tmp/saga-tech-pr.md
