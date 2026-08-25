@@ -1,0 +1,57 @@
+name: Saga Prompt Notion Sync
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: saga-prompt-notion-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Refresh prompt snapshot from Notion
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          SAGA_PROMPT_NOTION_DATA_SOURCE_ID: 66faef04-87eb-4f29-afdc-c712177d4fcf
+          SAGA_PROMPT_SYNC_LIMIT: 18
+        run: node scripts/saga-prompt-sync.mjs
+
+      - name: Validate snapshot
+        run: |
+          node --check scripts/saga-prompt-sync.mjs
+          node -e "const d=JSON.parse(require('fs').readFileSync('public/prompts/index.json','utf8')); if(!Array.isArray(d.prompts)) process.exit(1); console.log('Prompt records:', d.prompts.length)"
+
+      - name: Commit changes when Notion changed
+        shell: bash
+        run: |
+          if git diff --quiet -- public/prompts/index.json; then
+            echo "No prompt changes detected."
+            exit 0
+          fi
+
+          git config user.name "Saga Prompt Sync"
+          git config user.email "saga-prompt-sync@users.noreply.github.com"
+          git add public/prompts/index.json
+          git commit -m "Sync Prompt Intelligence from Notion"
+          git pull --rebase origin main
+          git push origin HEAD:main
